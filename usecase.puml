@@ -1,0 +1,103 @@
+@startuml ERP_CRM_UseCase
+!theme cerulean-outline
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle hollow
+
+actor Admin as admin
+actor Employee as emp
+actor Customer as cust
+
+rectangle "MERN ERP-CRM System" {
+  
+  package "Auth & Account Security" {
+    usecase "Login" as auth_login
+    usecase "Register" as auth_register
+    usecase "Logout" as auth_logout
+  }
+
+  package "Lead Management" {
+    usecase "Add/View/Edit/Delete Lead" as lead_manage
+    usecase "Convert Lead to Customer" as lead_convert
+  }
+
+  package "CRM (Customer Management)" {
+    usecase "Manage Customers" as crm_manage
+  }
+
+  package "Sales & Billing" {
+    usecase "Create/Send/Track Quotes" as sales_quotes
+    usecase "Create/Send/Track Invoices" as sales_invoices
+    usecase "Record Payment" as sales_pay
+  }
+
+  package "Accounting" {
+    usecase "Add/View Expenses" as acc_expenses
+  }
+
+  package "Inventory & Goods" {
+    usecase "Manage Products" as inv_products
+    usecase "Track Stock Level" as inv_stock
+  }
+
+  package "Order Processing" {
+    usecase "Place / Track Orders" as ord_track
+  }
+
+  package "Human Resources (HRM)" {
+    usecase "Manage Employees" as hr_emp
+    usecase "Process Payroll" as hr_payroll
+  }
+
+  package "Analytics Platform" {
+    usecase "View Sales/Expense/Lead Reports" as rep_view
+  }
+
+  package "System Alerts" {
+    usecase "Receive/Read Notifications" as alert_read
+  }
+}
+
+' ─── ADMIN ASSOCIATIONS (Full Access) ──────────────────────────────
+admin --> auth_login
+admin --> auth_register
+admin --> auth_logout
+admin --> lead_manage
+admin --> lead_convert
+admin --> crm_manage
+admin --> sales_quotes
+admin --> sales_invoices
+admin --> sales_pay
+admin --> acc_expenses
+admin --> inv_products
+admin --> inv_stock
+admin --> ord_track
+admin --> hr_emp
+admin --> hr_payroll
+admin --> rep_view
+admin --> alert_read
+
+' ─── EMPLOYEE ASSOCIATIONS (Operational Access) ────────────────────
+emp --> auth_login
+emp --> auth_logout
+emp --> lead_manage
+emp --> lead_convert
+emp --> crm_manage
+emp --> sales_quotes
+emp --> sales_invoices
+emp --> sales_pay
+emp --> acc_expenses
+emp --> inv_products
+emp --> inv_stock
+emp --> ord_track
+emp --> alert_read
+
+' ─── CUSTOMER ASSOCIATIONS (Client Portal Access) ──────────────────
+cust --> auth_login
+cust --> auth_logout
+cust --> sales_quotes
+cust --> sales_invoices
+cust --> sales_pay
+cust --> ord_track
+
+@enduml

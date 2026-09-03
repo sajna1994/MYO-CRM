@@ -1,0 +1,137 @@
+/* ── Google Font ────────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ── CSS Reset & Base ──────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    sans-serif;
+  background: #f6f7f9;
+  color: #141820;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* MYO Fitness Studio application shell */
+.studio-layout { min-height: 100vh; background: #f6f7f9; }.studio-sider { position: sticky !important; top: 0; height: 100vh; background: linear-gradient(160deg, #0d141a, #18232b) !important; padding: 22px 12px; }.studio-brand { height: 86px; display: flex; align-items: center; gap: 12px; color: #fff; font-weight: 800; line-height: 1.25; font-size: 1.06rem; padding: 0 12px 18px; }.studio-logo {
+  width: 55px;
+  height: 55px;
+  flex: 0 0 55px;
+  object-fit: contain;
+  display: block;
+}.studio-sider .ant-menu { background: transparent; border: 0; }.studio-sider .ant-menu-item { height: 52px; line-height: 52px; margin: 5px 0; border-radius: 8px; font-size: 1.02rem; }.studio-sider .ant-menu-dark .ant-menu-item-selected { background: linear-gradient(90deg, #ff8a00, #ff6900); }.studio-sider .ant-menu-item .anticon { font-size: 1.28rem; }.studio-logout { position: absolute; left: 12px; bottom: 20px; color: #fff !important; font-size: 1rem; }.studio-main { min-width: 0; }.studio-header { height: 80px; padding: 0 32px 0 18px; background: #fff; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #eef0f3; }.studio-menu-toggle { font-size: 1.25rem; }.studio-user, .studio-user > span { display: flex; align-items: center; gap: 18px; }.studio-user .ant-avatar { background: #141820; }.studio-content { margin: 0; padding: 28px 32px; min-height: calc(100vh - 80px); background: #f6f7f9; }.studio-content .ant-typography { color: #141820; }.studio-content .ant-card, .studio-content .ant-table-wrapper { border-radius: 12px; }.studio-content .ant-card { border: 1px solid #eaecf0; box-shadow: none; }.studio-content .ant-table-wrapper { overflow: hidden; border: 1px solid #eaecf0; background: #fff; }.studio-content .ant-table-thead > tr > th { background: #fafafa; color: #141820; font-weight: 700; }.studio-content .ant-table-tbody > tr > td { padding-top: 18px; padding-bottom: 18px; }.studio-content .ant-btn-primary { background: linear-gradient(135deg, #ff8a00, #ff6900); border: 0; box-shadow: none; }.studio-content .ant-input, .studio-content .ant-input-number, .studio-content .ant-select-selector { border-color: #dfe3e8 !important; }.studio-content .page-header h1 { background: none; -webkit-text-fill-color: #141820; color: #141820; }.studio-content .glass-card { background: #fff; border-color: #eaecf0; backdrop-filter: none; }
+@media (max-width: 768px) { .studio-sider { position: fixed !important; z-index: 20; }.studio-content { padding: 18px; }.studio-header { padding-right: 18px; } }
+
+/* Dashboard: MYO Fitness Studio reference design */
+.fitness-dashboard__header { margin-bottom: 28px; }.fitness-dashboard__header h1 { margin: 0; color: #141820; font-size: 2rem; line-height: 1.15; }.fitness-dashboard__header p { margin: 5px 0 0; color: #707581; font-size: 1.08rem; }.fitness-stats { margin-bottom: 26px; }.fitness-stat { min-height: 164px; display: flex; align-items: center; gap: 20px; overflow: hidden; }.fitness-stat .ant-card-body { width: 100%; display: flex; align-items: center; gap: 18px; padding: 24px; }.fitness-stat__icon { width: 66px; height: 66px; display: grid; flex: 0 0 auto; place-items: center; border-radius: 50%; font-size: 2rem; }.fitness-stat p { margin: 0 0 5px; font-weight: 600; color: #242933; }.fitness-stat strong { display: block; font-size: 2.2rem; line-height: 1.15; }.fitness-stat small { display: block; margin-top: 8px; color: #777d88; font-size: .92rem; }.fitness-stat--blue { background: #fbfdff !important; }.fitness-stat--blue .fitness-stat__icon { background: #eaf4ff; color: #147bed; }.fitness-stat--green { background: #fcfffc !important; }.fitness-stat--green .fitness-stat__icon { background: #e7f8e9; color: #24a848; }.fitness-stat--orange { background: #fffdf8 !important; }.fitness-stat--orange .fitness-stat__icon { background: #fff2d8; color: #f39a00; }.fitness-stat--purple { background: #fffcff !important; }.fitness-stat--purple .fitness-stat__icon { background: #f2eaff; color: #752fd4; }.fitness-stat--purple strong { color: #1aa539; font-size: 1.95rem; }
+.fitness-panel { height: 100%; border-radius: 13px !important; }.fitness-panel .ant-card-head { min-height: 78px; padding: 0 24px; }.fitness-panel .ant-card-body { padding: 0 24px 14px; }.fitness-panel__title { display: flex; align-items: center; justify-content: space-between; width: 100%; color: #131820; font-size: 1.35rem; font-weight: 800; }.fitness-panel__title a { color: #ef7600; font-size: .94rem; font-weight: 600; text-decoration: none; }.fitness-table { border: 0 !important; }.fitness-table .ant-table-thead > tr > th { padding: 17px 12px; }.fitness-table .ant-table-tbody > tr > td { padding: 20px 12px; }.fitness-alerts .ant-card-body { padding: 0 24px 8px; }.low-stock-item { display: flex; align-items: center; gap: 15px; min-height: 118px; border-bottom: 1px solid #edf0f2; }.low-stock-item:last-child { border-bottom: 0; }.supplement-placeholder { width: 60px; height: 75px; display: grid; place-items: center; flex: 0 0 auto; background: linear-gradient(140deg, #15191e, #39424b); border: 3px solid #080a0c; border-radius: 9px 9px 15px 15px; color: #ff7900; font-size: .78rem; font-weight: 900; }.low-stock-item strong, .low-stock-item small { display: block; }.low-stock-item strong { font-size: .95rem; }.low-stock-item small { margin-top: 7px; color: #757b85; }.low-stock-item__count { margin-left: auto; text-align: right; }.low-stock-item__count span { display: block; color: #e3332b; font-weight: 700; font-size: .88rem; }.low-stock-item__count b { display: block; margin-top: 8px; }.dashboard-loader { min-height: 500px; display: grid; place-items: center; }
+@media (max-width: 575px) { .fitness-dashboard__header h1 { font-size: 1.7rem; }.fitness-stat .ant-card-body { padding: 18px; }.fitness-panel .ant-card-body { padding: 0 12px; }.fitness-panel .ant-card-head { padding: 0 12px; }.fitness-table { overflow-x: auto; }.low-stock-item { gap: 10px; }.supplement-placeholder { width: 45px; height: 60px; }.low-stock-item__count { font-size: .85rem; } }
+
+/* Product / Price List */
+.price-list-page { background: #fff; border: 1px solid #e7eaee; border-radius: 13px; padding: 30px; min-height: calc(100vh - 136px); }.price-list-page__head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 30px; }.price-list-page__head h1 { margin: 0; font-size: 1.9rem; color: #141820; }.price-list-page__head .ant-btn { height: 55px; padding: 0 27px; border-radius: 8px; font-size: 1.05rem; font-weight: 600; }.price-list-table { border: 1px solid #e6e9ed !important; border-radius: 10px !important; }.price-list-table .ant-table-thead > tr > th { padding: 20px 32px; background: #fff; font-size: .95rem; }.price-list-table .ant-table-tbody > tr > td { padding: 23px 32px; color: #1c2027; font-size: .98rem; }.price-list-edit { color: #161b22; font-size: 1.15rem; }.price-list-table .ant-pagination { margin: 22px 0 0; }
+@media (max-width: 575px) { .price-list-page { padding: 18px 12px; }.price-list-page__head h1 { font-size: 1.45rem; }.price-list-page__head .ant-btn { padding: 0 14px; }.price-list-table .ant-table-thead > tr > th, .price-list-table .ant-table-tbody > tr > td { padding: 16px; } }
+
+/* Add / Edit Product */
+.product-editor-screen__title { margin: 0 0 24px; color: #141820; font-size: 2rem; }.product-editor { min-height: calc(100vh - 196px); padding: 38px 44px; background: #fff; border: 1px solid #e7eaee; border-radius: 13px; }.product-editor > h1 { margin: 0 0 34px; color: #151a21; font-size: 1.9rem; }.product-editor__fields { display: grid; grid-template-columns: minmax(240px, 1fr) minmax(240px, .88fr) 255px; gap: 44px; max-width: 1130px; }.product-editor__column .ant-form-item { margin-bottom: 29px; }.product-editor .ant-form-item-label > label, .product-image-field > label { color: #1c2028; font-weight: 700; font-size: 1rem; }.product-editor .ant-input, .product-editor .ant-input-number, .product-editor .ant-select-selector { min-height: 62px !important; border-color: #dce0e5 !important; border-radius: 8px !important; font-size: 1rem; }.product-editor .ant-input-number { width: 100%; padding-top: 12px; }.product-editor .ant-input-number input { height: 34px; }.product-editor .ant-select-selector { padding-top: 14px !important; }.product-editor textarea.ant-input { min-height: 112px !important; resize: vertical; }.product-image-field { padding-top: 1px; }.product-image-field > label { display: block; margin-bottom: 10px; }.product-image-upload { width: 255px; height: 355px; display: grid; place-content: center; gap: 20px; overflow: hidden; border: 2px dashed #9aa1aa; border-radius: 10px; color: #363d47; font-weight: 700; text-align: center; cursor: pointer; }.product-image-upload .anticon { font-size: 3rem; }.product-image-upload img { width: 100%; height: 100%; object-fit: contain; }.product-editor__actions { display: flex; gap: 38px; margin: 15px 0 0 235px; }.product-editor__actions .ant-btn { height: 62px; min-width: 240px; border-radius: 8px; font-size: 1.05rem; font-weight: 700; }.product-editor__actions .ant-btn-primary { background: linear-gradient(135deg, #ff8a00, #ff6900); }
+@media (max-width: 1050px) { .product-editor__fields { grid-template-columns: 1fr 1fr; }.product-image-field { grid-column: 1 / -1; }.product-image-upload { height: 220px; width: 100%; }.product-editor__actions { margin-left: 0; } } @media (max-width: 600px) { .product-editor { padding: 25px 18px; }.product-editor__fields { grid-template-columns: 1fr; gap: 0; }.product-image-field { grid-column: auto; }.product-editor__actions { gap: 12px; }.product-editor__actions .ant-btn { min-width: 0; flex: 1; } }
+
+/* Fitness Studio authentication pages */
+.auth-shell { min-height: 100vh; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(520px, .9fr); background: #fafafa; }
+.auth-brand { position: relative; display: grid; place-items: center; overflow: hidden; background-position: center; background-size: cover; color: #fff; }.auth-brand-overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,.35), rgba(0,0,0,.72)); }.auth-brand-content { position: relative; width: min(82%, 640px); text-align: center; text-shadow: 0 2px 14px rgba(0,0,0,.8); }.auth-eyebrow {
+  display: block;
+  width: 220px;
+  height: auto;
+  margin: 0 auto 20px;
+  object-fit: contain;
+}.auth-brand h1 { margin: .5rem 0 0; color: #ff6900; font-size: clamp(4.5rem, 10vw, 9rem); font-style: italic; line-height: .9; font-weight: 900; letter-spacing: .06em; }.auth-brand h2 { margin: .25rem 0 1.3rem; font-size: clamp(2rem, 4.7vw, 4.1rem); letter-spacing: .08em; font-style: italic; line-height: 1; }.auth-brand-rule { display: block; width: 42%; height: 2px; background: #ff6900; margin: 0 auto 1.2rem; }.auth-tagline { font-size: clamp(.9rem, 1.5vw, 1.25rem); font-weight: 700; letter-spacing: .04em; }.auth-features { display: flex; justify-content: space-around; gap: 1rem; margin: 3.5rem auto 0; max-width: 600px; }.auth-features div { display: grid; gap: .65rem; place-items: center; font-size: 1rem; font-weight: 600; }.auth-features svg { color: #ff6900; font-size: 2.8rem; }
+.auth-panel { display: grid; place-content: center; padding: 2rem; color: #171717; }.auth-card { width: min(100%, 520px); padding: clamp(2rem, 5vw, 4.5rem); background: #fff; border-radius: 18px; box-shadow: 0 4px 18px rgba(0,0,0,.11); }.auth-copyright { color: #777; text-align: center; margin-top: 2.2rem; }.auth-form-heading { text-align: center; margin-bottom: 3rem; }.auth-form-heading h1 { margin: 0; color: #111; font-size: 2.2rem; }.auth-form-heading p { margin: .55rem 0 0; color: #626262; font-size: 1.35rem; }.auth-form .ant-form-item-label > label { color: #3a3a3a; font-weight: 600; }.auth-form .ant-input-affix-wrapper { height: 70px; border-radius: 10px; border-color: #dedede; padding: 0 18px; background: #fff; }.auth-form .ant-input { font-size: 1.1rem; }.auth-form .ant-input-prefix, .auth-form .ant-input-suffix { color: #222; font-size: 1.35rem; margin-right: 16px; }.auth-form .ant-input-suffix { margin: 0; }.auth-options { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }.auth-options a, .auth-switch a { color: #f26900; font-weight: 600; text-decoration: none; }.auth-options .ant-checkbox-wrapper { color: #3a3a3a; font-size: 1rem; }.auth-submit { height: 64px !important; border: 0 !important; border-radius: 10px !important; background: #ff6900 !important; font-size: 1.25rem !important; font-weight: 700 !important; }.auth-form .ant-divider { color: #777; border-color: #ddd; margin: 2rem 0; }.google-button { height: 58px; border-radius: 8px; font-size: 1.05rem; color: #333; border-color: #ddd; }.google-mark { margin-right: 28px; color: #4285f4; font-size: 1.8rem; font-weight: 800; }.auth-switch { text-align: center; color: #666; margin-top: 1.5rem; }
+@media (max-width: 900px) { .auth-shell { grid-template-columns: 1fr; }.auth-brand { display: none; }.auth-panel { min-height: 100vh; }.auth-card { padding: 2.25rem; }.auth-form-heading { margin-bottom: 2rem; } }
+
+/* ── Scrollbar ─────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a1a;
+}
+::-webkit-scrollbar-thumb {
+  background: #6c5ce7;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a29bfe;
+}
+
+/* ── Utility ───────────────────────────────────────────────────────────────── */
+.page-header {
+  margin-bottom: 24px;
+}
+.page-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.page-header p {
+  color: #888;
+  margin-top: 4px;
+}
+
+/* ── Card glass effect ─────────────────────────────────────────────────────── */
+.glass-card {
+  background: rgba(26, 26, 46, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(108, 92, 231, 0.15);
+  border-radius: 12px;
+}
+
+/* Stock Management */
+.stock-page__title { margin: 0 0 24px; color: #141820; font-size: 2rem; }.stock-overview { min-height: calc(100vh - 196px); padding: 36px 28px; background: #fff; border: 1px solid #e7eaee; border-radius: 13px; }.stock-overview > h2 { margin: 0 0 30px; color: #171c23; font-size: 1.75rem; }.stock-summary { margin-bottom: 30px; }.stock-summary-card .ant-card-body { display: flex; align-items: center; justify-content: space-between; min-height: 128px; padding: 22px 26px; }.stock-summary-card span, .stock-summary-card strong { display: block; }.stock-summary-card span { color: #666d78; font-size: 1.02rem; }.stock-summary-card strong { margin-top: 15px; color: #184276; font-size: 2.1rem; line-height: 1; }.stock-summary-card i { width: 62px; height: 62px; display: grid; place-items: center; border-radius: 50%; background: #eaf2fd; color: #1d5793; font-size: 2rem; font-style: normal; }.stock-summary-card--orange span, .stock-summary-card--orange strong { color: #db8200; }.stock-summary-card--orange i { color: #f39600; background: #fff3dd; }.stock-summary-card--red span, .stock-summary-card--red strong { color: #c8332c; }.stock-summary-card--red i { color: #e24942; background: #fde9e8; }.stock-filters { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 28px; }.stock-filters .ant-input-affix-wrapper, .stock-filters .ant-select-selector { min-height: 60px !important; border-radius: 8px !important; border-color: #e0e4e9 !important; font-size: 1rem; }.stock-filters .ant-input-affix-wrapper { padding: 0 18px; }.stock-filters .ant-select-selector { padding-top: 13px !important; }.stock-filters .ant-input-prefix { font-size: 1.35rem; color: #444b54; margin-right: 16px; }.stock-table { border: 1px solid #e5e9ed !important; border-radius: 10px !important; }.stock-table .ant-table-thead > tr > th { padding: 18px 24px; color: #171b22; font-weight: 700; }.stock-table .ant-table-tbody > tr > td { padding: 21px 24px; }.stock-status { margin: 0; border: 0; border-radius: 6px; padding: 6px 12px; font-size: .95rem; font-weight: 700; }.stock-status--in-stock { background: #eaf8ed; color: #149339; }.stock-status--low-stock { background: #fff4e7; color: #e68a08; }.stock-status--out-of-stock { background: #fdeceb; color: #d73830; }.stock-loader { min-height: 450px; display: grid; place-items: center; }
+@media (max-width: 650px) { .stock-page__title { font-size: 1.6rem; }.stock-overview { padding: 25px 13px; }.stock-overview > h2 { font-size: 1.4rem; }.stock-filters { grid-template-columns: 1fr; gap: 12px; }.stock-table .ant-table-thead > tr > th, .stock-table .ant-table-tbody > tr > td { padding: 16px; } }
+.invoice-logo {
+  width: 100px;
+  height: 100px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 4px solid #ff8500;
+
+  flex-shrink: 0;
+}
+
+.invoice-logo img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  display: block;
+}
