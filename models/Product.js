@@ -4,9 +4,8 @@ const ProductSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, 'Product name is required'],
+      required: true,
       trim: true,
-      maxlength: [200, 'Name cannot exceed 200 characters'],
     },
     sku: {
       type: String,
@@ -40,7 +39,7 @@ const ProductSchema = new mongoose.Schema(
       default: 0,
       min: [0, 'Cost price cannot be negative'],
     },
-    stock: {
+    stock: {  // ← ONLY ONE DEFINITION
       type: Number,
       default: 0,
       min: [0, 'Stock cannot be negative'],
@@ -57,6 +56,10 @@ const ProductSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true,
+    },
+     image: {
+      type: String,  // URL or base64 string
+      default: '',
     },
   },
   {

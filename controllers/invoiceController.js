@@ -1,6 +1,6 @@
 const Invoice = require('../models/Invoice');
-
-
+const Customer = require('../models/Customer');
+const Product = require('../models/Product');
 // ==========================================================
 // Generate Invoice Number
 // ==========================================================
@@ -131,6 +131,7 @@ const getInvoice = async (req, res, next) => {
 };
 
 
+
 // ==========================================================
 // CREATE INVOICE
 // ==========================================================
@@ -140,29 +141,27 @@ const createInvoice = async (req, res, next) => {
     console.log('CREATE INVOICE BODY:');
     console.log(JSON.stringify(req.body, null, 2));
 
-   const {
-  customer,
-  customerName,
-  phone,
-  items,
-  discount = 0,
-  status = 'unpaid',
-  dueDate,
-  notes = '',
-} = req.body;
-
+    const {
+      customer,
+      customerName,
+      phone,
+      items,
+      discount = 0,
+      status = 'unpaid',
+      dueDate,
+      notes = '',
+    } = req.body;
 
     // ------------------------------------------------------
     // Validate customer
     // ------------------------------------------------------
 
-    if (!customer) {
-      return res.status(400).json({
-        success: false,
-        message: 'Customer is required',
-      });
-    }
-
+   if (customer === undefined || customer === '') {
+  return res.status(400).json({
+    success: false,
+    message: 'Customer is required',
+  });
+}
 
     // ------------------------------------------------------
     // Validate items
@@ -175,7 +174,6 @@ const createInvoice = async (req, res, next) => {
       });
     }
 
-
     // ------------------------------------------------------
     // Validate due date
     // ------------------------------------------------------
@@ -187,64 +185,108 @@ const createInvoice = async (req, res, next) => {
       });
     }
 
-
     // ------------------------------------------------------
-    // Calculate items
-    // ------------------------------------------------------
-
-   const formattedItems = items.map((item) => {
-  const quantity = Number(item.quantity);
-  const unitPrice = Number(item.unitPrice);
-
-  if (
-    !item.description ||
-    !String(item.description).trim()
-  ) {
-    throw new Error(
-      'Product description is required'
-    );
-  }
-
-  if (
-    !Number.isFinite(quantity) ||
-    quantity < 1
-  ) {
-    throw new Error(
-      `Invalid quantity for ${item.description}`
-    );
-  }
-
-  if (
-    !Number.isFinite(unitPrice) ||
-    unitPrice < 0
-  ) {
-    throw new Error(
-      `Invalid price for ${item.description}`
-    );
-  }
-
-  return {
-    description:
-      String(item.description).trim(),
-
-    quantity,
-
-    unitPrice,
-
-    total:
-      quantity * unitPrice,
-  };
-});
-
-
-    // ------------------------------------------------------
-    // Calculate totals
+    // Validate and format items
     // ------------------------------------------------------
 
-    const subtotal = formattedItems.reduce(
-      (sum, item) => sum + item.total,
-      0
-    );
+    const formattedItems = items.map((item) => {
+      const quantity = Number(item.quantity);
+      const unitPrice = Number(item.unitPrice);
+
+      if (
+        !item.product ||
+        !String(item.product).trim()
+      ) {
+        throw new Error(
+          'Product is required'
+        );
+      }
+
+      if (
+        !item.description ||
+        !String(item.description).trim()
+      ) {
+        throw new Error(
+          'Product description is required'
+        );
+      }
+
+      if (
+        !Number.isFinite(quantity) ||
+        quantity < 1
+      ) {
+        throw new Error(
+          `Invalid quantity for ${item.description}`
+        );
+      }
+
+      if (
+        !Number.isFinite(unitPrice) ||
+        unitPrice < 0
+      ) {
+        throw new Error(
+          `Invalid price for ${item.description}`
+        );
+      }
+
+      return {
+        product: item.product,
+
+        description:
+          String(item.description).trim(),
+
+        quantity,
+
+        unitPrice,
+
+        total:
+          quantity * unitPrice,
+      };
+    });
+
+    // ------------------------------------------------------
+    // CHECK PRODUCT STOCK
+    // ------------------------------------------------------
+
+    for (const item of formattedItems) {
+      const product = await Product.findById(
+        item.product
+      );
+
+      if (!product) {
+        return res.status(404).json({
+          success: false,
+          message:
+            `Product "${item.description}" not found`,
+        });
+      }
+
+      const currentStock =
+        Number(product.stock) || 0;
+
+      if (currentStock < item.quantity) {
+        return res.status(400).json({
+          success: false,
+          message:
+            `Insufficient stock for "${product.name}". Available: ${currentStock}, Required: ${item.quantity}`,
+        });
+      }
+    }
+
+    // ------------------------------------------------------
+    // Calculate subtotal
+    // ------------------------------------------------------
+
+    const subtotal =
+      formattedItems.reduce(
+        (sum, item) =>
+          sum + item.total,
+        0
+      );
+
+    // ------------------------------------------------------
+    // Calculate discount
+    // ------------------------------------------------------
 
     const discountAmount = Math.max(
       0,
@@ -256,77 +298,164 @@ const createInvoice = async (req, res, next) => {
       subtotal
     );
 
+    // ------------------------------------------------------
+    // Calculate final total
+    // ------------------------------------------------------
+
     const totalAmount = Math.max(
       0,
       subtotal - finalDiscount
     );
 
+    // ------------------------------------------------------
+    // Generate invoice number
+    // ------------------------------------------------------
+
+    let invoiceNumber =
+      await generateInvoiceNumber();
 
     // ------------------------------------------------------
-    // Generate invoice number on SERVER
-    // ------------------------------------------------------
-
-    let invoiceNumber = await generateInvoiceNumber();
-
-
-    // ------------------------------------------------------
-    // Create invoice
+    // CREATE INVOICE
     // ------------------------------------------------------
 
     let invoice;
 
     try {
-     invoice = await Invoice.create({
-  invoiceNumber,
-  customer,
-  customerName,
-  phone,
-  items: formattedItems,
-  subtotal,
-  discount: finalDiscount,
-  totalAmount,
-  paidAmount: 0,
-  status,
-  dueDate: new Date(dueDate),
-  notes,
-});
+      invoice = await Invoice.create({
+        invoiceNumber,
+
+        customer,
+
+        customerName,
+
+        phone,
+
+        items: formattedItems,
+
+        subtotal,
+
+        discount: finalDiscount,
+
+        totalAmount,
+
+        paidAmount:
+          status === 'paid'
+            ? totalAmount
+            : 0,
+
+        status,
+
+        dueDate:
+          new Date(dueDate),
+
+        notes,
+      });
+
     } catch (error) {
 
-      // Handle rare duplicate invoice number
-     if (error.code === 11000) {
-  invoiceNumber = `INV-${new Date().getFullYear()}-${Date.now()
-    .toString()
-    .slice(-6)}`;
+      // ----------------------------------------------------
+      // Handle duplicate invoice number
+      // ----------------------------------------------------
 
-  invoice = await Invoice.create({
-    invoiceNumber,
-    customer,
-    customerName,
-    phone,
-    items: formattedItems,
-    subtotal,
-    discount: finalDiscount,
-    totalAmount,
-    paidAmount: 0,
-    status,
-    dueDate: new Date(dueDate),
-    notes,
-  });
-} else {
+      if (error.code === 11000) {
+
+        invoiceNumber =
+          `INV-${new Date().getFullYear()}-${Date.now()
+            .toString()
+            .slice(-6)}`;
+
+        invoice =
+          await Invoice.create({
+            invoiceNumber,
+
+            customer,
+
+            customerName,
+
+            phone,
+
+            items: formattedItems,
+
+            subtotal,
+
+            discount: finalDiscount,
+
+            totalAmount,
+
+            paidAmount:
+              status === 'paid'
+                ? totalAmount
+                : 0,
+
+            status,
+
+            dueDate:
+              new Date(dueDate),
+
+            notes,
+          });
+
+      } else {
         throw error;
       }
     }
 
+    // ------------------------------------------------------
+    // REDUCE PRODUCT STOCK
+    // ------------------------------------------------------
+
+    for (const item of formattedItems) {
+
+      const updatedProduct =
+        await Product.findOneAndUpdate(
+          {
+            _id: item.product,
+
+            // Prevent negative stock
+            stock: {
+              $gte: item.quantity,
+            },
+          },
+          {
+            $inc: {
+              stock: -item.quantity,
+            },
+          },
+          {
+            new: true,
+          }
+        );
+
+      if (!updatedProduct) {
+
+        // IMPORTANT:
+        // Invoice has already been created.
+        // In a production system, use a MongoDB transaction
+        // to make invoice + stock update atomic.
+
+        return res.status(400).json({
+          success: false,
+          message:
+            `Unable to reduce stock for "${item.description}". Please check stock availability.`,
+        });
+      }
+
+      console.log(
+        `STOCK REDUCED: ${updatedProduct.name} | ` +
+        `Sold: ${item.quantity} | ` +
+        `Remaining: ${updatedProduct.stock}`
+      );
+    }
 
     // ------------------------------------------------------
     // Populate customer
     // ------------------------------------------------------
 
-    const populated = await invoice.populate(
-      'customer',
-      'name email company phone address'
-    );
-
+    const populated =
+      await invoice.populate(
+        'customer',
+        'name email company phone address'
+      );
 
     // ------------------------------------------------------
     // Response
@@ -334,34 +463,54 @@ const createInvoice = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: 'Invoice created successfully',
+      message:
+        'Invoice created successfully',
       data: populated,
     });
 
   } catch (error) {
 
-    console.error('CREATE INVOICE ERROR:', error);
+    console.error(
+      'CREATE INVOICE ERROR:',
+      error
+    );
 
-    if (error.name === 'ValidationError') {
+    if (
+      error.name ===
+      'ValidationError'
+    ) {
       return res.status(400).json({
         success: false,
-        message: Object.values(error.errors)
-          .map((err) => err.message)
-          .join(', '),
-        errors: error.errors,
+
+        message:
+          Object.values(error.errors)
+            .map(
+              (err) =>
+                err.message
+            )
+            .join(', '),
+
+        errors:
+          error.errors,
       });
     }
 
-    if (error.name === 'CastError') {
+    if (
+      error.name ===
+      'CastError'
+    ) {
       return res.status(400).json({
         success: false,
-        message: `Invalid ${error.path}: ${error.value}`,
+
+        message:
+          `Invalid ${error.path}: ${error.value}`,
       });
     }
 
     next(error);
   }
 };
+
 
 
 // ==========================================================

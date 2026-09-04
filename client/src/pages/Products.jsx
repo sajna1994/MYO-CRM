@@ -33,6 +33,7 @@ const Products = () => {
   const [categories, setCategories] = useState([]);
   const [saving, setSaving] = useState(false);
   const [preview, setPreview] = useState(null);
+const [imageFile, setImageFile] = useState(null);
 
   const [form] = Form.useForm();
 
@@ -98,42 +99,51 @@ const Products = () => {
   // ─────────────────────────────────────────────
   // PRODUCT SUBMIT
   // ─────────────────────────────────────────────
-  const submit = async (values) => {
-    setSaving(true);
+// Update submit function
+const submit = async (values) => {
+  setSaving(true);
 
-    try {
-      if (editingProduct?._id) {
-        await API.put(`/products/${editingProduct._id}`, values);
+  try {
+    const productData = {
+      ...values,
+      image: imageFile || preview || '', // Save base64 image
+    };
 
-        message.success('Product updated successfully');
-      } else {
-        await API.post('/products', {
-          ...values,
-          sku: `PRD-${Date.now().toString().slice(-6)}`,
-        });
-
-        message.success('Product saved successfully');
-      }
-
-      navigate('/quotes');
-    } catch (error) {
-      message.error(
-        error.response?.data?.message || 'Unable to save product'
-      );
-    } finally {
-      setSaving(false);
+    if (editingProduct?._id) {
+      await API.put(`/products/${editingProduct._id}`, productData);
+      message.success('Product updated successfully');
+    } else {
+      await API.post('/products', {
+        ...productData,
+        sku: `PRD-${Date.now().toString().slice(-6)}`,
+      });
+      message.success('Product saved successfully');
     }
-  };
+
+    navigate('/quotes');
+  } catch (error) {
+    message.error(
+      error.response?.data?.message || 'Unable to save product'
+    );
+  } finally {
+    setSaving(false);
+  }
+};
 
   // ─────────────────────────────────────────────
   // IMAGE
   // ─────────────────────────────────────────────
-  const selectImage = (file) => {
-    setPreview(URL.createObjectURL(file));
-
-    // Prevent automatic upload
-    return false;
+ // Update selectImage function
+const selectImage = (file) => {
+  // Convert file to base64
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    setPreview(e.target.result);
+    setImageFile(e.target.result); // Store base64 string
   };
+  reader.readAsDataURL(file);
+  return false; // Prevent automatic upload
+};
 
   // ─────────────────────────────────────────────
   // OPEN CATEGORY MODAL

@@ -43,7 +43,7 @@ const InvoiceSchema = new mongoose.Schema(
     customer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Customer',
-      default: null,
+      required: false,
     },
 
     // Needed for Walk-in Customer

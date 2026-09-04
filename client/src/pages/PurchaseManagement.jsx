@@ -18,6 +18,7 @@ import {
   Row,
   Select,
   Space,
+    Switch, 
   Table,
   Tooltip,
   Typography,
@@ -30,6 +31,8 @@ import {
   EyeOutlined,
   PlusOutlined,
   SearchOutlined,
+    SettingOutlined, // Add this
+
 } from '@ant-design/icons';
 
 import dayjs from 'dayjs';
@@ -217,7 +220,120 @@ const fetchSuppliers = useCallback(async () => {
     setSuppliersLoading(false);
   }
 }, []);
+// =========================================================
+// CATEGORY STATE (Add these after existing categories state)
+// =========================================================
 
+const [categoryModalVisible, setCategoryModalVisible] = useState(false);
+const [categorySaving, setCategorySaving] = useState(false);
+const [categoryForm] = Form.useForm();
+const [editingCategoryId, setEditingCategoryId] = useState(null);
+
+// =========================================================
+// OPEN ADD CATEGORY MODAL
+// =========================================================
+
+const openCategoryModal = () => {
+  categoryForm.resetFields();
+  setEditingCategoryId(null);
+  setCategoryModalVisible(true);
+};
+
+// =========================================================
+// CLOSE CATEGORY MODAL
+// =========================================================
+
+const closeCategoryModal = () => {
+  setCategoryModalVisible(false);
+  setEditingCategoryId(null);
+  categoryForm.resetFields();
+};
+
+// =========================================================
+// CREATE/UPDATE CATEGORY
+// =========================================================
+
+const handleCreateCategory = async (values) => {
+  setCategorySaving(true);
+
+  try {
+    const payload = {
+      name: values.name?.trim(),
+      description: values.description?.trim() || '',
+      isActive: values.isActive !== undefined ? values.isActive : true,
+    };
+
+    let response;
+    let newCategory;
+
+    if (editingCategoryId) {
+      // Update existing category
+      response = await API.put(`/categories/${editingCategoryId}`, payload);
+      newCategory = response.data?.data || response.data;
+      message.success('Category updated successfully');
+    } else {
+      // Create new category
+      response = await API.post('/categories', payload);
+      newCategory = response.data?.data || response.data;
+      message.success('Category added successfully');
+    }
+
+    if (!newCategory?._id) {
+      throw new Error('Category was created but no ID was returned');
+    }
+
+    // Refresh categories list
+    await fetchCategories();
+
+    // If this is called from product form, update the product form's category field
+    if (productForm) {
+      productForm.setFieldValue('category', newCategory._id);
+    }
+
+    closeCategoryModal();
+
+  } catch (error) {
+    console.error('CATEGORY ERROR:', error);
+    message.error(
+      error.response?.data?.message || 
+      error.message || 
+      'Failed to save category'
+    );
+  } finally {
+    setCategorySaving(false);
+  }
+};
+
+// =========================================================
+// EDIT CATEGORY
+// =========================================================
+
+const handleEditCategory = (category) => {
+  setEditingCategoryId(category._id);
+  categoryForm.setFieldsValue({
+    name: category.name,
+    description: category.description || '',
+    isActive: category.isActive !== false,
+  });
+  setCategoryModalVisible(true);
+};
+
+// =========================================================
+// DELETE CATEGORY
+// =========================================================
+
+const handleDeleteCategory = async (categoryId) => {
+  try {
+    await API.delete(`/categories/${categoryId}`);
+    message.success('Category deleted successfully');
+    await fetchCategories();
+  } catch (error) {
+    console.error('DELETE CATEGORY ERROR:', error);
+    message.error(
+      error.response?.data?.message || 'Failed to delete category'
+    );
+  }
+};
   // =========================================================
   // FETCH PRODUCTS
   // =========================================================
@@ -348,10 +464,12 @@ useEffect(() => {
   fetchPurchases(1, '');
   fetchProducts();
   fetchSuppliers();
+   fetchCategories();
 }, [
   fetchPurchases,
   fetchProducts,
   fetchSuppliers,
+   fetchCategories,
 ]);
 
 
@@ -724,9 +842,14 @@ supplier:
   // SAVE PURCHASE
   // =========================================================
 
-  const handleSubmit = async (
-    values
-  ) => {
+  const handleSubmit = async (values) => {
+  console.log('========== PURCHASE FORM ==========');
+  console.log('All values:', values);
+  console.log('Supplier:', values.supplier);
+  console.log('Supplier type:', typeof values.supplier);
+  console.log('===================================');
+
+  
     if (
       !values.items?.length
     ) {
@@ -813,30 +936,33 @@ supplier:
           0
         );
 
-      const payload = {
-        invoiceNumber:
-          values.invoiceNumber?.trim(),
+     const supplierId = values.supplier;
 
-        supplier:
-          values.supplier?.trim(),
+if (!supplierId) {
+  message.error('Please select a supplier');
+  return;
+}
 
-        items:
-          formattedItems,
+const payload = {
+  invoiceNumber:
+    values.invoiceNumber?.trim(),
 
-        totalAmount,
+  supplier: String(supplierId),
 
-        date: values.date
-          ? values.date.toISOString()
-          : new Date().toISOString(),
+  items: formattedItems,
 
-        status:
-          values.status ||
-          'received',
+  totalAmount,
 
-        notes:
-          values.notes?.trim() ||
-          '',
-      };
+  date: values.date
+    ? values.date.toISOString()
+    : new Date().toISOString(),
+
+  status:
+    values.status || 'received',
+
+  notes:
+    values.notes?.trim() || '',
+};
 
       if (editingId) {
         await API.put(
@@ -1029,7 +1155,70 @@ supplier:
       formatCurrency,
       getPurchasePrice,
     ]);
+// =========================================================
+// CATEGORY TABLE COLUMNS
+// =========================================================
 
+const categoryColumns = useMemo(() => [
+  {
+    title: 'S.No.',
+    key: 'serialNumber',
+    width: 60,
+    align: 'center',
+    render: (_, __, index) => index + 1,
+  },
+  {
+    title: 'Category Name',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: 'Description',
+    dataIndex: 'description',
+    key: 'description',
+    render: (text) => text || '-',
+  },
+  {
+    title: 'Status',
+    dataIndex: 'isActive',
+    key: 'isActive',
+    align: 'center',
+    render: (isActive) => (
+      <span style={{ color: isActive !== false ? '#52c41a' : '#ff4d4f' }}>
+        {isActive !== false ? 'Active' : 'Inactive'}
+      </span>
+    ),
+  },
+  {
+    title: 'Action',
+    key: 'action',
+    width: 120,
+    align: 'center',
+    render: (_, record) => (
+      <Space size="small">
+        <Tooltip title="Edit">
+          <Button
+            type="text"
+            icon={<EditOutlined />}
+            onClick={() => handleEditCategory(record)}
+          />
+        </Tooltip>
+        <Popconfirm
+          title="Delete this category?"
+          description="This action cannot be undone."
+          okText="Delete"
+          cancelText="Cancel"
+          okButtonProps={{ danger: true }}
+          onConfirm={() => handleDeleteCategory(record._id)}
+        >
+          <Tooltip title="Delete">
+            <Button type="text" danger icon={<DeleteOutlined />} />
+          </Tooltip>
+        </Popconfirm>
+      </Space>
+    ),
+  },
+], []);
   // =========================================================
   // TABLE COLUMNS
   // =========================================================
@@ -1120,14 +1309,27 @@ supplier:
         ),
       },
 
-      {
-        title:
-          'Supplier',
-        dataIndex:
-          'supplier',
-        width: 180,
-      },
-
+    {
+  title: 'Supplier',
+  dataIndex: 'supplier',
+  width: 180,
+  render: (supplier) => {
+    if (!supplier) return 'N/A';
+    
+    // If supplier is an object with name
+    if (typeof supplier === 'object' && supplier.name) {
+      return supplier.name;
+    }
+    
+    // If supplier is a string (ID), look it up
+    if (typeof supplier === 'string') {
+      const foundSupplier = suppliers.find(s => String(s._id) === String(supplier));
+      return foundSupplier ? foundSupplier.name : supplier;
+    }
+    
+    return String(supplier);
+  },
+},
       {
         title:
           'Total Price',
@@ -1461,8 +1663,65 @@ supplier:
 
           </Row>
 
-          {/* ===================================================== SUPPLIER ===================================================== */} <Form.Item name="supplier" label="Supplier" rules={[ { required: true, message: 'Please select a supplier', }, ]} > <Select showSearch allowClear loading={suppliersLoading} placeholder="Search / Select Supplier" optionFilterProp="label" options={suppliers.map( (supplier) => ({ value: supplier._id, label: supplier.phone ? `${supplier.name} - ${supplier.phone}` : supplier.name, }) )} dropdownRender={(menu) => ( <> {menu} <div style={{ borderTop: '1px solid #f0f0f0', padding: '8px 12px', }} > <Button type="link" icon={ <PlusOutlined /> } onClick={ openSupplierModal } > Add New Supplier </Button> </div> </> )} /> </Form.Item>
+{/* =====================================================
+    SUPPLIER
+===================================================== */}
 
+<Form.Item
+  name="supplier"
+  label="Supplier"
+  rules={[
+    {
+      required: true,
+      message: 'Please select a supplier',
+    },
+  ]}
+>
+  <Select
+    showSearch
+    allowClear
+    loading={suppliersLoading}
+    placeholder="Search / Select Supplier"
+    optionFilterProp="label"
+
+    options={suppliers.map((supplier) => ({
+      value: String(supplier._id),
+      label: supplier.phone
+        ? `${supplier.name} - ${supplier.phone}`
+        : supplier.name,
+    }))}
+
+    onChange={(value) => {
+      console.log('Selected Supplier ID:', value);
+
+      form.setFieldValue(
+        'supplier',
+        value ? String(value) : undefined
+      );
+    }}
+
+    dropdownRender={(menu) => (
+      <>
+        {menu}
+
+        <div
+          style={{
+            borderTop: '1px solid #f0f0f0',
+            padding: '8px 12px',
+          }}
+        >
+          <Button
+            type="link"
+            icon={<PlusOutlined />}
+            onClick={openSupplierModal}
+          >
+            Add New Supplier
+          </Button>
+        </div>
+      </>
+    )}
+  />
+</Form.Item>
           {/* PRODUCTS */}
 
           <Form.List name="items">
@@ -1860,45 +2119,48 @@ supplier:
             </Col>
 
             <Col span={12}>
-              <Form.Item
-                name="category"
-                label="Category"
-                rules={[
-                  {
-                    required:
-                      true,
-                    message:
-                      'Please select category',
-                  },
-                ]}
-              >
-                <Select
-                  showSearch
-                  loading={
-                    categoriesLoading
-                  }
-                  optionFilterProp="label"
-                  placeholder="Select category"
-                  options={categories
-                    .filter(
-                      (
-                        category
-                      ) =>
-                        category.isActive !==
-                        false
-                    )
-                    .map(
-                      (
-                        category
-                      ) => ({
-                        value:
-                          category._id,
-                        label:
-                          category.name,
-                      })
-                    )}
-                />
-              </Form.Item>
+             <Form.Item
+  name="category"
+  label="Category"
+  rules={[
+    {
+      required: true,
+      message: 'Please select category',
+    },
+  ]}
+>
+  <Select
+    showSearch
+    loading={categoriesLoading}
+    optionFilterProp="label"
+    placeholder="Select category"
+    options={categories
+      .filter((category) => category.isActive !== false)
+      .map((category) => ({
+        value: category._id,
+        label: category.name,
+      }))}
+    dropdownRender={(menu) => (
+      <>
+        {menu}
+        <div
+          style={{
+            borderTop: '1px solid #f0f0f0',
+            padding: '8px 12px',
+          }}
+        >
+          <Button
+            type="link"
+            icon={<PlusOutlined />}
+            onClick={openCategoryModal}
+          >
+            Add New Category
+          </Button>
+        </div>
+      </>
+    )}
+  />
+</Form.Item>
             </Col>
 
             <Col span={12}>
@@ -2051,212 +2313,105 @@ supplier:
           VIEW PURCHASE MODAL
       ===================================================== */}
 
-      <Modal
-        title="Purchase Details"
-        open={
-          viewModalVisible
-        }
-        onCancel={
-          closeViewModal
-        }
-        footer={[
-          <Button
-            key="close"
-            onClick={
-              closeViewModal
-            }
-          >
-            Close
-          </Button>,
-        ]}
-        width={850}
-      >
+    <Modal
+  title="Purchase Details"
+  open={viewModalVisible}
+  onCancel={closeViewModal}
+  footer={[
+    <Button
+      key="close"
+      onClick={closeViewModal}
+    >
+      Close
+    </Button>,
+  ]}
+  width={850}
+>
+  {selectedPurchase && (
+    <div className="purchase-details">
+      <div className="purchase-info-grid">
+        <div className="detail-row">
+          <span>Date</span>
+          <strong>
+            {dayjs(selectedPurchase.date).format('DD-MM-YYYY')}
+          </strong>
+        </div>
 
-        {selectedPurchase && (
-          <div className="purchase-details">
+        <div className="detail-row">
+          <span>Invoice No.</span>
+          <strong>{selectedPurchase.invoiceNumber}</strong>
+        </div>
 
-            <div className="purchase-info-grid">
+        <div className="detail-row">
+          <span>Supplier</span>
+          <strong>
+            {typeof selectedPurchase.supplier === 'object' && selectedPurchase.supplier !== null
+              ? selectedPurchase.supplier.name || 'N/A'
+              : selectedPurchase.supplier || 'N/A'}
+          </strong>
+        </div>
 
-              <div className="detail-row">
-                <span>Date</span>
+        <div className="detail-row">
+          <span>Status</span>
+          <strong>{selectedPurchase.status}</strong>
+        </div>
+      </div>
 
-                <strong>
-                  {dayjs(
-                    selectedPurchase.date
-                  ).format(
-                    'DD-MM-YYYY'
-                  )}
-                </strong>
-              </div>
+      <div className="purchase-products-section">
+        <h3>Products</h3>
+        <Table
+          bordered
+          pagination={false}
+          rowKey={(record, index) => `${record.product}-${index}`}
+          dataSource={selectedPurchase.items || []}
+          columns={[
+            {
+              title: '#',
+              width: 60,
+              align: 'center',
+              render: (_, __, index) => index + 1,
+            },
+            {
+              title: 'Product',
+              dataIndex: 'product',
+            },
+            {
+              title: 'Quantity',
+              dataIndex: 'quantity',
+              align: 'center',
+            },
+            {
+              title: 'Unit Price',
+              dataIndex: 'unitPrice',
+              align: 'right',
+              render: (value) => formatCurrency(value),
+            },
+            {
+              title: 'Total Price',
+              dataIndex: 'totalPrice',
+              align: 'right',
+              render: (value) => (
+                <strong>{formatCurrency(value)}</strong>
+              ),
+            },
+          ]}
+        />
+      </div>
 
-              <div className="detail-row">
-                <span>
-                  Invoice No.
-                </span>
+      <div className="purchase-grand-total">
+        <span>Grand Total</span>
+        <strong>{formatCurrency(selectedPurchase.totalAmount)}</strong>
+      </div>
 
-                <strong>
-                  {
-                    selectedPurchase.invoiceNumber
-                  }
-                </strong>
-              </div>
-
-              <div className="detail-row">
-                <span>
-                  Supplier
-                </span>
-
-                <strong>
-                  {
-                    selectedPurchase.supplier
-                  }
-                </strong>
-              </div>
-
-              <div className="detail-row">
-                <span>Status</span>
-
-                <strong>
-                  {
-                    selectedPurchase.status
-                  }
-                </strong>
-              </div>
-
-            </div>
-
-            <div className="purchase-products-section">
-
-              <h3>Products</h3>
-
-              <Table
-                bordered
-                pagination={
-                  false
-                }
-                rowKey={(
-                  record,
-                  index
-                ) =>
-                  `${record.product}-${index}`
-                }
-                dataSource={
-                  selectedPurchase.items ||
-                  []
-                }
-                columns={[
-                  {
-                    title: '#',
-                    width: 60,
-                    align:
-                      'center',
-
-                    render: (
-                      _,
-                      __,
-                      index
-                    ) =>
-                      index + 1,
-                  },
-
-                  {
-                    title:
-                      'Product',
-
-                    dataIndex:
-                      'product',
-                  },
-
-                  {
-                    title:
-                      'Quantity',
-
-                    dataIndex:
-                      'quantity',
-
-                    align:
-                      'center',
-                  },
-
-                  {
-                    title:
-                      'Unit Price',
-
-                    dataIndex:
-                      'unitPrice',
-
-                    align:
-                      'right',
-
-                    render:
-                      (
-                        value
-                      ) =>
-                        formatCurrency(
-                          value
-                        ),
-                  },
-
-                  {
-                    title:
-                      'Total Price',
-
-                    dataIndex:
-                      'totalPrice',
-
-                    align:
-                      'right',
-
-                    render:
-                      (
-                        value
-                      ) => (
-                        <strong>
-                          {formatCurrency(
-                            value
-                          )}
-                        </strong>
-                      ),
-                  },
-                ]}
-              />
-
-            </div>
-
-            <div className="purchase-grand-total">
-
-              <span>
-                Grand Total
-              </span>
-
-              <strong>
-                {formatCurrency(
-                  selectedPurchase.totalAmount
-                )}
-              </strong>
-
-            </div>
-
-            {selectedPurchase.notes && (
-              <div className="detail-notes">
-
-                <span>
-                  Notes
-                </span>
-
-                <p>
-                  {
-                    selectedPurchase.notes
-                  }
-                </p>
-
-              </div>
-            )}
-
-          </div>
-        )}
-
-      </Modal>
+      {selectedPurchase.notes && (
+        <div className="detail-notes">
+          <span>Notes</span>
+          <p>{selectedPurchase.notes}</p>
+        </div>
+      )}
+    </div>
+  )}
+</Modal>
 
 {/* =====================================================
     ADD NEW SUPPLIER MODAL
@@ -2513,7 +2668,121 @@ supplier:
 
   </Form>
 </Modal>
+{/* =====================================================
+    CATEGORY MANAGEMENT MODAL
+===================================================== */}
 
+<Modal
+  title={
+    <Space>
+      {editingCategoryId ? 'Edit Category' : 'Add New Category'}
+    </Space>
+  }
+  open={categoryModalVisible}
+  onCancel={closeCategoryModal}
+  width={850}
+  footer={null}
+  destroyOnClose
+>
+  {/* Category Form */}
+  <div
+    style={{
+      background: '#fafafa',
+      padding: 16,
+      borderRadius: 10,
+      marginBottom: 20,
+    }}
+  >
+    <h3 style={{ marginTop: 0 }}>
+      {editingCategoryId ? 'Edit Category' : 'Add New Category'}
+    </h3>
+
+    <Form
+      form={categoryForm}
+      layout="vertical"
+      onFinish={handleCreateCategory}
+    >
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr 120px auto',
+          gap: 12,
+          alignItems: 'end',
+        }}
+      >
+        <Form.Item
+          name="name"
+          label="Category Name"
+          rules={[
+            {
+              required: true,
+              message: 'Enter category name',
+            },
+            {
+              max: 100,
+              message: 'Maximum 100 characters',
+            },
+          ]}
+          style={{ marginBottom: 0 }}
+        >
+          <Input placeholder="e.g. Protein" />
+        </Form.Item>
+
+        <Form.Item
+          name="description"
+          label="Description"
+          style={{ marginBottom: 0 }}
+        >
+          <Input placeholder="Category description" />
+        </Form.Item>
+
+        <Form.Item
+          name="isActive"
+          label="Active"
+          valuePropName="checked"
+          initialValue={true}
+          style={{ marginBottom: 0 }}
+        >
+          <Switch />
+        </Form.Item>
+
+        <Space>
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={categorySaving}
+            icon={editingCategoryId ? <EditOutlined /> : <PlusOutlined />}
+          >
+            {editingCategoryId ? 'Update' : 'Add'}
+          </Button>
+
+          {editingCategoryId && (
+            <Button
+              onClick={() => {
+                setEditingCategoryId(null);
+                categoryForm.resetFields();
+              }}
+            >
+              Cancel
+            </Button>
+          )}
+        </Space>
+      </div>
+    </Form>
+  </div>
+
+  {/* Category List */}
+  <Table
+    columns={categoryColumns}
+    dataSource={categories}
+    rowKey="_id"
+    pagination={{
+      pageSize: 6,
+    }}
+    size="middle"
+    loading={categoriesLoading}
+  />
+</Modal>
 
     </div>
   );

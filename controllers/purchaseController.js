@@ -1,6 +1,7 @@
 
 const mongoose = require('mongoose');
 const Purchase = require('../models/Purchase');
+const Product = require('../models/Product'); // ← ADD THIS IMPORT
 
 // ============================================================
 // GET ALL PURCHASES
@@ -241,11 +242,7 @@ const getPurchase = async (
 // CREATE PURCHASE
 // ============================================================
 
-const createPurchase = async (
-  req,
-  res,
-  next
-) => {
+const createPurchase = async (req, res, next) => {
   try {
     const {
       invoiceNumber,
@@ -300,109 +297,90 @@ const createPurchase = async (
     // --------------------------------------------------------
     // FORMAT ITEMS
     // --------------------------------------------------------
-    const formattedItems =
-      items.map((item, index) => {
-        const quantity =
-          Number(item.quantity);
+    const formattedItems = items.map((item, index) => {
+      const quantity = Number(item.quantity);
+      const unitPrice = Number(item.unitPrice);
 
-        const unitPrice =
-          Number(item.unitPrice);
+      if (!item.product?.trim()) {
+        throw new Error(`Product is required for item ${index + 1}`);
+      }
 
-        if (!item.product?.trim()) {
-          throw new Error(
-            `Product is required for item ${index + 1}`
-          );
-        }
+      if (!Number.isFinite(quantity) || quantity <= 0) {
+        throw new Error(`Invalid quantity for ${item.product}`);
+      }
 
-        if (
-          !Number.isFinite(quantity) ||
-          quantity <= 0
-        ) {
-          throw new Error(
-            `Invalid quantity for ${item.product}`
-          );
-        }
+      if (!Number.isFinite(unitPrice) || unitPrice <= 0) {
+        throw new Error(`Invalid unit price for ${item.product}`);
+      }
 
-        if (
-          !Number.isFinite(unitPrice) ||
-          unitPrice <= 0
-        ) {
-          throw new Error(
-            `Invalid unit price for ${item.product}`
-          );
-        }
-
-        return {
-          product: item.product.trim(),
-
-          quantity,
-
-          unitPrice,
-
-          totalPrice:
-            quantity * unitPrice,
-        };
-      });
+      return {
+        product: item.product.trim(),
+        quantity,
+        unitPrice,
+        totalPrice: quantity * unitPrice,
+      };
+    });
 
     // --------------------------------------------------------
     // CALCULATE TOTAL
     // --------------------------------------------------------
-    const totalAmount =
-      formattedItems.reduce(
-        (sum, item) =>
-          sum + item.totalPrice,
-        0
-      );
+    const totalAmount = formattedItems.reduce(
+      (sum, item) => sum + item.totalPrice,
+      0
+    );
 
     // --------------------------------------------------------
     // CREATE PURCHASE
     // --------------------------------------------------------
-    const purchase =
-      await Purchase.create({
-        invoiceNumber:
-          invoiceNumber.trim(),
+    const purchase = await Purchase.create({
+      invoiceNumber: invoiceNumber.trim(),
+      supplier,
+      items: formattedItems,
+      totalAmount,
+      date: date || new Date(),
+      status: status || 'received',
+      notes: notes?.trim() || '',
+      createdBy: req.user?._id || null,
+    });
+// --------------------------------------------------------
+    // UPDATE PRODUCT STOCK (NEW CODE)
+    // --------------------------------------------------------
 
-        // IMPORTANT:
-        // Supplier is now ObjectId
-        supplier,
-
-        items: formattedItems,
-
-        totalAmount,
-
-        date:
-          date || new Date(),
-
-        status:
-          status || 'received',
-
-        notes:
-          notes?.trim() || '',
-
-        createdBy:
-          req.user?._id || null,
+    for (const item of formattedItems) {
+      // Find product by name (case insensitive)
+      const product = await Product.findOne({
+        name: { $regex: new RegExp(`^${item.product}$`, 'i') }
       });
 
+      if (product) {
+        // Update stock
+        await Product.findByIdAndUpdate(
+          product._id,
+          {
+            $inc: { stock: item.quantity }
+          },
+          { new: true }
+        );
+        
+        console.log(
+          `STOCK UPDATED: ${product.name} | ` +
+          `Added: ${item.quantity} | ` +
+          `New Stock: ${product.stock + item.quantity}`
+        );
+      } else {
+        console.warn(`Product "${item.product}" not found in inventory`);
+      }
+    }
     // --------------------------------------------------------
     // RETURN POPULATED PURCHASE
     // --------------------------------------------------------
-    const populatedPurchase =
-      await Purchase.findById(
-        purchase._id
-      )
-        .populate(
-          'supplier',
-          'name contactPerson phone email landline website gstNumber address notes'
-        )
-        .populate(
-          'createdBy',
-          'name email'
-        );
+    const populatedPurchase = await Purchase.findById(purchase._id)
+      .populate('supplier', 'name contactPerson phone email landline website gstNumber address notes')
+      .populate('createdBy', 'name email');
 
     res.status(201).json({
       success: true,
-      message:
-        'Purchase created successfully',
+      message: 'Purchase created successfully',
       data: populatedPurchase,
     });
   } catch (error) {
@@ -415,16 +393,9 @@ const createPurchase = async (
 // UPDATE PURCHASE
 // ============================================================
 
-const updatePurchase = async (
-  req,
-  res,
-  next
-) => {
+const updatePurchase = async (req, res, next) => {
   try {
-    const purchase =
-      await Purchase.findById(
-        req.params.id
-      );
+    const purchase = await Purchase.findById(req.params.id);
 
     if (!purchase) {
       return res.status(404).json({
@@ -482,113 +453,103 @@ const updatePurchase = async (
           'At least one product is required',
       });
     }
-
+ // --------------------------------------------------------
+    // REVERT OLD STOCK (remove old purchase quantities)
     // --------------------------------------------------------
-    // FORMAT ITEMS
-    // --------------------------------------------------------
-    const formattedItems =
-      items.map((item, index) => {
-        const quantity =
-          Number(item.quantity);
 
-        const unitPrice =
-          Number(item.unitPrice);
-
-        if (!item.product?.trim()) {
-          throw new Error(
-            `Product is required for item ${index + 1}`
-          );
-        }
-
-        if (
-          !Number.isFinite(quantity) ||
-          quantity <= 0
-        ) {
-          throw new Error(
-            `Invalid quantity for ${item.product}`
-          );
-        }
-
-        if (
-          !Number.isFinite(unitPrice) ||
-          unitPrice <= 0
-        ) {
-          throw new Error(
-            `Invalid unit price for ${item.product}`
-          );
-        }
-
-        return {
-          product:
-            item.product.trim(),
-
-          quantity,
-
-          unitPrice,
-
-          totalPrice:
-            quantity * unitPrice,
-        };
+    for (const oldItem of purchase.items) {
+      const product = await Product.findOne({
+        name: { $regex: new RegExp(`^${oldItem.product}$`, 'i') }
       });
+
+      if (product) {
+        await Product.findByIdAndUpdate(
+          product._id,
+          {
+            $inc: { stock: -oldItem.quantity } // Remove old stock
+          },
+          { new: true }
+        );
+      }
+    }
+
+    // --------------------------------------------------------
+    // FORMAT NEW ITEMS
+    // --------------------------------------------------------
+    const formattedItems = items.map((item, index) => {
+      const quantity = Number(item.quantity);
+      const unitPrice = Number(item.unitPrice);
+
+      if (!item.product?.trim()) {
+        throw new Error(`Product is required for item ${index + 1}`);
+      }
+
+      if (!Number.isFinite(quantity) || quantity <= 0) {
+        throw new Error(`Invalid quantity for ${item.product}`);
+      }
+
+      if (!Number.isFinite(unitPrice) || unitPrice <= 0) {
+        throw new Error(`Invalid unit price for ${item.product}`);
+      }
+
+      return {
+        product: item.product.trim(),
+        quantity,
+        unitPrice,
+        totalPrice: quantity * unitPrice,
+      };
+    });
 
     // --------------------------------------------------------
     // CALCULATE TOTAL
     // --------------------------------------------------------
-    const totalAmount =
-      formattedItems.reduce(
-        (sum, item) =>
-          sum + item.totalPrice,
-        0
-      );
+    const totalAmount = formattedItems.reduce(
+      (sum, item) => sum + item.totalPrice,
+      0
+    );
 
     // --------------------------------------------------------
     // UPDATE PURCHASE
     // --------------------------------------------------------
-    purchase.invoiceNumber =
-      invoiceNumber.trim();
-
-    // IMPORTANT:
-    // Supplier is ObjectId, NOT string
-    purchase.supplier =
-      supplier;
-
-    purchase.items =
-      formattedItems;
-
-    purchase.totalAmount =
-      totalAmount;
-
-    purchase.date =
-      date || purchase.date;
-
-    purchase.status =
-      status || purchase.status;
-
-    purchase.notes =
-      notes?.trim() || '';
+    purchase.invoiceNumber = invoiceNumber.trim();
+    purchase.supplier = supplier;
+    purchase.items = formattedItems;
+    purchase.totalAmount = totalAmount;
+    purchase.date = date || purchase.date;
+    purchase.status = status || purchase.status;
+    purchase.notes = notes?.trim() || '';
 
     await purchase.save();
 
     // --------------------------------------------------------
+    // ADD NEW STOCK
+    // --------------------------------------------------------
+    for (const item of formattedItems) {
+      const product = await Product.findOne({
+        name: { $regex: new RegExp(`^${item.product}$`, 'i') }
+      });
+
+      if (product) {
+        await Product.findByIdAndUpdate(
+          product._id,
+          {
+            $inc: { stock: item.quantity } // Add new stock
+          },
+          { new: true }
+        );
+      }
+    }
+
+    // --------------------------------------------------------
     // RETURN POPULATED PURCHASE
     // --------------------------------------------------------
-    const populatedPurchase =
-      await Purchase.findById(
-        purchase._id
-      )
-        .populate(
-          'supplier',
-          'name contactPerson phone email landline website gstNumber address notes'
-        )
-        .populate(
-          'createdBy',
-          'name email'
-        );
+    const populatedPurchase = await Purchase.findById(purchase._id)
+      .populate('supplier', 'name contactPerson phone email landline website gstNumber address notes')
+      .populate('createdBy', 'name email');
 
     res.status(200).json({
       success: true,
-      message:
-        'Purchase updated successfully',
+      message: 'Purchase updated successfully',
       data: populatedPurchase,
     });
   } catch (error) {
@@ -596,34 +557,49 @@ const updatePurchase = async (
   }
 };
 
-
 // ============================================================
 // DELETE PURCHASE
 // ============================================================
 
-const deletePurchase = async (
-  req,
-  res,
-  next
-) => {
+const deletePurchase = async (req, res, next) => {
   try {
-    const purchase =
-      await Purchase.findByIdAndDelete(
-        req.params.id
-      );
+    const purchase = await Purchase.findById(req.params.id);
 
     if (!purchase) {
       return res.status(404).json({
         success: false,
-        message:
-          'Purchase not found',
+        message: 'Purchase not found',
       });
     }
 
+    // --------------------------------------------------------
+    // REMOVE STOCK BEFORE DELETING
+    // --------------------------------------------------------
+
+    for (const item of purchase.items) {
+      const product = await Product.findOne({
+        name: { $regex: new RegExp(`^${item.product}$`, 'i') }
+      });
+
+      if (product) {
+        await Product.findByIdAndUpdate(
+          product._id,
+          {
+            $inc: { stock: -item.quantity } // Remove stock
+          },
+          { new: true }
+        );
+      }
+    }
+
+    // --------------------------------------------------------
+    // DELETE PURCHASE
+    // --------------------------------------------------------
+    await Purchase.findByIdAndDelete(req.params.id);
+
     res.status(200).json({
       success: true,
-      message:
-        'Purchase deleted successfully',
+      message: 'Purchase deleted successfully',
     });
   } catch (error) {
     next(error);
