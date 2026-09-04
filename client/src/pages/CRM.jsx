@@ -11,6 +11,7 @@ import {
   Typography,
   Row,
   Col,
+  Card,
 } from 'antd';
 
 import {
@@ -20,6 +21,7 @@ import {
 } from '@ant-design/icons';
 
 import API from '../api/axios';
+import '../styles/CRM.css'; // We'll create this
 
 const { Title } = Typography;
 
@@ -42,7 +44,6 @@ const CRM = () => {
 
     try {
       const res = await API.get('/suppliers?limit=100');
-
       setSuppliers(res.data.data || []);
     } catch (error) {
       console.error(error);
@@ -65,7 +66,6 @@ const CRM = () => {
   const showModal = (record = null) => {
     if (record) {
       setEditingId(record._id);
-
       form.setFieldsValue({
         name: record.name,
         contactPerson: record.contactPerson,
@@ -105,11 +105,9 @@ const CRM = () => {
     try {
       if (editingId) {
         await API.put(`/suppliers/${editingId}`, values);
-
         message.success('Supplier updated successfully');
       } else {
         await API.post('/suppliers', values);
-
         message.success('Supplier added successfully');
       }
 
@@ -117,7 +115,6 @@ const CRM = () => {
       fetchSuppliers();
     } catch (error) {
       console.error(error);
-
       message.error(
         error.response?.data?.message || 'Unable to save supplier'
       );
@@ -133,13 +130,10 @@ const CRM = () => {
   const handleDelete = async (id) => {
     try {
       await API.delete(`/suppliers/${id}`);
-
       message.success('Supplier deleted successfully');
-
       fetchSuppliers();
     } catch (error) {
       console.error(error);
-
       message.error(
         error.response?.data?.message || 'Unable to delete supplier'
       );
@@ -155,44 +149,39 @@ const CRM = () => {
       title: 'Supplier Name',
       dataIndex: 'name',
       key: 'name',
+      render: (value) => <strong>{value}</strong>,
     },
-
     {
       title: 'Contact Person',
       dataIndex: 'contactPerson',
       key: 'contactPerson',
+      responsive: ['sm'],
     },
-
     {
       title: 'Phone',
       dataIndex: 'phone',
       key: 'phone',
+      responsive: ['md'],
     },
-
     {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
+      responsive: ['lg'],
     },
-
     {
       title: 'Action',
       key: 'action',
-      width: 130,
+      width: 120,
       align: 'center',
-
       render: (_, record) => (
-        <Space size="middle">
+        <Space size="small">
           <Button
             type="text"
             icon={<EditOutlined />}
             onClick={() => showModal(record)}
-            style={{
-              color: '#555',
-              fontSize: 20,
-            }}
+            className="supplier-edit-btn"
           />
-
           <Popconfirm
             title="Delete Supplier"
             description="Are you sure you want to delete this supplier?"
@@ -204,9 +193,7 @@ const CRM = () => {
               type="text"
               danger
               icon={<DeleteOutlined />}
-              style={{
-                fontSize: 20,
-              }}
+              className="supplier-delete-btn"
             />
           </Popconfirm>
         </Space>
@@ -225,21 +212,8 @@ const CRM = () => {
           PAGE HEADER
       ====================================================== */}
 
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: 25,
-        }}
-      >
-        <Title
-          level={2}
-          style={{
-            margin: 0,
-            fontWeight: 700,
-          }}
-        >
+      <div className="supplier-header">
+        <Title level={2} className="supplier-title">
           Suppliers Management
         </Title>
 
@@ -247,15 +221,7 @@ const CRM = () => {
           type="primary"
           icon={<PlusOutlined />}
           onClick={() => showModal()}
-          style={{
-            background: '#ff8a00',
-            borderColor: '#ff8a00',
-            height: 46,
-            padding: '0 25px',
-            fontSize: 16,
-            fontWeight: 600,
-            borderRadius: 8,
-          }}
+          className="supplier-add-btn"
         >
           Add Supplier
         </Button>
@@ -265,14 +231,7 @@ const CRM = () => {
           SUPPLIER TABLE
       ====================================================== */}
 
-      <div
-        style={{
-          background: '#fff',
-          padding: 20,
-          borderRadius: 10,
-          border: '1px solid #e5e5e5',
-        }}
-      >
+      <Card className="supplier-table-card">
         <Table
           dataSource={suppliers}
           columns={columns}
@@ -281,12 +240,18 @@ const CRM = () => {
           pagination={{
             pageSize: 5,
             showSizeChanger: false,
-            showTotal: (total, range) =>
-              `Showing ${range[0]} to ${range[1]} of ${total} entries`,
+            responsive: true,
+            showTotal: (total, range) => {
+              if (window.innerWidth < 480) {
+                return `${range[0]}-${range[1]} of ${total}`;
+              }
+              return `Showing ${range[0]} to ${range[1]} of ${total} entries`;
+            },
           }}
-          scroll={{ x: 800 }}
+          scroll={{ x: 600 }}
+          size="middle"
         />
-      </div>
+      </Card>
 
       {/* ======================================================
           ADD / EDIT SUPPLIER MODAL
@@ -297,16 +262,17 @@ const CRM = () => {
         open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
-        width={850}
+        width={window.innerWidth < 768 ? '95%' : 850}
         destroyOnClose
+        style={{ top: window.innerWidth < 768 ? 10 : 100 }}
+        className="supplier-modal"
       >
         <Form
           form={form}
           layout="vertical"
           onFinish={onFinish}
         >
-
-          <Row gutter={24}>
+          <Row gutter={[24, 0]}>
 
             {/* Supplier Name */}
             <Col xs={24} md={12}>
@@ -410,17 +376,6 @@ const CRM = () => {
               </Form.Item>
             </Col>
 
-            {/* Email Required */}
-            <Col xs={24} md={12}>
-              <Form.Item
-                name="emailRequired"
-                label="Email"
-                style={{ display: 'none' }}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-
             {/* GST Number */}
             <Col xs={24} md={12}>
               <Form.Item
@@ -449,6 +404,7 @@ const CRM = () => {
                 <Input.TextArea
                   rows={4}
                   placeholder="Enter Address"
+                  className="supplier-textarea"
                 />
               </Form.Item>
             </Col>
@@ -462,6 +418,7 @@ const CRM = () => {
                 <Input.TextArea
                   rows={4}
                   placeholder="Enter notes"
+                  className="supplier-textarea"
                 />
               </Form.Item>
             </Col>
@@ -469,20 +426,12 @@ const CRM = () => {
           </Row>
 
           {/* Buttons */}
-
           <Form.Item
-            style={{
-              marginBottom: 0,
-              textAlign: 'right',
-              marginTop: 10,
-            }}
+            className="supplier-modal-actions"
           >
             <Button
               onClick={handleCancel}
-              style={{
-                marginRight: 10,
-                minWidth: 100,
-              }}
+              className="supplier-modal-cancel"
             >
               Cancel
             </Button>
@@ -491,11 +440,7 @@ const CRM = () => {
               type="primary"
               htmlType="submit"
               loading={saving}
-              style={{
-                background: '#ff8a00',
-                borderColor: '#ff8a00',
-                minWidth: 140,
-              }}
+              className="supplier-modal-submit"
             >
               {editingId ? 'Update Supplier' : 'Save Supplier'}
             </Button>

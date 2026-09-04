@@ -25,7 +25,7 @@ import {
 
 import dayjs from 'dayjs';
 import API from '../api/axios';
-import '../styles/billing.css';
+import '../styles/SalesBilling.css'; // We'll create this
 
 const SalesBilling = () => {
   const navigate = useNavigate();
@@ -78,11 +78,9 @@ const SalesBilling = () => {
       const customersData = customersRes.data.data || [];
       setCustomers(customersData);
 
-      // Find or create walk-in customer
       let walkIn = customersData.find(c => c.name === 'Walk-in Customer');
       
       if (!walkIn) {
-        // Create walk-in customer if not exists
         const walkInRes = await API.post('/customers', {
           name: 'Walk-in Customer',
           email: 'walkin@example.com',
@@ -94,7 +92,7 @@ const SalesBilling = () => {
       }
       
       setWalkInCustomerId(walkIn._id);
-      setCustomerId(walkIn._id); // Set walk-in as default
+      setCustomerId(walkIn._id);
 
     } catch (error) {
       console.error(error);
@@ -155,7 +153,6 @@ const SalesBilling = () => {
     }
   };
 
-  // ✅ CORRECTED: Single customerOptions definition
   const customerOptions = useMemo(() => {
     if (!walkInCustomerId) return [];
 
@@ -165,7 +162,7 @@ const SalesBilling = () => {
         label: 'Walk-in Customer',
       },
       ...customers
-        .filter(c => c._id !== walkInCustomerId) // Remove duplicate walk-in
+        .filter(c => c._id !== walkInCustomerId)
         .map((customer) => ({
           value: customer._id,
           label: customer.company
@@ -197,8 +194,6 @@ const SalesBilling = () => {
       message.warning('Please select a product');
       return;
     }
-
-    console.log('SELECTED PRODUCT:', selectedProduct);
 
     const productId = selectedProduct._id;
     const productName = selectedProduct.name || selectedProduct.productName || 'Unnamed Product';
@@ -289,7 +284,7 @@ const SalesBilling = () => {
   }, [items]);
 
   const clearBill = () => {
-    setCustomerId(walkInCustomerId); // ✅ Reset to walk-in instead of null
+    setCustomerId(walkInCustomerId);
     setPhone('');
     setNotes('');
     setDiscount(0);
@@ -332,17 +327,12 @@ const SalesBilling = () => {
     setSaving(true);
 
     try {
-      // Get customer details
       let customerName = 'Walk-in Customer';
       let customerPhone = phone || '';
       let customerIdValue = customerId;
 
-      // If it's the walk-in customer, set customer to null (or keep the ID)
       if (customerId === walkInCustomerId) {
-        // Option 1: Send null (if backend allows)
         customerIdValue = null;
-        // Option 2: Send the walk-in customer ID (if backend requires it)
-        // customerIdValue = walkInCustomerId;
       } else {
         const customer = customers.find(c => c._id === customerId);
         if (customer) {
@@ -355,7 +345,7 @@ const SalesBilling = () => {
       const payload = {
         invoiceNumber,
         invoiceDate: invoiceDate.toISOString(),
-        customer: customerIdValue, // ✅ This will be null for walk-in
+        customer: customerIdValue,
         customerName: customerName,
         phone: customerPhone,
         items: items.map((item) => {
@@ -377,8 +367,6 @@ const SalesBilling = () => {
         dueDate: invoiceDate.toISOString(),
         notes: notes || '',
       };
-
-      console.log('FINAL INVOICE PAYLOAD:', JSON.stringify(payload, null, 2));
 
       const response = await API.post('/invoices', payload);
       const invoice = response.data?.data || response.data;
@@ -423,6 +411,7 @@ const SalesBilling = () => {
       dataIndex: 'unitPrice',
       key: 'unitPrice',
       render: (price) => Number(price || 0).toLocaleString('en-IN'),
+      responsive: ['sm'],
     },
     {
       title: 'Qty',
@@ -545,7 +534,7 @@ const SalesBilling = () => {
             />
           </div>
 
-          <div className="billing-field">
+          <div className="billing-field billing-field--notes">
             <label>Notes (Optional)</label>
             <Input.TextArea
               rows={7}
@@ -587,6 +576,8 @@ const SalesBilling = () => {
               rowKey="product"
               pagination={false}
               bordered
+              size="middle"
+              scroll={{ x: 500 }}
             />
           )}
         </Card>
@@ -605,7 +596,7 @@ const SalesBilling = () => {
             <strong>₹{subtotal.toLocaleString('en-IN')}</strong>
           </div>
 
-          <div className="billing-summary-row">
+          <div className="billing-summary-row billing-summary-row--discount">
             <span>Discount :</span>
             <InputNumber
               min={0}
@@ -715,6 +706,7 @@ const SalesBilling = () => {
         }}
         footer={null}
         destroyOnClose
+        width={window.innerWidth < 768 ? '95%' : 520}
       >
         <Form form={customerForm} layout="vertical" onFinish={handleCreateCustomer}>
           <Form.Item
@@ -744,7 +736,7 @@ const SalesBilling = () => {
             <Input placeholder="Enter company name" />
           </Form.Item>
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 20 }}>
+          <div className="billing-customer-modal-actions">
             <Button
               onClick={() => {
                 setCustomerModal(false);

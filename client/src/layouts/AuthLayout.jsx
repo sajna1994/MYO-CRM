@@ -8,6 +8,7 @@ import {
 
 import gymImage from '../images/gym.png';
 import bgImage from '../images/background.jpeg';
+import '../styles/AuthLayout.css'; // We'll create this
 
 const features = [
   [InboxOutlined, <>Stock<br />Management</>],
@@ -43,8 +44,8 @@ const AuthLayout = () => (
         </p>
 
         <div className="auth-features">
-          {features.map(([Icon, label]) => (
-            <div key={Icon.displayName || Icon.name}>
+          {features.map(([Icon, label], index) => (
+            <div key={index}>
               <Icon />
               <span>{label}</span>
             </div>

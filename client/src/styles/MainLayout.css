@@ -1,0 +1,450 @@
+/* MainLayout.css - Fully Responsive */
+
+/* ─────────────────────────────────────────────
+   GLOBAL LAYOUT
+   ───────────────────────────────────────────── */
+
+.studio-layout {
+  min-height: 100vh;
+  background: #f0f2f5;
+}
+
+/* ─────────────────────────────────────────────
+   SIDEBAR / SIDER
+   ───────────────────────────────────────────── */
+
+.studio-sider {
+  background: #001529 !important;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  position: fixed !important;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1000;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Hide scrollbar but keep functionality */
+.studio-sider::-webkit-scrollbar {
+  width: 0;
+  background: transparent;
+}
+
+.studio-sider {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* ─────────────────────────────────────────────
+   BRAND / LOGO
+   ───────────────────────────────────────────── */
+
+.studio-brand {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  min-height: 64px;
+}
+
+.studio-brand img {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.studio-brand span {
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.studio-sider.ant-layout-sider-collapsed .studio-brand span {
+  display: none;
+}
+
+.studio-sider.ant-layout-sider-collapsed .studio-brand {
+  justify-content: center;
+  padding: 16px 8px;
+}
+
+.studio-sider.ant-layout-sider-collapsed .studio-brand img {
+  width: 32px;
+  height: 32px;
+}
+
+/* ─────────────────────────────────────────────
+   MENU
+   ───────────────────────────────────────────── */
+
+.studio-sider .ant-menu {
+  flex: 1;
+  border-right: none;
+  background: transparent;
+  padding: 8px 0;
+}
+
+.studio-sider .ant-menu-item {
+  margin: 4px 8px !important;
+  border-radius: 8px !important;
+  height: 44px !important;
+  line-height: 44px !important;
+}
+
+.studio-sider .ant-menu-item:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.studio-sider .ant-menu-item-selected {
+  background: #1890ff !important;
+  color: white !important;
+}
+
+.studio-sider .ant-menu-item .anticon {
+  font-size: 18px;
+}
+
+.studio-sider.ant-layout-sider-collapsed .ant-menu-item {
+  padding: 0 20px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.studio-sider.ant-layout-sider-collapsed .ant-menu-item .ant-menu-title-content {
+  display: none;
+}
+
+/* ─────────────────────────────────────────────
+   LOGOUT BUTTON
+   ───────────────────────────────────────────── */
+
+.studio-logout {
+  margin: 16px 12px !important;
+  color: rgba(255, 255, 255, 0.65) !important;
+  border-radius: 8px !important;
+  height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  justify-content: flex-start !important;
+  padding: 0 16px !important;
+  transition: all 0.3s ease;
+  width: calc(100% - 24px);
+}
+
+.studio-logout:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ff4d4f !important;
+}
+
+.studio-logout .anticon {
+  font-size: 18px;
+}
+
+.studio-sider.ant-layout-sider-collapsed .studio-logout {
+  justify-content: center !important;
+  padding: 0 !important;
+  width: auto;
+  margin: 16px auto !important;
+}
+
+.studio-sider.ant-layout-sider-collapsed .studio-logout span:not(.anticon) {
+  display: none;
+}
+
+/* ─────────────────────────────────────────────
+   MAIN CONTENT AREA
+   ───────────────────────────────────────────── */
+
+.studio-main {
+  margin-left: 270px;
+  transition: margin-left 0.2s ease;
+  background: #f0f2f5;
+  min-height: 100vh;
+}
+
+.studio-sider.ant-layout-sider-collapsed + .studio-main {
+  margin-left: 80px;
+}
+
+/* ─────────────────────────────────────────────
+   HEADER
+   ───────────────────────────────────────────── */
+
+.studio-header {
+  background: white;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.studio-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.studio-menu-toggle {
+  font-size: 18px;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.studio-menu-toggle:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Mobile Brand in Header */
+.studio-brand-mobile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.studio-brand-mobile img {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.studio-brand-mobile span {
+  font-weight: 700;
+  font-size: 16px;
+  color: #1a1a2e;
+}
+
+/* ─────────────────────────────────────────────
+   USER PROFILE
+   ───────────────────────────────────────────── */
+
+.studio-user {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.studio-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 12px 4px 4px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  color: #1a1a2e;
+}
+
+.studio-user-profile:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.studio-user-profile .ant-avatar {
+  background: #1890ff;
+}
+
+/* ─────────────────────────────────────────────
+   CONTENT
+   ───────────────────────────────────────────── */
+
+.studio-content {
+  padding: 20px;
+  min-height: calc(100vh - 64px);
+  background: #f0f2f5;
+}
+
+/* ─────────────────────────────────────────────
+   MOBILE DRAWER
+   ───────────────────────────────────────────── */
+
+.studio-mobile-drawer .ant-drawer-body {
+  padding: 0;
+  background: #001529;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.studio-mobile-drawer .ant-drawer-content {
+  background: #001529;
+}
+
+.studio-mobile-drawer .ant-drawer-content-wrapper {
+  width: 270px !important;
+}
+
+/* ─────────────────────────────────────────────
+   RESPONSIVE BREAKPOINTS
+   ───────────────────────────────────────────── */
+
+/* Tablets and small laptops */
+@media (max-width: 992px) {
+  .studio-content {
+    padding: 16px;
+  }
+
+  .studio-header {
+    padding: 0 16px;
+  }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+  .studio-sider {
+    display: none !important;
+  }
+
+  .studio-main {
+    margin-left: 0 !important;
+  }
+
+  .studio-header {
+    padding: 0 12px;
+    height: 56px;
+  }
+
+  .studio-content {
+    padding: 12px;
+    min-height: calc(100vh - 56px);
+  }
+
+  .studio-user-profile span {
+    display: none;
+  }
+
+  .studio-user-profile {
+    padding: 4px;
+  }
+
+  .studio-brand-mobile span {
+    font-size: 14px;
+  }
+
+  /* Hide notification count on very small screens if needed */
+  .studio-user .ant-badge {
+    font-size: 12px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .studio-header {
+    padding: 0 8px;
+    height: 50px;
+  }
+
+  .studio-content {
+    padding: 8px;
+    min-height: calc(100vh - 50px);
+  }
+
+  .studio-brand-mobile img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .studio-brand-mobile span {
+    font-size: 12px;
+  }
+
+  .studio-menu-toggle {
+    height: 36px;
+    width: 36px;
+    font-size: 16px;
+  }
+
+  .studio-user {
+    gap: 10px;
+  }
+
+  .studio-user-profile .ant-avatar {
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    font-size: 12px;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   ANIMATIONS
+   ───────────────────────────────────────────── */
+
+.studio-sider,
+.studio-main {
+  transition: all 0.2s ease;
+}
+
+.studio-brand,
+.studio-logout {
+  transition: all 0.2s ease;
+}
+
+/* ─────────────────────────────────────────────
+   DARK THEME OVERRIDES (Optional)
+   ───────────────────────────────────────────── */
+
+.studio-sider .ant-menu-dark .ant-menu-item-selected {
+  background: #1890ff !important;
+}
+
+.studio-sider .ant-menu-dark .ant-menu-item-active {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ─────────────────────────────────────────────
+   NOTIFICATION BELL STYLING
+   ───────────────────────────────────────────── */
+
+.studio-user .ant-badge {
+  display: flex;
+  align-items: center;
+}
+
+.studio-user .ant-badge .ant-badge-count {
+  box-shadow: 0 0 0 2px white;
+}
+
+/* ─────────────────────────────────────────────
+   FIX FOR ANT DESIGN RESPONSIVE ISSUES
+   ───────────────────────────────────────────── */
+
+/* Fix for mobile menu z-index */
+.ant-drawer-mask {
+  z-index: 999 !important;
+}
+
+.ant-drawer-content-wrapper {
+  z-index: 1000 !important;
+}
+
+/* Fix for dropdown on mobile */
+@media (max-width: 768px) {
+  .ant-dropdown {
+    min-width: 120px !important;
+  }
+
+  .ant-dropdown-menu-item {
+    padding: 8px 16px !important;
+  }
+}

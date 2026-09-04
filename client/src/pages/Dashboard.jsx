@@ -28,6 +28,8 @@ import {
 import dayjs from 'dayjs';
 import API from '../api/axios';
 
+import '../styles/Dashboard.css'; 
+
 const Dashboard = () => {
   const { user } = useSelector((state) => state.auth);
 
@@ -72,11 +74,7 @@ const Dashboard = () => {
       setSuppliers(suppliersRes.data?.data || []);
 
     } catch (error) {
-      console.error(
-        'Dashboard loading error:',
-        error
-      );
-
+      console.error('Dashboard loading error:', error);
       message.error(
         error.response?.data?.message ||
         'Failed to load dashboard data'
@@ -265,31 +263,25 @@ const Dashboard = () => {
       .slice(0, 5)
       .map((purchase) => ({
         key: purchase._id,
-
         date: dayjs(
           purchase.date ||
           purchase.createdAt
         ).format('DD-MM-YYYY'),
-
         invoiceNumber:
           purchase.invoiceNumber || '-',
-
         product:
           purchase.product ||
           purchase.productName ||
           '-',
-
         supplier:
           purchase.supplier ||
           '-',
-
         qty:
           Number(
             purchase.quantity ||
             purchase.qty ||
             0
           ),
-
         total:
           Number(
             purchase.totalPrice ||
@@ -324,25 +316,20 @@ const Dashboard = () => {
       .slice(0, 5)
       .map((invoice) => ({
         key: invoice._id,
-
         date: dayjs(
           invoice.invoiceDate ||
           invoice.createdAt
         ).format('DD-MM-YYYY'),
-
         invoiceNumber:
           invoice.invoiceNumber || '-',
-
         customer:
           invoice.customer?.name ||
           invoice.customerName ||
           'Walk-in Customer',
-
         total:
           Number(
             invoice.totalAmount || 0
           ),
-
         status:
           invoice.status || 'unpaid',
       }));
@@ -360,7 +347,6 @@ const Dashboard = () => {
       icon: <InboxOutlined />,
       tone: 'blue',
     },
-
     {
       title: 'Total Stock',
       value: totalStock,
@@ -368,7 +354,6 @@ const Dashboard = () => {
       icon: <ShoppingCartOutlined />,
       tone: 'green',
     },
-
     {
       title: 'Low Stock Items',
       value: lowStockProducts.length,
@@ -376,7 +361,6 @@ const Dashboard = () => {
       icon: <WarningOutlined />,
       tone: 'orange',
     },
-
     {
       title: "Today's Sales",
       value: formatCurrency(todaySales),
@@ -384,7 +368,6 @@ const Dashboard = () => {
       icon: <DollarOutlined />,
       tone: 'purple',
     },
-
     {
       title: "Today's Purchases",
       value: formatCurrency(todayPurchases),
@@ -392,7 +375,6 @@ const Dashboard = () => {
       icon: <FallOutlined />,
       tone: 'red',
     },
-
     {
       title: 'Customers',
       value: customers.length,
@@ -400,7 +382,6 @@ const Dashboard = () => {
       icon: <TeamOutlined />,
       tone: 'cyan',
     },
-
     {
       title: 'Suppliers',
       value: suppliers.length,
@@ -408,7 +389,6 @@ const Dashboard = () => {
       icon: <ShopOutlined />,
       tone: 'indigo',
     },
-
     {
       title: 'Total Invoices',
       value: invoices.length,
@@ -427,39 +407,39 @@ const Dashboard = () => {
       title: 'Date',
       dataIndex: 'date',
       key: 'date',
+      width: 100,
     },
-
     {
       title: 'Invoice No.',
       dataIndex: 'invoiceNumber',
       key: 'invoiceNumber',
+      width: 120,
     },
-
     {
       title: 'Product',
       dataIndex: 'product',
       key: 'product',
+      ellipsis: true,
     },
-
     {
       title: 'Supplier',
       dataIndex: 'supplier',
       key: 'supplier',
+      ellipsis: true,
     },
-
     {
       title: 'Qty',
       dataIndex: 'qty',
       key: 'qty',
       align: 'center',
+      width: 60,
     },
-
     {
-      title: 'Total Price',
+      title: 'Total',
       dataIndex: 'total',
       key: 'total',
       align: 'right',
-
+      width: 100,
       render: (value) =>
         formatCurrency(value),
     },
@@ -474,35 +454,34 @@ const Dashboard = () => {
       title: 'Date',
       dataIndex: 'date',
       key: 'date',
+      width: 100,
     },
-
     {
       title: 'Invoice',
       dataIndex: 'invoiceNumber',
       key: 'invoiceNumber',
+      width: 120,
     },
-
     {
       title: 'Customer',
       dataIndex: 'customer',
       key: 'customer',
+      ellipsis: true,
     },
-
     {
       title: 'Amount',
       dataIndex: 'total',
       key: 'total',
       align: 'right',
-
+      width: 100,
       render: (value) =>
         formatCurrency(value),
     },
-
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-
+      width: 100,
       render: (status) => {
         const colors = {
           paid: 'green',
@@ -548,7 +527,6 @@ const Dashboard = () => {
 
         <div>
           <h1>Dashboard</h1>
-
           <p>
             Welcome back,{' '}
             {user?.name || 'Admin'}!
@@ -569,7 +547,7 @@ const Dashboard = () => {
       =================================================== */}
 
       <Row
-        gutter={[18, 18]}
+        gutter={[16, 16]}
         className="fitness-stats"
       >
 
@@ -585,22 +563,27 @@ const Dashboard = () => {
 
             <Card
               className={`fitness-stat fitness-stat--${card.tone}`}
+              bodyStyle={{ padding: '16px' }}
             >
 
-              <span className="fitness-stat__icon">
-                {card.icon}
-              </span>
+              <div className="fitness-stat__content">
+                <span className="fitness-stat__icon">
+                  {card.icon}
+                </span>
 
-              <div>
-                <p>{card.title}</p>
+                <div className="fitness-stat__info">
+                  <p className="fitness-stat__title">
+                    {card.title}
+                  </p>
 
-                <strong>
-                  {card.value}
-                </strong>
+                  <strong className="fitness-stat__value">
+                    {card.value}
+                  </strong>
 
-                <small>
-                  {card.note}
-                </small>
+                  <small className="fitness-stat__note">
+                    {card.note}
+                  </small>
+                </div>
               </div>
 
             </Card>
@@ -616,7 +599,7 @@ const Dashboard = () => {
           PURCHASES + LOW STOCK
       =================================================== */}
 
-      <Row gutter={[22, 22]}>
+      <Row gutter={[16, 16]}>
 
         <Col xs={24} xl={16}>
 
@@ -634,6 +617,7 @@ const Dashboard = () => {
 
               <Empty
                 description="No purchases found"
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
               />
 
             ) : (
@@ -644,6 +628,7 @@ const Dashboard = () => {
                 dataSource={recentPurchases}
                 pagination={false}
                 scroll={{ x: 700 }}
+                size="middle"
               />
 
             )}
@@ -668,7 +653,7 @@ const Dashboard = () => {
             {lowStockProducts.length === 0 ? (
 
               <div className="no-low-stock">
-                <span>✓</span>
+                <span className="no-low-stock__icon">✓</span>
                 <strong>
                   All stock levels are healthy
                 </strong>
@@ -679,65 +664,63 @@ const Dashboard = () => {
 
             ) : (
 
-              lowStockProducts
-                .slice(0, 6)
-                .map((product) => {
+              <div className="low-stock-list">
+                {lowStockProducts
+                  .slice(0, 6)
+                  .map((product) => {
 
-                  const stock =
-                    getStock(product);
+                    const stock =
+                      getStock(product);
 
-                  const threshold =
-                    getLowStockThreshold(
-                      product
-                    );
+                    const threshold =
+                      getLowStockThreshold(
+                        product
+                      );
 
-                  const initials =
-                    product.name
-                      ?.split(' ')
-                      .map((word) =>
-                        word[0]
-                      )
-                      .join('')
-                      .substring(0, 3)
-                      .toUpperCase() ||
-                    'PRD';
+                    const initials =
+                      product.name
+                        ?.split(' ')
+                        .map((word) =>
+                          word[0]
+                        )
+                        .join('')
+                        .substring(0, 3)
+                        .toUpperCase() ||
+                      'PRD';
 
-                  return (
-                    <div
-                      className="low-stock-item"
-                      key={product._id}
-                    >
+                    return (
+                      <div
+                        className="low-stock-item"
+                        key={product._id}
+                      >
 
-                      <span className="supplement-placeholder">
-                        {initials}
-                      </span>
-
-                      <div>
-                        <strong>
-                          {product.name}
-                        </strong>
-
-                        <small>
-                          Reorder level:{' '}
-                          {threshold}
-                        </small>
-                      </div>
-
-                      <div className="low-stock-item__count">
-
-                        <span>
-                          Low Stock
+                        <span className="supplement-placeholder">
+                          {initials}
                         </span>
 
-                        <b>
-                          {stock} pcs
-                        </b>
+                        <div className="low-stock-item__info">
+                          <strong>
+                            {product.name}
+                          </strong>
+                          <small>
+                            Reorder level:{' '}
+                            {threshold}
+                          </small>
+                        </div>
+
+                        <div className="low-stock-item__count">
+                          <span>
+                            Low Stock
+                          </span>
+                          <b>
+                            {stock} pcs
+                          </b>
+                        </div>
 
                       </div>
-
-                    </div>
-                  );
-                })
+                    );
+                  })}
+              </div>
 
             )}
 
@@ -753,9 +736,9 @@ const Dashboard = () => {
       =================================================== */}
 
       <Row
-        gutter={[22, 22]}
+        gutter={[16, 16]}
         style={{
-          marginTop: 22,
+          marginTop: 16,
         }}
       >
 
@@ -775,6 +758,7 @@ const Dashboard = () => {
 
               <Empty
                 description="No invoices found"
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
               />
 
             ) : (
@@ -785,6 +769,7 @@ const Dashboard = () => {
                 dataSource={recentSales}
                 pagination={false}
                 scroll={{ x: 700 }}
+                size="middle"
               />
 
             )}

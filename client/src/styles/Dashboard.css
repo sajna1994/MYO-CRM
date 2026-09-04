@@ -1,0 +1,543 @@
+/* Dashboard.css - Fully Responsive */
+
+/* ─────────────────────────────────────────────
+   DASHBOARD CONTAINER
+   ───────────────────────────────────────────── */
+
+.fitness-dashboard {
+  padding: 20px;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* ─────────────────────────────────────────────
+   LOADER
+   ───────────────────────────────────────────── */
+
+.dashboard-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+/* ─────────────────────────────────────────────
+   HEADER
+   ───────────────────────────────────────────── */
+
+.fitness-dashboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.fitness-dashboard__header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  color: #1a1a2e;
+}
+
+.fitness-dashboard__header p {
+  margin: 4px 0 0;
+  color: #666;
+  font-size: 16px;
+}
+
+.dashboard-date {
+  background: #f0f2f5;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  color: #1a1a2e;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* ─────────────────────────────────────────────
+   STAT CARDS
+   ───────────────────────────────────────────── */
+
+.fitness-stats {
+  margin-bottom: 24px;
+}
+
+.fitness-stat {
+  border-radius: 12px !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.fitness-stat:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.fitness-stat__content {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.fitness-stat__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.fitness-stat__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.fitness-stat__title {
+  margin: 0;
+  font-size: 13px;
+  color: #888;
+  font-weight: 500;
+}
+
+.fitness-stat__value {
+  display: block;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.fitness-stat__note {
+  display: block;
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 2px;
+}
+
+/* Stat Color Variants */
+.fitness-stat--blue .fitness-stat__icon {
+  background: #e6f7ff;
+  color: #1890ff;
+}
+
+.fitness-stat--green .fitness-stat__icon {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+.fitness-stat--orange .fitness-stat__icon {
+  background: #fff7e6;
+  color: #fa8c16;
+}
+
+.fitness-stat--purple .fitness-stat__icon {
+  background: #f9f0ff;
+  color: #722ed1;
+}
+
+.fitness-stat--red .fitness-stat__icon {
+  background: #fff1f0;
+  color: #ff4d4f;
+}
+
+.fitness-stat--cyan .fitness-stat__icon {
+  background: #e6fffb;
+  color: #13c2c2;
+}
+
+.fitness-stat--indigo .fitness-stat__icon {
+  background: #ede9fe;
+  color: #4f46e5;
+}
+
+.fitness-stat--teal .fitness-stat__icon {
+  background: #e6f7f7;
+  color: #008080;
+}
+
+/* ─────────────────────────────────────────────
+   PANELS / CARDS
+   ───────────────────────────────────────────── */
+
+.fitness-panel {
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: none !important;
+  height: 100%;
+}
+
+.fitness-panel .ant-card-head {
+  border-bottom: 1px solid #f0f0f0;
+  padding: 12px 20px;
+}
+
+.fitness-panel .ant-card-body {
+  padding: 16px 20px;
+}
+
+.fitness-panel__title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.fitness-panel__title span {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.fitness-panel__title a {
+  font-size: 13px;
+  color: #1890ff;
+  font-weight: 500;
+}
+
+.fitness-panel__title a:hover {
+  color: #40a9ff;
+}
+
+/* ─────────────────────────────────────────────
+   TABLE
+   ───────────────────────────────────────────── */
+
+.fitness-table .ant-table-thead > tr > th {
+  background: #fafafa;
+  font-weight: 600;
+  font-size: 13px;
+  color: #555;
+}
+
+.fitness-table .ant-table-tbody > tr > td {
+  font-size: 13px;
+  padding: 10px 12px;
+}
+
+/* ─────────────────────────────────────────────
+   LOW STOCK ALERTS
+   ───────────────────────────────────────────── */
+
+.fitness-alerts .ant-card-body {
+  padding: 12px 16px;
+}
+
+.low-stock-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.low-stock-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background: #fff9f0;
+  border-radius: 10px;
+  border-left: 4px solid #fa8c16;
+  transition: all 0.2s ease;
+}
+
+.low-stock-item:hover {
+  background: #fff4e6;
+}
+
+.supplement-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: #fa8c16;
+  color: white;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.low-stock-item__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.low-stock-item__info strong {
+  display: block;
+  font-size: 14px;
+  color: #1a1a2e;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.low-stock-item__info small {
+  font-size: 12px;
+  color: #888;
+}
+
+.low-stock-item__count {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.low-stock-item__count span {
+  display: block;
+  font-size: 11px;
+  color: #fa8c16;
+  font-weight: 500;
+}
+
+.low-stock-item__count b {
+  font-size: 16px;
+  color: #d4380d;
+}
+
+/* ─────────────────────────────────────────────
+   NO LOW STOCK
+   ───────────────────────────────────────────── */
+
+.no-low-stock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.no-low-stock__icon {
+  font-size: 40px;
+  color: #52c41a;
+  margin-bottom: 8px;
+}
+
+.no-low-stock strong {
+  font-size: 16px;
+  color: #1a1a2e;
+}
+
+.no-low-stock small {
+  font-size: 13px;
+  color: #999;
+  margin-top: 4px;
+}
+
+/* ─────────────────────────────────────────────
+   RESPONSIVE BREAKPOINTS
+   ───────────────────────────────────────────── */
+
+/* Tablets and small laptops */
+@media (max-width: 992px) {
+  .fitness-dashboard {
+    padding: 16px;
+  }
+
+  .fitness-dashboard__header h1 {
+    font-size: 24px;
+  }
+
+  .fitness-stat__value {
+    font-size: 20px;
+  }
+
+  .fitness-stat__icon {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+  }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+  .fitness-dashboard {
+    padding: 12px;
+  }
+
+  .fitness-dashboard__header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .fitness-dashboard__header h1 {
+    font-size: 22px;
+  }
+
+  .fitness-dashboard__header p {
+    font-size: 14px;
+  }
+
+  .dashboard-date {
+    font-size: 13px;
+    padding: 6px 12px;
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Cards become full width */
+  .fitness-stat {
+    margin-bottom: 4px;
+  }
+
+  .fitness-stat__content {
+    gap: 10px;
+  }
+
+  .fitness-stat__icon {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
+
+  .fitness-stat__value {
+    font-size: 18px;
+  }
+
+  .fitness-stat__title {
+    font-size: 12px;
+  }
+
+  .fitness-panel .ant-card-head {
+    padding: 10px 16px;
+  }
+
+  .fitness-panel .ant-card-body {
+    padding: 12px 14px;
+  }
+
+  .fitness-panel__title span {
+    font-size: 14px;
+  }
+
+  .fitness-panel__title a {
+    font-size: 12px;
+  }
+
+  .low-stock-item {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  .low-stock-item__info strong {
+    font-size: 13px;
+  }
+
+  .supplement-placeholder {
+    width: 34px;
+    height: 34px;
+    font-size: 12px;
+  }
+
+  .low-stock-item__count b {
+    font-size: 14px;
+  }
+
+  .no-low-stock {
+    padding: 20px 16px;
+  }
+
+  .no-low-stock strong {
+    font-size: 14px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .fitness-dashboard {
+    padding: 8px;
+  }
+
+  .fitness-dashboard__header h1 {
+    font-size: 20px;
+  }
+
+  .fitness-stat__value {
+    font-size: 16px;
+  }
+
+  .fitness-stat__icon {
+    width: 34px;
+    height: 34px;
+    font-size: 14px;
+  }
+
+  .fitness-stat__title {
+    font-size: 11px;
+  }
+
+  .fitness-stat__note {
+    font-size: 10px;
+  }
+
+  .fitness-panel .ant-card-head {
+    padding: 8px 12px;
+  }
+
+  .fitness-panel .ant-card-body {
+    padding: 10px 10px;
+  }
+
+  .fitness-panel__title span {
+    font-size: 13px;
+  }
+
+  .fitness-table .ant-table-thead > tr > th {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+
+  .fitness-table .ant-table-tbody > tr > td {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+
+  .low-stock-item {
+    padding: 6px 8px;
+  }
+
+  .low-stock-item__info strong {
+    font-size: 12px;
+  }
+
+  .supplement-placeholder {
+    width: 30px;
+    height: 30px;
+    font-size: 10px;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   SCROLLBAR STYLING (optional)
+   ───────────────────────────────────────────── */
+
+.low-stock-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.low-stock-list::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.low-stock-list::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 4px;
+}
+
+.low-stock-list::-webkit-scrollbar-thumb:hover {
+  background: #bfbfbf;
+}

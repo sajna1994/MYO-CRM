@@ -25,6 +25,7 @@ import {
 } from '@ant-design/icons';
 
 import API from '../api/axios';
+import '../styles/Products.css'; // We'll create this
 
 const Products = () => {
   // ─────────────────────────────────────────────
@@ -33,7 +34,7 @@ const Products = () => {
   const [categories, setCategories] = useState([]);
   const [saving, setSaving] = useState(false);
   const [preview, setPreview] = useState(null);
-const [imageFile, setImageFile] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
 
   const [form] = Form.useForm();
 
@@ -57,7 +58,6 @@ const [imageFile, setImageFile] = useState(null);
   const fetchCategories = async () => {
     try {
       const res = await API.get('/categories');
-
       setCategories(res.data.data || []);
     } catch (error) {
       message.error(
@@ -81,9 +81,9 @@ const [imageFile, setImageFile] = useState(null);
           undefined,
       });
 
-      // If existing product has image
       if (editingProduct.image) {
         setPreview(editingProduct.image);
+        setImageFile(editingProduct.image);
       }
     } else {
       form.setFieldsValue({
@@ -99,51 +99,48 @@ const [imageFile, setImageFile] = useState(null);
   // ─────────────────────────────────────────────
   // PRODUCT SUBMIT
   // ─────────────────────────────────────────────
-// Update submit function
-const submit = async (values) => {
-  setSaving(true);
+  const submit = async (values) => {
+    setSaving(true);
 
-  try {
-    const productData = {
-      ...values,
-      image: imageFile || preview || '', // Save base64 image
-    };
+    try {
+      const productData = {
+        ...values,
+        image: imageFile || preview || '',
+      };
 
-    if (editingProduct?._id) {
-      await API.put(`/products/${editingProduct._id}`, productData);
-      message.success('Product updated successfully');
-    } else {
-      await API.post('/products', {
-        ...productData,
-        sku: `PRD-${Date.now().toString().slice(-6)}`,
-      });
-      message.success('Product saved successfully');
+      if (editingProduct?._id) {
+        await API.put(`/products/${editingProduct._id}`, productData);
+        message.success('Product updated successfully');
+      } else {
+        await API.post('/products', {
+          ...productData,
+          sku: `PRD-${Date.now().toString().slice(-6)}`,
+        });
+        message.success('Product saved successfully');
+      }
+
+      navigate('/quotes');
+    } catch (error) {
+      message.error(
+        error.response?.data?.message || 'Unable to save product'
+      );
+    } finally {
+      setSaving(false);
     }
-
-    navigate('/quotes');
-  } catch (error) {
-    message.error(
-      error.response?.data?.message || 'Unable to save product'
-    );
-  } finally {
-    setSaving(false);
-  }
-};
+  };
 
   // ─────────────────────────────────────────────
   // IMAGE
   // ─────────────────────────────────────────────
- // Update selectImage function
-const selectImage = (file) => {
-  // Convert file to base64
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    setPreview(e.target.result);
-    setImageFile(e.target.result); // Store base64 string
+  const selectImage = (file) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setPreview(e.target.result);
+      setImageFile(e.target.result);
+    };
+    reader.readAsDataURL(file);
+    return false;
   };
-  reader.readAsDataURL(file);
-  return false; // Prevent automatic upload
-};
 
   // ─────────────────────────────────────────────
   // OPEN CATEGORY MODAL
@@ -151,9 +148,7 @@ const selectImage = (file) => {
   const openCategoryModal = () => {
     setEditingCategoryId(null);
     categoryForm.resetFields();
-
     setCategoryModalOpen(true);
-
     fetchCategories();
   };
 
@@ -174,26 +169,19 @@ const selectImage = (file) => {
 
     try {
       if (editingCategoryId) {
-        await API.put(
-          `/categories/${editingCategoryId}`,
-          values
-        );
-
+        await API.put(`/categories/${editingCategoryId}`, values);
         message.success('Category updated successfully');
       } else {
         await API.post('/categories', values);
-
         message.success('Category created successfully');
       }
 
       categoryForm.resetFields();
       setEditingCategoryId(null);
-
       await fetchCategories();
     } catch (error) {
       message.error(
-        error.response?.data?.message ||
-          'Unable to save category'
+        error.response?.data?.message || 'Unable to save category'
       );
     } finally {
       setCategorySaving(false);
@@ -205,7 +193,6 @@ const selectImage = (file) => {
   // ─────────────────────────────────────────────
   const editCategory = (record) => {
     setEditingCategoryId(record._id);
-
     categoryForm.setFieldsValue({
       name: record.name,
       description: record.description,
@@ -219,60 +206,50 @@ const selectImage = (file) => {
   const deleteCategory = async (id) => {
     try {
       await API.delete(`/categories/${id}`);
-
       message.success('Category deleted successfully');
-
-      // Refresh category list
       await fetchCategories();
 
-      // If deleted category was selected in product form,
-      // clear it.
       const currentCategory = form.getFieldValue('category');
-
       if (currentCategory === id) {
         form.setFieldValue('category', undefined);
       }
     } catch (error) {
       message.error(
-        error.response?.data?.message ||
-          'Unable to delete category'
+        error.response?.data?.message || 'Unable to delete category'
       );
     }
   };
 
   // ─────────────────────────────────────────────
-  // CATEGORY TABLE
+  // CATEGORY TABLE COLUMNS (Responsive)
   // ─────────────────────────────────────────────
   const categoryColumns = [
     {
       title: '#',
       key: 'index',
-      width: 60,
+      width: 50,
+      align: 'center',
       render: (_, __, index) => index + 1,
     },
-
     {
       title: 'Category Name',
       dataIndex: 'name',
       key: 'name',
-      render: (name) => (
-        <strong>{name}</strong>
-      ),
+      render: (name) => <strong>{name}</strong>,
     },
-
     {
       title: 'Description',
       dataIndex: 'description',
       key: 'description',
-      render: (description) =>
-        description || '-',
+      render: (description) => description || '-',
+      responsive: ['sm'],
     },
-
     {
       title: 'Status',
       dataIndex: 'isActive',
       key: 'isActive',
-      width: 120,
+      width: 100,
+      align: 'center',
       render: (isActive) =>
         isActive ? (
           <Tag color="green">ACTIVE</Tag>
@@ -280,38 +257,27 @@ const selectImage = (file) => {
           <Tag color="red">INACTIVE</Tag>
         ),
     },
-
     {
       title: 'Action',
       key: 'action',
-      width: 150,
+      width: 120,
+      align: 'center',
       render: (_, record) => (
-        <Space>
+        <Space size="small">
           <Button
             type="text"
             icon={<EditOutlined />}
-            onClick={() =>
-              editCategory(record)
-            }
+            onClick={() => editCategory(record)}
           />
-
           <Popconfirm
             title="Delete this category?"
             description="This action cannot be undone."
             okText="Delete"
             cancelText="Cancel"
-            okButtonProps={{
-              danger: true,
-            }}
-            onConfirm={() =>
-              deleteCategory(record._id)
-            }
+            okButtonProps={{ danger: true }}
+            onConfirm={() => deleteCategory(record._id)}
           >
-            <Button
-              type="text"
-              danger
-              icon={<DeleteOutlined />}
-            />
+            <Button type="text" danger icon={<DeleteOutlined />} />
           </Popconfirm>
         </Space>
       ),
@@ -323,16 +289,8 @@ const selectImage = (file) => {
   // ─────────────────────────────────────────────
   return (
     <div className="product-editor-screen">
-
       {/* PAGE HEADER */}
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: 24,
-        }}
-      >
+      <div className="product-editor-header">
         <h1 className="product-editor-screen__title">
           Product Management
         </h1>
@@ -340,6 +298,7 @@ const selectImage = (file) => {
         <Button
           icon={<AppstoreOutlined />}
           onClick={openCategoryModal}
+          className="manage-categories-btn"
         >
           Manage Categories
         </Button>
@@ -347,12 +306,9 @@ const selectImage = (file) => {
 
       {/* PRODUCT FORM */}
       <section className="product-editor">
-
-        <h1>
-          {editingProduct
-            ? 'Edit Product'
-            : 'Add New Product'}
-        </h1>
+        <h2 className="product-editor__heading">
+          {editingProduct ? 'Edit Product' : 'Add New Product'}
+        </h2>
 
         <Form
           form={form}
@@ -360,26 +316,20 @@ const selectImage = (file) => {
           onFinish={submit}
           className="product-editor__form"
         >
-
           <div className="product-editor__fields">
-
             {/* LEFT COLUMN */}
             <div className="product-editor__column">
-
               <Form.Item
                 name="name"
                 label="Product Name"
                 rules={[
                   {
                     required: true,
-                    message:
-                      'Enter a product name',
+                    message: 'Enter a product name',
                   },
                 ]}
               >
-                <Input
-                  placeholder="Enter Product Name"
-                />
+                <Input placeholder="Enter Product Name" />
               </Form.Item>
 
               {/* CATEGORY */}
@@ -389,8 +339,7 @@ const selectImage = (file) => {
                 rules={[
                   {
                     required: true,
-                    message:
-                      'Please select a category',
+                    message: 'Please select a category',
                   },
                 ]}
               >
@@ -400,10 +349,7 @@ const selectImage = (file) => {
                   showSearch
                   optionFilterProp="label"
                   options={categories
-                    .filter(
-                      (item) =>
-                        item.isActive !== false
-                    )
+                    .filter((item) => item.isActive !== false)
                     .map((item) => ({
                       value: item._id,
                       label: item.name,
@@ -411,20 +357,16 @@ const selectImage = (file) => {
                   dropdownRender={(menu) => (
                     <>
                       {menu}
-
                       <div
                         style={{
                           padding: '8px 12px',
-                          borderTop:
-                            '1px solid #f0f0f0',
+                          borderTop: '1px solid #f0f0f0',
                         }}
                       >
                         <Button
                           type="link"
                           icon={<PlusOutlined />}
-                          onClick={
-                            openCategoryModal
-                          }
+                          onClick={openCategoryModal}
                         >
                           Add New Category
                         </Button>
@@ -434,57 +376,30 @@ const selectImage = (file) => {
                 />
               </Form.Item>
 
-              <Form.Item
-                name="brand"
-                label="Brand"
-              >
-                <Input
-                  placeholder="Enter Brand"
-                />
+              <Form.Item name="brand" label="Brand">
+                <Input placeholder="Enter Brand" />
               </Form.Item>
 
-              <Form.Item
-                name="unit"
-                label="Unit"
-              >
+              <Form.Item name="unit" label="Unit">
                 <Select
                   options={[
-                    {
-                      value: 'Pcs',
-                      label: 'Pcs',
-                    },
-                    {
-                      value: 'Tub',
-                      label: 'Tub',
-                    },
-                    {
-                      value: 'Bottle',
-                      label: 'Bottle',
-                    },
-                    {
-                      value: 'Box',
-                      label: 'Box',
-                    },
+                    { value: 'Pcs', label: 'Pcs' },
+                    { value: 'Tub', label: 'Tub' },
+                    { value: 'Bottle', label: 'Bottle' },
+                    { value: 'Box', label: 'Box' },
                   ]}
                 />
               </Form.Item>
-
             </div>
 
             {/* RIGHT COLUMN */}
             <div className="product-editor__column">
-
-              <Form.Item
-                name="costPrice"
-                label="Buying Price (₹)"
-              >
+              <Form.Item name="costPrice" label="Buying Price (₹)">
                 <InputNumber
                   min={0}
                   precision={2}
                   placeholder="0.00"
-                  style={{
-                    width: '100%',
-                  }}
+                  style={{ width: '100%' }}
                 />
               </Form.Item>
 
@@ -494,8 +409,7 @@ const selectImage = (file) => {
                 rules={[
                   {
                     required: true,
-                    message:
-                      'Enter selling price',
+                    message: 'Enter selling price',
                   },
                 ]}
               >
@@ -503,99 +417,62 @@ const selectImage = (file) => {
                   min={0}
                   precision={2}
                   placeholder="0.00"
-                  style={{
-                    width: '100%',
-                  }}
+                  style={{ width: '100%' }}
                 />
               </Form.Item>
 
-              <Form.Item
-                name="lowStockThreshold"
-                label="Reorder Level"
-              >
+              <Form.Item name="lowStockThreshold" label="Reorder Level">
                 <InputNumber
                   min={0}
                   placeholder="0"
-                  style={{
-                    width: '100%',
-                  }}
+                  style={{ width: '100%' }}
                 />
               </Form.Item>
 
-              <Form.Item
-                name="description"
-                label="Description (Optional)"
-              >
-                <Input.TextArea
-                  rows={4}
-                  placeholder="Enter description"
-                />
+              <Form.Item name="description" label="Description (Optional)">
+                <Input.TextArea rows={4} placeholder="Enter description" />
               </Form.Item>
-
             </div>
 
             {/* IMAGE */}
             <div className="product-image-field">
-
               <label>Product Image</label>
-
               <Upload
                 accept="image/*"
                 showUploadList={false}
                 beforeUpload={selectImage}
               >
                 <div className="product-image-upload">
-
                   {preview ? (
-                    <img
-                      src={preview}
-                      alt="Product preview"
-                    />
+                    <img src={preview} alt="Product preview" />
                   ) : (
                     <>
                       <PlusOutlined />
-                      <span>
-                        Upload Image
-                      </span>
+                      <span>Upload Image</span>
                     </>
                   )}
-
                 </div>
               </Upload>
-
             </div>
-
           </div>
 
           {/* PRODUCT ACTIONS */}
           <div className="product-editor__actions">
-
             <Button
               type="primary"
               htmlType="submit"
               loading={saving}
             >
-              {editingProduct
-                ? 'Update Product'
-                : 'Save Product'}
+              {editingProduct ? 'Update Product' : 'Save Product'}
             </Button>
 
-            <Button
-              onClick={() =>
-                navigate('/quotes')
-              }
-            >
-              Cancel
-            </Button>
-
+            <Button onClick={() => navigate('/quotes')}>Cancel</Button>
           </div>
-
         </Form>
-
       </section>
 
       {/* ═══════════════════════════════════════════
-          CATEGORY MANAGEMENT MODAL
+          CATEGORY MANAGEMENT MODAL (Responsive)
       ═══════════════════════════════════════════ */}
 
       <Modal
@@ -607,77 +484,43 @@ const selectImage = (file) => {
         }
         open={categoryModalOpen}
         onCancel={closeCategoryModal}
-        width={850}
+        width={window.innerWidth < 768 ? '95%' : 850}
         footer={null}
-        destroyOnHidden
+        destroyOnClose
+        style={{ top: window.innerWidth < 768 ? 10 : 100 }}
       >
-
         {/* CATEGORY FORM */}
-        <div
-          style={{
-            background: '#fafafa',
-            padding: 16,
-            borderRadius: 10,
-            marginBottom: 20,
-          }}
-        >
-
+        <div className="category-form-container">
           <h3 style={{ marginTop: 0 }}>
-            {editingCategoryId
-              ? 'Edit Category'
-              : 'Add New Category'}
+            {editingCategoryId ? 'Edit Category' : 'Add New Category'}
           </h3>
 
-          <Form
-            form={categoryForm}
-            layout="vertical"
-            onFinish={saveCategory}
-          >
-
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns:
-                  '1fr 1fr 120px auto',
-                gap: 12,
-                alignItems: 'end',
-              }}
-            >
-
+          <Form form={categoryForm} layout="vertical" onFinish={saveCategory}>
+            <div className="category-form-grid">
               <Form.Item
                 name="name"
                 label="Category Name"
                 rules={[
                   {
                     required: true,
-                    message:
-                      'Enter category name',
+                    message: 'Enter category name',
                   },
                   {
                     max: 100,
-                    message:
-                      'Maximum 100 characters',
+                    message: 'Maximum 100 characters',
                   },
                 ]}
-                style={{
-                  marginBottom: 0,
-                }}
+                style={{ marginBottom: 0 }}
               >
-                <Input
-                  placeholder="e.g. Protein"
-                />
+                <Input placeholder="e.g. Protein" />
               </Form.Item>
 
               <Form.Item
                 name="description"
                 label="Description"
-                style={{
-                  marginBottom: 0,
-                }}
+                style={{ marginBottom: 0 }}
               >
-                <Input
-                  placeholder="Category description"
-                />
+                <Input placeholder="Category description" />
               </Form.Item>
 
               <Form.Item
@@ -685,30 +528,19 @@ const selectImage = (file) => {
                 label="Active"
                 valuePropName="checked"
                 initialValue={true}
-                style={{
-                  marginBottom: 0,
-                }}
+                style={{ marginBottom: 0 }}
               >
                 <Switch />
               </Form.Item>
 
-              <Space>
-
+              <Space className="category-form-actions">
                 <Button
                   type="primary"
                   htmlType="submit"
                   loading={categorySaving}
-                  icon={
-                    editingCategoryId ? (
-                      <EditOutlined />
-                    ) : (
-                      <PlusOutlined />
-                    )
-                  }
+                  icon={editingCategoryId ? <EditOutlined /> : <PlusOutlined />}
                 >
-                  {editingCategoryId
-                    ? 'Update'
-                    : 'Add'}
+                  {editingCategoryId ? 'Update' : 'Add'}
                 </Button>
 
                 {editingCategoryId && (
@@ -721,13 +553,9 @@ const selectImage = (file) => {
                     Cancel
                   </Button>
                 )}
-
               </Space>
-
             </div>
-
           </Form>
-
         </div>
 
         {/* CATEGORY LIST */}
@@ -739,10 +567,9 @@ const selectImage = (file) => {
             pageSize: 6,
           }}
           size="middle"
+          scroll={{ x: window.innerWidth < 768 ? 500 : 'auto' }}
         />
-
       </Modal>
-
     </div>
   );
 };

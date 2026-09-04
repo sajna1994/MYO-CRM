@@ -1,0 +1,693 @@
+.purchase-page {
+  width: 100%;
+  min-height: 100%;
+  padding: 0;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.purchase-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.purchase-title {
+  margin: 0 !important;
+  font-size: 30px !important;
+  font-weight: 700 !important;
+  color: #111318 !important;
+}
+
+.purchase-subtitle {
+  margin-top: 4px;
+  color: #858990;
+  font-size: 14px;
+}
+
+/* =========================================================
+   ORANGE BUTTON
+========================================================= */
+
+.new-purchase-button {
+  height: 50px;
+  padding: 0 24px;
+  border: none !important;
+  border-radius: 7px !important;
+  background: linear-gradient(135deg, #ff9800, #ff7200) !important;
+  font-size: 16px;
+  font-weight: 600;
+  box-shadow: 0 5px 12px rgba(255, 126, 0, 0.18);
+  white-space: nowrap;
+}
+
+.new-purchase-button:hover {
+  background: linear-gradient(135deg, #ffad26, #ff7d00) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 126, 0, 0.25);
+}
+
+.new-purchase-button:active {
+  transform: translateY(0);
+}
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+.purchase-summary {
+  margin-bottom: 18px;
+}
+
+.purchase-summary-card {
+  border-radius: 10px !important;
+  border: 1px solid #eeeeee !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  height: 100%;
+  transition: all 0.3s ease;
+}
+
+.purchase-summary-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+
+.summary-label {
+  color: #777;
+  font-size: 14px;
+}
+
+.summary-value {
+  margin-top: 5px;
+  color: #15171a;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.summary-value.orange {
+  color: #f58200;
+}
+
+/* =========================================================
+   TABLE CARD
+========================================================= */
+
+.purchase-table-card {
+  background: #ffffff;
+  border-radius: 10px !important;
+  border: 1px solid #e9e9e9;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.purchase-table-card .ant-card-body {
+  padding: 20px;
+}
+
+/* =========================================================
+   TOOLBAR
+========================================================= */
+
+.purchase-table-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.purchase-search {
+  width: 330px;
+  height: 42px;
+  border-radius: 7px;
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.purchase-table-card .ant-table {
+  font-size: 15px;
+}
+
+.purchase-table-card .ant-table-thead > tr > th {
+  background: #ffffff !important;
+  color: #222 !important;
+  font-size: 14px;
+  font-weight: 600;
+  border-bottom: 1px solid #e5e5e5;
+  padding: 12px 16px !important;
+}
+
+.purchase-table-card .ant-table-tbody > tr > td {
+  height: 67px;
+  border-bottom: 1px solid #eeeeee;
+  color: #222;
+  padding: 8px 16px !important;
+}
+
+.purchase-table-card .ant-table-tbody > tr:hover > td {
+  background: #fffaf4 !important;
+}
+
+/* =========================================================
+   PRODUCT / INVOICE
+========================================================= */
+
+.purchase-product {
+  font-weight: 500;
+  color: #17191c;
+}
+
+.purchase-invoice {
+  margin-top: 3px;
+  color: #8b8d91;
+  font-size: 12px;
+}
+
+/* =========================================================
+   ACTION BUTTONS
+========================================================= */
+
+.purchase-view-btn {
+  color: #ed6c5c !important;
+  font-size: 18px;
+}
+
+.purchase-edit-btn {
+  color: #f28a00 !important;
+  font-size: 18px;
+}
+
+/* =========================================================
+   PAGINATION
+========================================================= */
+
+.purchase-table-card .ant-pagination .ant-pagination-item-active {
+  background: #ff8500;
+  border-color: #ff8500;
+}
+
+.purchase-table-card .ant-pagination .ant-pagination-item-active a {
+  color: #ffffff;
+}
+
+.purchase-table-card .ant-pagination {
+  margin-top: 16px;
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.purchase-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.purchase-modal-footer .ant-btn {
+  min-width: 100px;
+}
+
+/* =========================================================
+   DETAILS
+========================================================= */
+
+.purchase-details {
+  padding: 5px 0;
+}
+
+.purchase-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 30px;
+  margin-bottom: 24px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-row span {
+  color: #666;
+  font-size: 14px;
+}
+
+.detail-row strong {
+  color: #171717;
+  font-size: 14px;
+}
+
+.detail-total {
+  color: #f57c00 !important;
+  font-size: 18px;
+}
+
+.purchase-products-section {
+  margin-top: 20px;
+}
+
+.purchase-products-section h3 {
+  margin-bottom: 12px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.purchase-products-section .ant-table {
+  font-size: 14px;
+}
+
+.purchase-products-section .ant-table-thead > tr > th {
+  background: #fafafa !important;
+  font-weight: 600;
+}
+
+.purchase-grand-total {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid #ddd;
+  font-size: 20px;
+  font-weight: 700;
+  flex-wrap: wrap;
+}
+
+.purchase-grand-total strong {
+  color: #159447;
+  font-size: 24px;
+}
+
+.detail-notes {
+  margin-top: 20px;
+  padding: 15px;
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+.detail-notes span {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+}
+
+.detail-notes p {
+  margin: 0;
+  color: #555;
+  white-space: pre-wrap;
+}
+
+/* =========================================================
+   RESPONSIVE BREAKPOINTS
+========================================================= */
+
+/* Tablets and small laptops */
+@media (max-width: 992px) {
+  .purchase-title {
+    font-size: 26px !important;
+  }
+
+  .purchase-search {
+    width: 280px;
+  }
+
+  .purchase-table-card .ant-table {
+    font-size: 14px;
+  }
+
+  .purchase-table-card .ant-table-thead > tr > th {
+    font-size: 13px;
+    padding: 10px 12px !important;
+  }
+
+  .purchase-table-card .ant-table-tbody > tr > td {
+    padding: 6px 12px !important;
+    height: 60px;
+  }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+  .purchase-page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 16px;
+  }
+
+  .purchase-title {
+    font-size: 22px !important;
+  }
+
+  .purchase-subtitle {
+    font-size: 13px;
+  }
+
+  .new-purchase-button {
+    width: 100%;
+    height: 44px;
+    font-size: 15px;
+    justify-content: center;
+  }
+
+  .purchase-search {
+    width: 100%;
+    height: 38px;
+  }
+
+  .purchase-table-toolbar {
+    justify-content: stretch;
+    margin-bottom: 14px;
+  }
+
+  .purchase-table-card .ant-card-body {
+    padding: 12px;
+  }
+
+  .purchase-table-card .ant-table {
+    font-size: 13px;
+  }
+
+  .purchase-table-card .ant-table-thead > tr > th {
+    font-size: 12px;
+    padding: 8px 10px !important;
+  }
+
+  .purchase-table-card .ant-table-tbody > tr > td {
+    padding: 6px 10px !important;
+    height: 54px;
+    font-size: 12px;
+  }
+
+  .purchase-table-card .ant-pagination {
+    font-size: 12px;
+  }
+
+  .purchase-table-card .ant-pagination .ant-pagination-item {
+    min-width: 28px;
+    height: 28px;
+    line-height: 28px;
+  }
+
+  .purchase-table-card .ant-pagination .ant-pagination-prev,
+  .purchase-table-card .ant-pagination .ant-pagination-next {
+    min-width: 28px;
+    height: 28px;
+    line-height: 28px;
+  }
+
+  /* Summary cards on mobile */
+  .purchase-summary .ant-col {
+    margin-bottom: 8px;
+  }
+
+  .purchase-summary-card .summary-value {
+    font-size: 20px;
+  }
+
+  .purchase-summary-card .summary-label {
+    font-size: 12px;
+  }
+
+  /* Modal on mobile */
+  .purchase-modal-footer {
+    flex-direction: column-reverse;
+  }
+
+  .purchase-modal-footer .ant-btn {
+    width: 100%;
+  }
+
+  /* Purchase details on mobile */
+  .purchase-info-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .detail-row {
+    padding: 8px 0;
+  }
+
+  .detail-row span {
+    font-size: 13px;
+  }
+
+  .detail-row strong {
+    font-size: 13px;
+  }
+
+  .purchase-products-section h3 {
+    font-size: 16px;
+  }
+
+  .purchase-products-section .ant-table {
+    font-size: 12px;
+  }
+
+  .purchase-products-section .ant-table-thead > tr > th {
+    padding: 6px 8px !important;
+    font-size: 11px;
+  }
+
+  .purchase-products-section .ant-table-tbody > tr > td {
+    padding: 4px 8px !important;
+    font-size: 12px;
+  }
+
+  .purchase-grand-total {
+    font-size: 16px;
+    gap: 10px;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .purchase-grand-total strong {
+    font-size: 20px;
+  }
+
+  .detail-notes {
+    padding: 12px;
+  }
+
+  .detail-notes p {
+    font-size: 13px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .purchase-title {
+    font-size: 20px !important;
+  }
+
+  .purchase-page-header {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+
+  .new-purchase-button {
+    height: 40px;
+    font-size: 14px;
+    padding: 0 16px;
+  }
+
+  .purchase-table-card .ant-card-body {
+    padding: 8px;
+  }
+
+  .purchase-table-card .ant-table-thead > tr > th {
+    padding: 6px 6px !important;
+    font-size: 10px;
+  }
+
+  .purchase-table-card .ant-table-tbody > tr > td {
+    padding: 4px 6px !important;
+    height: 48px;
+    font-size: 11px;
+  }
+
+  .summary-value {
+    font-size: 18px !important;
+  }
+
+  .purchase-modal-footer .ant-btn {
+    min-width: 80px;
+    font-size: 13px;
+    height: 38px;
+  }
+
+  .purchase-grand-total {
+    font-size: 14px;
+  }
+
+  .purchase-grand-total strong {
+    font-size: 18px;
+  }
+
+  /* Table horizontal scroll indicator */
+  .purchase-table-card .ant-table-wrapper {
+    position: relative;
+  }
+
+  .purchase-table-card .ant-table-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 20px;
+    background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.03));
+    pointer-events: none;
+    display: none;
+  }
+
+  .purchase-table-card .ant-table-wrapper .ant-table-body {
+    overflow-x: auto;
+  }
+}
+
+/* =========================================================
+   MODAL RESPONSIVE OVERRIDES
+========================================================= */
+
+@media (max-width: 768px) {
+  .ant-modal {
+    max-width: 95% !important;
+    margin: 10px auto !important;
+  }
+
+  .ant-modal-body {
+    padding: 16px !important;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  .ant-modal-header {
+    padding: 12px 16px !important;
+  }
+
+  .ant-modal-title {
+    font-size: 16px !important;
+  }
+
+  /* Form inside modal */
+  .ant-form-item {
+    margin-bottom: 12px !important;
+  }
+
+  .ant-form-item-label > label {
+    font-size: 13px !important;
+  }
+
+  /* Product items in form */
+  .ant-card {
+    margin-bottom: 8px !important;
+  }
+
+  .ant-card-body {
+    padding: 12px !important;
+  }
+
+  .ant-col {
+    padding: 0 4px !important;
+  }
+
+  /* Select dropdown */
+  .ant-select {
+    font-size: 13px !important;
+  }
+
+  .ant-input,
+  .ant-input-number,
+  .ant-picker {
+    font-size: 13px !important;
+    height: 36px !important;
+  }
+
+  .ant-input-textarea textarea {
+    font-size: 13px !important;
+  }
+
+  .ant-btn {
+    font-size: 13px !important;
+    height: 36px !important;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+  .purchase-title {
+    font-size: 18px !important;
+  }
+
+  .purchase-table-card .ant-table-thead > tr > th {
+    padding: 4px 4px !important;
+    font-size: 9px !important;
+  }
+
+  .purchase-table-card .ant-table-tbody > tr > td {
+    padding: 3px 4px !important;
+    font-size: 10px !important;
+    height: 42px;
+  }
+
+  .ant-modal-body {
+    padding: 12px !important;
+  }
+
+  .ant-form-item {
+    margin-bottom: 8px !important;
+  }
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+.purchase-summary-card,
+.new-purchase-button {
+  transition: all 0.3s ease;
+}
+
+.purchase-table-card .ant-table-tbody > tr {
+  transition: background 0.2s ease;
+}
+
+/* =========================================================
+   SCROLLBAR STYLING FOR TABLES
+========================================================= */
+
+.purchase-table-card .ant-table-body::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.purchase-table-card .ant-table-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.purchase-table-card .ant-table-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.purchase-table-card .ant-table-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

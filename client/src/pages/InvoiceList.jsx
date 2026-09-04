@@ -28,6 +28,7 @@ import {
 
 import dayjs from 'dayjs';
 import API from '../api/axios';
+import '../styles/InvoiceList.css'; // We'll create this
 
 const PAGE_SIZE = 10;
 
@@ -67,9 +68,6 @@ const InvoiceList = () => {
 
         setInvoices(data);
         setTotal(response.data?.total || 0);
-
-        // Backend may return totalAmount/totalSales.
-        // Use it when available.
         setTotalSales(
           Number(
             response.data?.totalAmount ??
@@ -79,7 +77,6 @@ const InvoiceList = () => {
         );
       } catch (error) {
         console.error('FETCH INVOICES ERROR:', error);
-
         message.error(
           error.response?.data?.message ||
             'Failed to load invoices'
@@ -106,7 +103,6 @@ const InvoiceList = () => {
   const handleSearch = (value) => {
     setSearch(value);
     setPage(1);
-
     fetchInvoices(1, value, status);
   };
 
@@ -117,7 +113,6 @@ const InvoiceList = () => {
   const handleStatusChange = (value) => {
     setStatus(value || '');
     setPage(1);
-
     fetchInvoices(1, search, value || '');
   };
 
@@ -161,14 +156,10 @@ const InvoiceList = () => {
   const handleDelete = async (invoiceId) => {
     try {
       await API.delete(`/invoices/${invoiceId}`);
-
       message.success('Invoice deleted successfully');
-
-      // Reload current page
       fetchInvoices(page, search, status);
     } catch (error) {
       console.error('DELETE INVOICE ERROR:', error);
-
       message.error(
         error.response?.data?.message ||
           'Failed to delete invoice'
@@ -195,7 +186,6 @@ const InvoiceList = () => {
     if (!Array.isArray(invoice?.items)) {
       return 0;
     }
-
     return invoice.items.reduce(
       (sum, item) =>
         sum + Number(item?.quantity || 0),
@@ -257,7 +247,6 @@ const InvoiceList = () => {
         render: (_, __, index) =>
           (page - 1) * PAGE_SIZE + index + 1,
       },
-
       {
         title: 'Invoice No.',
         dataIndex: 'invoiceNumber',
@@ -267,7 +256,6 @@ const InvoiceList = () => {
           <strong>{value}</strong>
         ),
       },
-
       {
         title: 'Date',
         dataIndex: 'invoiceDate',
@@ -277,13 +265,11 @@ const InvoiceList = () => {
           const date =
             record.invoiceDate ||
             record.createdAt;
-
           return date
             ? dayjs(date).format('DD-MM-YYYY')
             : '-';
         },
       },
-
       {
         title: 'Customer',
         dataIndex: 'customerName',
@@ -295,7 +281,6 @@ const InvoiceList = () => {
           </span>
         ),
       },
-
       {
         title: 'Phone',
         dataIndex: 'phone',
@@ -303,8 +288,8 @@ const InvoiceList = () => {
         width: 140,
         render: (phone) =>
           phone || '-',
+        responsive: ['md'],
       },
-
       {
         title: 'Items',
         key: 'items',
@@ -313,7 +298,6 @@ const InvoiceList = () => {
         render: (_, record) =>
           getTotalItems(record),
       },
-
       {
         title: 'Subtotal',
         dataIndex: 'subtotal',
@@ -322,8 +306,8 @@ const InvoiceList = () => {
         align: 'right',
         render: (value) =>
           formatCurrency(value),
+        responsive: ['lg'],
       },
-
       {
         title: 'Discount',
         dataIndex: 'discount',
@@ -332,8 +316,8 @@ const InvoiceList = () => {
         align: 'right',
         render: (value) =>
           formatCurrency(value),
+        responsive: ['lg'],
       },
-
       {
         title: 'Total',
         dataIndex: 'totalAmount',
@@ -346,7 +330,6 @@ const InvoiceList = () => {
           </strong>
         ),
       },
-
       {
         title: 'Paid',
         dataIndex: 'paidAmount',
@@ -355,8 +338,8 @@ const InvoiceList = () => {
         align: 'right',
         render: (value) =>
           formatCurrency(value),
+        responsive: ['md'],
       },
-
       {
         title: 'Status',
         dataIndex: 'status',
@@ -366,14 +349,13 @@ const InvoiceList = () => {
         render: (value) =>
           renderStatus(value),
       },
-
       {
         title: 'Actions',
         key: 'actions',
         fixed: 'right',
-        width: 150,
+        width: 130,
         render: (_, record) => (
-          <Space>
+          <Space size="small">
             <Button
               type="text"
               icon={<EyeOutlined />}
@@ -382,7 +364,6 @@ const InvoiceList = () => {
                 handleView(record)
               }
             />
-
             <Button
               type="text"
               icon={<PrinterOutlined />}
@@ -391,7 +372,6 @@ const InvoiceList = () => {
                 handlePrint(record)
               }
             />
-
             <Popconfirm
               title="Delete Invoice"
               description={`Delete ${record.invoiceNumber}?`}
@@ -423,36 +403,14 @@ const InvoiceList = () => {
   // --------------------------------------------------
 
   return (
-    <div
-      style={{
-        padding: 24,
-      }}
-    >
+    <div className="invoice-list-page">
       {/* HEADER */}
-
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: 24,
-        }}
-      >
+      <div className="invoice-list-header">
         <div>
-          <h1
-            style={{
-              margin: 0,
-            }}
-          >
+          <h1 className="invoice-list-title">
             Invoice List
           </h1>
-
-          <p
-            style={{
-              marginTop: 5,
-              color: '#888',
-            }}
-          >
+          <p className="invoice-list-subtitle">
             View and manage all sales invoices
           </p>
         </div>
@@ -463,21 +421,19 @@ const InvoiceList = () => {
           onClick={() =>
             navigate('/billing')
           }
+          className="invoice-create-btn"
         >
           Create New Invoice
         </Button>
       </div>
 
       {/* SUMMARY */}
-
       <Row
         gutter={[16, 16]}
-        style={{
-          marginBottom: 20,
-        }}
+        className="invoice-summary"
       >
         <Col xs={24} sm={12} lg={8}>
-          <Card>
+          <Card className="invoice-summary-card">
             <Statistic
               title="Total Invoices"
               value={total}
@@ -486,7 +442,7 @@ const InvoiceList = () => {
         </Col>
 
         <Col xs={24} sm={12} lg={8}>
-          <Card>
+          <Card className="invoice-summary-card">
             <Statistic
               title="Total Sales"
               value={totalSales}
@@ -498,18 +454,8 @@ const InvoiceList = () => {
       </Row>
 
       {/* FILTERS */}
-
-      <Card
-        style={{
-          marginBottom: 20,
-        }}
-      >
-        <Space
-          wrap
-          style={{
-            width: '100%',
-          }}
-        >
+      <Card className="invoice-filters-card">
+        <div className="invoice-filters">
           <Input
             allowClear
             prefix={
@@ -522,9 +468,7 @@ const InvoiceList = () => {
                 e.target.value
               )
             }
-            style={{
-              width: 300,
-            }}
+            className="invoice-search"
           />
 
           <Select
@@ -534,9 +478,7 @@ const InvoiceList = () => {
             onChange={
               handleStatusChange
             }
-            style={{
-              width: 180,
-            }}
+            className="invoice-status-filter"
             options={[
               {
                 value: 'paid',
@@ -566,15 +508,15 @@ const InvoiceList = () => {
               <ReloadOutlined />
             }
             onClick={handleRefresh}
+            className="invoice-refresh-btn"
           >
             Refresh
           </Button>
-        </Space>
+        </div>
       </Card>
 
       {/* INVOICE TABLE */}
-
-      <Card>
+      <Card className="invoice-table-card">
         {invoices.length === 0 &&
         !loading ? (
           <Empty
@@ -589,7 +531,7 @@ const InvoiceList = () => {
             bordered
             size="middle"
             scroll={{
-              x: 1700,
+              x: 1000,
             }}
             pagination={{
               current: page,
@@ -602,7 +544,6 @@ const InvoiceList = () => {
                 newPage
               ) => {
                 setPage(newPage);
-
                 fetchInvoices(
                   newPage,
                   search,

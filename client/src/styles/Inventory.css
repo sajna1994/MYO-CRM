@@ -1,0 +1,637 @@
+/* Inventory.css - Fully Responsive */
+
+/* ─────────────────────────────────────────────
+   PAGE CONTAINER
+   ───────────────────────────────────────────── */
+
+.stock-page {
+  padding: 20px;
+  max-width: 100%;
+  overflow-x: hidden;
+  min-height: 100%;
+}
+
+.stock-page__title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 20px 0;
+  color: #1a1a2e;
+}
+
+/* ─────────────────────────────────────────────
+   OVERVIEW SECTION
+   ───────────────────────────────────────────── */
+
+.stock-overview {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.stock-overview__heading {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 20px 0;
+  color: #1a1a2e;
+}
+
+/* ─────────────────────────────────────────────
+   LOADER
+   ───────────────────────────────────────────── */
+
+.stock-loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+/* ─────────────────────────────────────────────
+   SUMMARY CARDS
+   ───────────────────────────────────────────── */
+
+.stock-summary {
+  margin-bottom: 24px;
+}
+
+.stock-summary-card {
+  border-radius: 12px !important;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.stock-summary-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.stock-summary-card__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stock-summary-card__label {
+  display: block;
+  font-size: 14px;
+  color: #888;
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.stock-summary-card__value {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.stock-summary-card__icon {
+  font-size: 32px;
+  opacity: 0.7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Card Color Variants */
+.stock-summary-card--blue .stock-summary-card__icon {
+  color: #1890ff;
+}
+
+.stock-summary-card--blue:hover {
+  border-color: #1890ff !important;
+  box-shadow: 0 4px 16px rgba(24, 144, 255, 0.15) !important;
+}
+
+.stock-summary-card--orange .stock-summary-card__icon {
+  color: #fa8c16;
+}
+
+.stock-summary-card--orange:hover {
+  border-color: #fa8c16 !important;
+  box-shadow: 0 4px 16px rgba(250, 140, 22, 0.15) !important;
+}
+
+.stock-summary-card--red .stock-summary-card__icon {
+  color: #ff4d4f;
+}
+
+.stock-summary-card--red:hover {
+  border-color: #ff4d4f !important;
+  box-shadow: 0 4px 16px rgba(255, 77, 79, 0.15) !important;
+}
+
+/* ─────────────────────────────────────────────
+   FILTERS
+   ───────────────────────────────────────────── */
+
+.stock-filters {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.stock-search {
+  flex: 1;
+  min-width: 200px;
+  height: 42px;
+  border-radius: 8px;
+}
+
+.stock-category-select {
+  min-width: 160px;
+  width: 200px;
+  height: 42px;
+}
+
+.stock-category-select .ant-select-selector {
+  height: 42px !important;
+  border-radius: 8px !important;
+}
+
+.stock-category-select .ant-select-selection-placeholder {
+  line-height: 40px !important;
+}
+
+.stock-category-select .ant-select-selection-item {
+  line-height: 40px !important;
+}
+
+/* ─────────────────────────────────────────────
+   TABLE
+   ───────────────────────────────────────────── */
+
+.stock-table {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.stock-table .ant-table {
+  font-size: 14px;
+}
+
+.stock-table .ant-table-thead > tr > th {
+  background: #fafafa !important;
+  color: #1a1a2e !important;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 12px 14px !important;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.stock-table .ant-table-tbody > tr > td {
+  padding: 10px 14px !important;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 13px;
+}
+
+.stock-table .ant-table-tbody > tr:hover > td {
+  background: #fafafa !important;
+}
+
+.stock-table .ant-table-tbody > tr:last-child > td {
+  border-bottom: none;
+}
+
+/* ─────────────────────────────────────────────
+   STATUS TAGS
+   ───────────────────────────────────────────── */
+
+.stock-status {
+  font-weight: 600;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  border: none !important;
+}
+
+.stock-status--in-stock {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+.stock-status--low-stock {
+  background: #fff7e6;
+  color: #fa8c16;
+}
+
+.stock-status--out-of-stock {
+  background: #fff1f0;
+  color: #ff4d4f;
+}
+
+/* ─────────────────────────────────────────────
+   PAGINATION
+   ───────────────────────────────────────────── */
+
+.stock-table .ant-pagination {
+  margin-top: 16px;
+}
+
+.stock-table .ant-pagination .ant-pagination-item-active {
+  background: #ff8500;
+  border-color: #ff8500;
+}
+
+.stock-table .ant-pagination .ant-pagination-item-active a {
+  color: #ffffff;
+}
+
+.stock-table .ant-pagination .ant-pagination-item-active:hover {
+  border-color: #ff7200;
+}
+
+.stock-table .ant-pagination .ant-pagination-item-active:hover a {
+  color: #ffffff;
+}
+
+/* ─────────────────────────────────────────────
+   RESPONSIVE BREAKPOINTS
+   ───────────────────────────────────────────── */
+
+/* Tablets and small laptops */
+@media (max-width: 992px) {
+  .stock-page {
+    padding: 16px;
+  }
+
+  .stock-page__title {
+    font-size: 24px;
+  }
+
+  .stock-overview {
+    padding: 20px;
+  }
+
+  .stock-overview__heading {
+    font-size: 18px;
+  }
+
+  .stock-summary-card__value {
+    font-size: 20px;
+  }
+
+  .stock-summary-card__icon {
+    font-size: 28px;
+  }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+  .stock-page {
+    padding: 12px;
+  }
+
+  .stock-page__title {
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+
+  .stock-overview {
+    padding: 16px;
+    border-radius: 10px;
+  }
+
+  .stock-overview__heading {
+    font-size: 17px;
+    margin-bottom: 16px;
+  }
+
+  .stock-summary {
+    margin-bottom: 16px;
+  }
+
+  .stock-summary-card {
+    border-radius: 10px !important;
+  }
+
+  .stock-summary-card__value {
+    font-size: 18px;
+  }
+
+  .stock-summary-card__label {
+    font-size: 12px;
+  }
+
+  .stock-summary-card__icon {
+    font-size: 24px;
+  }
+
+  .stock-filters {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .stock-search {
+    width: 100%;
+    min-width: unset;
+    height: 38px;
+  }
+
+  .stock-category-select {
+    width: 100%;
+    min-width: unset;
+    height: 38px;
+  }
+
+  .stock-category-select .ant-select-selector {
+    height: 38px !important;
+  }
+
+  .stock-category-select .ant-select-selection-placeholder {
+    line-height: 36px !important;
+  }
+
+  .stock-category-select .ant-select-selection-item {
+    line-height: 36px !important;
+  }
+
+  .stock-table .ant-table {
+    font-size: 12px;
+  }
+
+  .stock-table .ant-table-thead > tr > th {
+    font-size: 11px;
+    padding: 8px 8px !important;
+  }
+
+  .stock-table .ant-table-tbody > tr > td {
+    padding: 6px 8px !important;
+    font-size: 12px;
+  }
+
+  .stock-status {
+    font-size: 10px;
+    padding: 1px 8px;
+  }
+
+  .stock-table .ant-pagination {
+    font-size: 12px;
+  }
+
+  .stock-table .ant-pagination .ant-pagination-item {
+    min-width: 28px;
+    height: 28px;
+    line-height: 28px;
+  }
+
+  .stock-table .ant-pagination .ant-pagination-prev,
+  .stock-table .ant-pagination .ant-pagination-next {
+    min-width: 28px;
+    height: 28px;
+    line-height: 28px;
+  }
+
+  .stock-table .ant-pagination .ant-pagination-item a {
+    font-size: 12px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .stock-page {
+    padding: 8px;
+  }
+
+  .stock-page__title {
+    font-size: 20px;
+  }
+
+  .stock-overview {
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .stock-overview__heading {
+    font-size: 16px;
+  }
+
+  .stock-summary-card {
+    border-radius: 8px !important;
+  }
+
+  .stock-summary-card__value {
+    font-size: 16px;
+  }
+
+  .stock-summary-card__label {
+    font-size: 11px;
+  }
+
+  .stock-summary-card__icon {
+    font-size: 20px;
+  }
+
+  .stock-table .ant-table {
+    font-size: 11px;
+  }
+
+  .stock-table .ant-table-thead > tr > th {
+    font-size: 10px;
+    padding: 6px 4px !important;
+  }
+
+  .stock-table .ant-table-tbody > tr > td {
+    padding: 4px 4px !important;
+    font-size: 11px;
+  }
+
+  .stock-status {
+    font-size: 9px;
+    padding: 1px 6px;
+  }
+
+  .stock-table .ant-pagination {
+    font-size: 11px;
+  }
+
+  .stock-table .ant-pagination .ant-pagination-item {
+    min-width: 24px;
+    height: 24px;
+    line-height: 24px;
+  }
+
+  .stock-table .ant-pagination .ant-pagination-prev,
+  .stock-table .ant-pagination .ant-pagination-next {
+    min-width: 24px;
+    height: 24px;
+    line-height: 24px;
+  }
+
+  .stock-table .ant-pagination .ant-pagination-item a {
+    font-size: 11px;
+  }
+
+  .stock-table .ant-pagination .ant-pagination-total-text {
+    font-size: 10px !important;
+  }
+
+  .stock-search {
+    height: 34px;
+    font-size: 13px;
+  }
+
+  .stock-category-select {
+    height: 34px;
+  }
+
+  .stock-category-select .ant-select-selector {
+    height: 34px !important;
+  }
+
+  .stock-category-select .ant-select-selection-placeholder {
+    line-height: 32px !important;
+    font-size: 13px;
+  }
+
+  .stock-category-select .ant-select-selection-item {
+    line-height: 32px !important;
+    font-size: 13px;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   SCROLLBAR STYLING FOR TABLES
+   ───────────────────────────────────────────── */
+
+.stock-table .ant-table-body::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.stock-table .ant-table-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.stock-table .ant-table-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.stock-table .ant-table-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* ─────────────────────────────────────────────
+   EMPTY STATE
+   ───────────────────────────────────────────── */
+
+.stock-table .ant-empty {
+  padding: 40px 0;
+}
+
+.stock-table .ant-empty-description {
+  font-size: 14px;
+  color: #999;
+}
+
+/* ─────────────────────────────────────────────
+   ANIMATIONS
+   ───────────────────────────────────────────── */
+
+.stock-summary-card,
+.stock-search,
+.stock-category-select {
+  transition: all 0.3s ease;
+}
+
+.stock-table .ant-table-tbody > tr {
+  transition: background 0.2s ease;
+}
+
+/* ─────────────────────────────────────────────
+   DARK MODE SUPPORT (Optional)
+   ───────────────────────────────────────────── */
+
+@media (prefers-color-scheme: dark) {
+  .stock-page__title {
+    color: #e8e8e8;
+  }
+
+  .stock-overview {
+    background: #1a1a2e;
+  }
+
+  .stock-overview__heading {
+    color: #e8e8e8;
+  }
+
+  .stock-table .ant-table-thead > tr > th {
+    background: #1f1f3a !important;
+    color: #e8e8e8 !important;
+    border-bottom-color: #2a2a4a;
+  }
+
+  .stock-table .ant-table-tbody > tr > td {
+    border-bottom-color: #2a2a4a;
+    color: #d0d0d0;
+  }
+
+  .stock-table .ant-table-tbody > tr:hover > td {
+    background: #2a2a4a !important;
+  }
+
+  .stock-table .ant-empty-description {
+    color: #888;
+  }
+
+  .stock-summary-card__value {
+    color: #e8e8e8;
+  }
+
+  .stock-summary-card__label {
+    color: #888;
+  }
+
+  .stock-search {
+    background: #1a1a2e;
+    border-color: #2a2a4a;
+    color: #d0d0d0;
+  }
+
+  .stock-search input {
+    color: #d0d0d0;
+    background: transparent;
+  }
+
+  .stock-category-select .ant-select-selector {
+    background: #1a1a2e !important;
+    border-color: #2a2a4a !important;
+    color: #d0d0d0 !important;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   PRINT STYLES
+   ───────────────────────────────────────────── */
+
+@media print {
+  .stock-page {
+    padding: 0;
+  }
+
+  .stock-filters {
+    display: none !important;
+  }
+
+  .stock-table .ant-table-thead > tr > th {
+    background: #f0f0f0 !important;
+    color: #000 !important;
+  }
+
+  .stock-table .ant-table-tbody > tr > td {
+    color: #000 !important;
+  }
+
+  .stock-summary-card {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+  }
+}

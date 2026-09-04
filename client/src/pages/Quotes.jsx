@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Popconfirm, Space, Table, message, Image } from 'antd';
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import API from '../api/axios';
+import '../styles/Quotes.css'; // We'll create this
 
 const formatMoney = (value) => `₹${Number(value || 0).toLocaleString('en-IN')}`;
 
@@ -15,7 +16,7 @@ const Quotes = () => {
     setLoading(true);
     try {
       const response = await API.get('/products?limit=100');
-      console.log('Products:', response.data.data); // Debug log
+      console.log('Products:', response.data.data);
       setProducts(response.data.data || []);
     } catch (error) {
       console.error('Fetch error:', error);
@@ -43,24 +44,23 @@ const Quotes = () => {
     {
       title: 'S.No.',
       key: 'index',
-      width: 70,
+      width: 60,
       align: 'center',
       render: (_, __, index) => index + 1,
     },
     {
       title: 'Image',
       key: 'image',
-      width: 80,
+      width: 70,
       align: 'center',
       render: (_, item) => {
-        // Check if image exists and is not empty
         if (item.image && typeof item.image === 'string' && item.image.length > 0) {
           return (
             <Image
               src={item.image}
               alt={item.name || 'Product'}
-              width={50}
-              height={50}
+              width={45}
+              height={45}
               style={{ objectFit: 'cover', borderRadius: 4 }}
               fallback="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50'%3E%3Crect width='50' height='50' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%23999' font-size='10'%3ENo Image%3C/text%3E%3C/svg%3E"
               preview={{
@@ -69,19 +69,18 @@ const Quotes = () => {
             />
           );
         }
-        // If no image, show placeholder
         return (
           <div
             style={{
-              width: 50,
-              height: 50,
+              width: 45,
+              height: 45,
               background: '#f0f0f0',
               borderRadius: 4,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#999',
-              fontSize: 10,
+              fontSize: 9,
               margin: '0 auto',
             }}
           >
@@ -119,7 +118,7 @@ const Quotes = () => {
       render: (value) => value || 'Pcs',
     },
     {
-      title: 'Selling Price',
+      title: 'Price',
       dataIndex: 'price',
       key: 'price',
       render: formatMoney,
@@ -135,9 +134,9 @@ const Quotes = () => {
       title: 'Action',
       key: 'action',
       align: 'center',
-      width: 120,
+      width: 100,
       render: (_, item) => (
-        <Space size="middle">
+        <Space size="small">
           <Button
             type="text"
             className="price-list-edit"
@@ -163,6 +162,7 @@ const Quotes = () => {
           type="primary"
           icon={<PlusOutlined />}
           onClick={() => navigate('/products')}
+          className="add-product-btn"
         >
           Add Product
         </Button>
@@ -173,8 +173,13 @@ const Quotes = () => {
         columns={columns}
         rowKey="_id"
         loading={loading}
-        pagination={{ pageSize: 10, showSizeChanger: false }}
-        scroll={{ x: 1100 }}
+        pagination={{ 
+          pageSize: 10, 
+          showSizeChanger: false,
+          responsive: true,
+        }}
+        scroll={{ x: 700 }}
+        size="middle"
       />
     </section>
   );

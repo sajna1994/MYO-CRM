@@ -32,7 +32,7 @@ import {
 import dayjs from 'dayjs';
 import API from '../api/axios';
 
-import './Invoices.css';
+import '../styles/Invoices.css';
 
 const { Title, Text } = Typography;
 

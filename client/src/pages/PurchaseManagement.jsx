@@ -18,7 +18,7 @@ import {
   Row,
   Select,
   Space,
-    Switch, 
+  Switch,
   Table,
   Tooltip,
   Typography,
@@ -31,15 +31,14 @@ import {
   EyeOutlined,
   PlusOutlined,
   SearchOutlined,
-    SettingOutlined, // Add this
-
+  SettingOutlined,
 } from '@ant-design/icons';
 
 import dayjs from 'dayjs';
 
 import API from '../api/axios';
 
-import './PurchaseManagement.css';
+import '../styles/PurchaseManagement.css';
 
 const { Title } = Typography;
 
@@ -114,11 +113,8 @@ const PurchaseManagement = () => {
   // VIEW STATE
   // =========================================================
 
-  const [viewModalVisible, setViewModalVisible] =
-    useState(false);
-
-  const [selectedPurchase, setSelectedPurchase] =
-    useState(null);
+  const [viewModalVisible, setViewModalVisible] = useState(false);
+  const [selectedPurchase, setSelectedPurchase] = useState(null);
 
   // =========================================================
   // PAGINATION / SEARCH
@@ -134,25 +130,18 @@ const PurchaseManagement = () => {
   // =========================================================
 
   const [products, setProducts] = useState([]);
-  const [productsLoading, setProductsLoading] =
-    useState(false);
+  const [productsLoading, setProductsLoading] = useState(false);
 
-  const [productModalVisible, setProductModalVisible] =
-    useState(false);
-
-  const [productSaving, setProductSaving] =
-    useState(false);
-
-  const [productTargetIndex, setProductTargetIndex] =
-    useState(null);
+  const [productModalVisible, setProductModalVisible] = useState(false);
+  const [productSaving, setProductSaving] = useState(false);
+  const [productTargetIndex, setProductTargetIndex] = useState(null);
 
   // =========================================================
   // CATEGORY STATE
   // =========================================================
 
   const [categories, setCategories] = useState([]);
-  const [categoriesLoading, setCategoriesLoading] =
-    useState(false);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
 
   // =========================================================
   // HELPERS
@@ -169,171 +158,55 @@ const PurchaseManagement = () => {
         0
     );
 
-    return Number.isFinite(price)
-      ? price
-      : 0;
+    return Number.isFinite(price) ? price : 0;
   }, []);
 
-// =========================================================
-// SUPPLIER STATE
-// =========================================================
+  // =========================================================
+  // SUPPLIER STATE
+  // =========================================================
 
-const [suppliers, setSuppliers] = useState([]);
-const [suppliersLoading, setSuppliersLoading] = useState(false);
+  const [suppliers, setSuppliers] = useState([]);
+  const [suppliersLoading, setSuppliersLoading] = useState(false);
 
-const [supplierModalVisible, setSupplierModalVisible] =
-  useState(false);
+  const [supplierModalVisible, setSupplierModalVisible] = useState(false);
+  const [supplierSaving, setSupplierSaving] = useState(false);
+  const [supplierForm] = Form.useForm();
 
-const [supplierSaving, setSupplierSaving] =
-  useState(false);
+  // =========================================================
+  // CATEGORY MANAGEMENT STATE
+  // =========================================================
 
-const [supplierForm] = Form.useForm();
+  const [categoryModalVisible, setCategoryModalVisible] = useState(false);
+  const [categorySaving, setCategorySaving] = useState(false);
+  const [categoryForm] = Form.useForm();
+  const [editingCategoryId, setEditingCategoryId] = useState(null);
 
-// =========================================================
-// FETCH SUPPLIERS
-// =========================================================
+  // =========================================================
+  // FETCH SUPPLIERS
+  // =========================================================
 
-const fetchSuppliers = useCallback(async () => {
-  setSuppliersLoading(true);
+  const fetchSuppliers = useCallback(async () => {
+    setSuppliersLoading(true);
 
-  try {
-    const response = await API.get('/suppliers', {
-      params: {
-        limit: 1000,
-      },
-    });
+    try {
+      const response = await API.get('/suppliers', {
+        params: {
+          limit: 1000,
+        },
+      });
 
-    setSuppliers(
-      response.data?.data || []
-    );
-  } catch (error) {
-    console.error(
-      'FETCH SUPPLIERS ERROR:',
-      error
-    );
-
-    message.error(
-      error.response?.data?.message ||
-        'Failed to load suppliers'
-    );
-  } finally {
-    setSuppliersLoading(false);
-  }
-}, []);
-// =========================================================
-// CATEGORY STATE (Add these after existing categories state)
-// =========================================================
-
-const [categoryModalVisible, setCategoryModalVisible] = useState(false);
-const [categorySaving, setCategorySaving] = useState(false);
-const [categoryForm] = Form.useForm();
-const [editingCategoryId, setEditingCategoryId] = useState(null);
-
-// =========================================================
-// OPEN ADD CATEGORY MODAL
-// =========================================================
-
-const openCategoryModal = () => {
-  categoryForm.resetFields();
-  setEditingCategoryId(null);
-  setCategoryModalVisible(true);
-};
-
-// =========================================================
-// CLOSE CATEGORY MODAL
-// =========================================================
-
-const closeCategoryModal = () => {
-  setCategoryModalVisible(false);
-  setEditingCategoryId(null);
-  categoryForm.resetFields();
-};
-
-// =========================================================
-// CREATE/UPDATE CATEGORY
-// =========================================================
-
-const handleCreateCategory = async (values) => {
-  setCategorySaving(true);
-
-  try {
-    const payload = {
-      name: values.name?.trim(),
-      description: values.description?.trim() || '',
-      isActive: values.isActive !== undefined ? values.isActive : true,
-    };
-
-    let response;
-    let newCategory;
-
-    if (editingCategoryId) {
-      // Update existing category
-      response = await API.put(`/categories/${editingCategoryId}`, payload);
-      newCategory = response.data?.data || response.data;
-      message.success('Category updated successfully');
-    } else {
-      // Create new category
-      response = await API.post('/categories', payload);
-      newCategory = response.data?.data || response.data;
-      message.success('Category added successfully');
+      setSuppliers(response.data?.data || []);
+    } catch (error) {
+      console.error('FETCH SUPPLIERS ERROR:', error);
+      message.error(
+        error.response?.data?.message ||
+          'Failed to load suppliers'
+      );
+    } finally {
+      setSuppliersLoading(false);
     }
+  }, []);
 
-    if (!newCategory?._id) {
-      throw new Error('Category was created but no ID was returned');
-    }
-
-    // Refresh categories list
-    await fetchCategories();
-
-    // If this is called from product form, update the product form's category field
-    if (productForm) {
-      productForm.setFieldValue('category', newCategory._id);
-    }
-
-    closeCategoryModal();
-
-  } catch (error) {
-    console.error('CATEGORY ERROR:', error);
-    message.error(
-      error.response?.data?.message || 
-      error.message || 
-      'Failed to save category'
-    );
-  } finally {
-    setCategorySaving(false);
-  }
-};
-
-// =========================================================
-// EDIT CATEGORY
-// =========================================================
-
-const handleEditCategory = (category) => {
-  setEditingCategoryId(category._id);
-  categoryForm.setFieldsValue({
-    name: category.name,
-    description: category.description || '',
-    isActive: category.isActive !== false,
-  });
-  setCategoryModalVisible(true);
-};
-
-// =========================================================
-// DELETE CATEGORY
-// =========================================================
-
-const handleDeleteCategory = async (categoryId) => {
-  try {
-    await API.delete(`/categories/${categoryId}`);
-    message.success('Category deleted successfully');
-    await fetchCategories();
-  } catch (error) {
-    console.error('DELETE CATEGORY ERROR:', error);
-    message.error(
-      error.response?.data?.message || 'Failed to delete category'
-    );
-  }
-};
   // =========================================================
   // FETCH PRODUCTS
   // =========================================================
@@ -351,15 +224,9 @@ const handleDeleteCategory = async (categoryId) => {
         }
       );
 
-      setProducts(
-        response.data?.data || []
-      );
+      setProducts(response.data?.data || []);
     } catch (error) {
-      console.error(
-        'FETCH PRODUCTS ERROR:',
-        error
-      );
-
+      console.error('FETCH PRODUCTS ERROR:', error);
       message.error(
         error.response?.data?.message ||
           'Failed to load products'
@@ -377,19 +244,10 @@ const handleDeleteCategory = async (categoryId) => {
     setCategoriesLoading(true);
 
     try {
-      const response = await API.get(
-        '/categories'
-      );
-
-      setCategories(
-        response.data?.data || []
-      );
+      const response = await API.get('/categories');
+      setCategories(response.data?.data || []);
     } catch (error) {
-      console.error(
-        'FETCH CATEGORIES ERROR:',
-        error
-      );
-
+      console.error('FETCH CATEGORIES ERROR:', error);
       message.error(
         error.response?.data?.message ||
           'Failed to load categories'
@@ -404,42 +262,23 @@ const handleDeleteCategory = async (categoryId) => {
   // =========================================================
 
   const fetchPurchases = useCallback(
-    async (
-      currentPage = 1,
-      currentSearch = ''
-    ) => {
+    async (currentPage = 1, currentSearch = '') => {
       setLoading(true);
 
       try {
-        const response = await API.get(
-          '/purchases',
-          {
-            params: {
-              page: currentPage,
-              limit: PAGE_SIZE,
-              search:
-                currentSearch || undefined,
-            },
-          }
-        );
+        const response = await API.get('/purchases', {
+          params: {
+            page: currentPage,
+            limit: PAGE_SIZE,
+            search: currentSearch || undefined,
+          },
+        });
 
-        setPurchases(
-          response.data?.data || []
-        );
-
-        setTotal(
-          response.data?.total || 0
-        );
-
-        setTotalAmount(
-          response.data?.totalAmount || 0
-        );
+        setPurchases(response.data?.data || []);
+        setTotal(response.data?.total || 0);
+        setTotalAmount(response.data?.totalAmount || 0);
       } catch (error) {
-        console.error(
-          'FETCH PURCHASES ERROR:',
-          error
-        );
-
+        console.error('FETCH PURCHASES ERROR:', error);
         message.error(
           error.response?.data?.message ||
             'Failed to fetch purchases'
@@ -455,130 +294,162 @@ const handleDeleteCategory = async (categoryId) => {
   // INITIAL LOAD
   // =========================================================
 
- 
-// =========================================================
-// INITIAL LOAD
-// =========================================================
+  useEffect(() => {
+    fetchPurchases(1, '');
+    fetchProducts();
+    fetchSuppliers();
+    fetchCategories();
+  }, [
+    fetchPurchases,
+    fetchProducts,
+    fetchSuppliers,
+    fetchCategories,
+  ]);
 
-useEffect(() => {
-  fetchPurchases(1, '');
-  fetchProducts();
-  fetchSuppliers();
-   fetchCategories();
-}, [
-  fetchPurchases,
-  fetchProducts,
-  fetchSuppliers,
-   fetchCategories,
-]);
+  // =========================================================
+  // OPEN ADD SUPPLIER MODAL
+  // =========================================================
 
+  const openSupplierModal = () => {
+    supplierForm.resetFields();
+    setSupplierModalVisible(true);
+  };
 
-// =========================================================
-// OPEN ADD SUPPLIER MODAL
-// =========================================================
+  // =========================================================
+  // CLOSE ADD SUPPLIER MODAL
+  // =========================================================
 
-const openSupplierModal = () => {
-  supplierForm.resetFields();
+  const closeSupplierModal = () => {
+    setSupplierModalVisible(false);
+    supplierForm.resetFields();
+  };
 
-  setSupplierModalVisible(true);
-};
+  // =========================================================
+  // CREATE SUPPLIER
+  // =========================================================
 
+  const handleCreateSupplier = async (values) => {
+    setSupplierSaving(true);
 
-// =========================================================
-// CLOSE ADD SUPPLIER MODAL
-// =========================================================
+    try {
+      const payload = {
+        name: values.name?.trim(),
+        contactPerson: values.contactPerson?.trim() || '',
+        phone: values.phone?.trim() || '',
+        email: values.email?.trim() || '',
+        landline: values.landline?.trim() || '',
+        website: values.website?.trim() || '',
+        gstNumber: values.gstNumber?.trim() || '',
+        address: values.address?.trim() || '',
+        notes: values.notes?.trim() || '',
+      };
 
-const closeSupplierModal = () => {
-  setSupplierModalVisible(false);
-  supplierForm.resetFields();
-};
+      const response = await API.post('/suppliers', payload);
+      const newSupplier = response.data?.data || response.data;
 
+      if (!newSupplier?._id) {
+        throw new Error('Supplier was created but no ID was returned');
+      }
 
-// =========================================================
-// CREATE SUPPLIER
-// =========================================================
+      setSuppliers((prev) => [newSupplier, ...prev]);
+      form.setFieldValue('supplier', newSupplier._id);
+      message.success('Supplier added successfully');
+      closeSupplierModal();
+    } catch (error) {
+      console.error('CREATE SUPPLIER ERROR:', error);
+      message.error(
+        error.response?.data?.message ||
+          'Failed to create supplier'
+      );
+    } finally {
+      setSupplierSaving(false);
+    }
+  };
 
-const handleCreateSupplier = async (values) => {
-  setSupplierSaving(true);
+  // =========================================================
+  // CATEGORY MODAL FUNCTIONS
+  // =========================================================
 
-  try {
-    const payload = {
-      name: values.name?.trim(),
+  const openCategoryModal = () => {
+    categoryForm.resetFields();
+    setEditingCategoryId(null);
+    setCategoryModalVisible(true);
+  };
 
-      contactPerson:
-        values.contactPerson?.trim() || '',
+  const closeCategoryModal = () => {
+    setCategoryModalVisible(false);
+    setEditingCategoryId(null);
+    categoryForm.resetFields();
+  };
 
-      phone:
-        values.phone?.trim() || '',
+  const handleCreateCategory = async (values) => {
+    setCategorySaving(true);
 
-      email:
-        values.email?.trim() || '',
+    try {
+      const payload = {
+        name: values.name?.trim(),
+        description: values.description?.trim() || '',
+        isActive: values.isActive !== undefined ? values.isActive : true,
+      };
 
-      landline:
-        values.landline?.trim() || '',
+      let response;
+      let newCategory;
 
-      website:
-        values.website?.trim() || '',
+      if (editingCategoryId) {
+        response = await API.put(`/categories/${editingCategoryId}`, payload);
+        newCategory = response.data?.data || response.data;
+        message.success('Category updated successfully');
+      } else {
+        response = await API.post('/categories', payload);
+        newCategory = response.data?.data || response.data;
+        message.success('Category added successfully');
+      }
 
-      gstNumber:
-        values.gstNumber?.trim() || '',
+      if (!newCategory?._id) {
+        throw new Error('Category was created but no ID was returned');
+      }
 
-      address:
-        values.address?.trim() || '',
+      await fetchCategories();
 
-      notes:
-        values.notes?.trim() || '',
-    };
+      if (productForm) {
+        productForm.setFieldValue('category', newCategory._id);
+      }
 
-    const response = await API.post(
-      '/suppliers',
-      payload
-    );
+      closeCategoryModal();
+    } catch (error) {
+      console.error('CATEGORY ERROR:', error);
+      message.error(
+        error.response?.data?.message ||
+          error.message ||
+          'Failed to save category'
+      );
+    } finally {
+      setCategorySaving(false);
+    }
+  };
 
-    const newSupplier =
-      response.data?.data ||
-      response.data;
+  const handleEditCategory = (category) => {
+    setEditingCategoryId(category._id);
+    categoryForm.setFieldsValue({
+      name: category.name,
+      description: category.description || '',
+      isActive: category.isActive !== false,
+    });
+    setCategoryModalVisible(true);
+  };
 
-    if (!newSupplier?._id) {
-      throw new Error(
-        'Supplier was created but no ID was returned'
+  const handleDeleteCategory = async (categoryId) => {
+    try {
+      await API.delete(`/categories/${categoryId}`);
+      message.success('Category deleted successfully');
+      await fetchCategories();
+    } catch (error) {
+      console.error('DELETE CATEGORY ERROR:', error);
+      message.error(
+        error.response?.data?.message || 'Failed to delete category'
       );
     }
-
-    // Add newly created supplier
-    // to the supplier list
-    setSuppliers((prev) => [
-      newSupplier,
-      ...prev,
-    ]);
-
-    // Automatically select the new supplier
-    form.setFieldValue(
-      'supplier',
-      newSupplier._id
-    );
-
-    message.success(
-      'Supplier added successfully'
-    );
-
-    closeSupplierModal();
-
-  } catch (error) {
-    console.error(
-      'CREATE SUPPLIER ERROR:',
-      error
-    );
-
-    message.error(
-      error.response?.data?.message ||
-        'Failed to create supplier'
-    );
-  } finally {
-    setSupplierSaving(false);
-  }
-};
-
+  };
 
   // =========================================================
   // PURCHASE MODAL
@@ -592,74 +463,31 @@ const handleCreateSupplier = async (values) => {
 
   const openNewPurchaseModal = () => {
     setEditingId(null);
-
     form.setFieldsValue({
       ...DEFAULT_PURCHASE,
       date: dayjs(),
-      items: [
-        {
-          ...DEFAULT_ITEM,
-        },
-      ],
+      items: [{ ...DEFAULT_ITEM }],
     });
-
     setModalVisible(true);
   };
 
-  const openEditPurchaseModal = (
-    record
-  ) => {
+  const openEditPurchaseModal = (record) => {
     setEditingId(record._id);
 
     form.setFieldsValue({
-      invoiceNumber:
-        record.invoiceNumber || '',
-
-      
-supplier:
-  record.supplier?._id ||
-  record.supplier ||
-  '',
-
-
-      date: record.date
-        ? dayjs(record.date)
-        : dayjs(),
-
-      status:
-        record.status ||
-        'received',
-
-      notes:
-        record.notes || '',
-
-      items:
-        record.items?.length
-          ? record.items.map(
-              (item) => ({
-                product:
-                  item.product || '',
-
-                productId:
-                  item.productId ||
-                  '',
-
-                quantity:
-                  Number(
-                    item.quantity
-                  ) || 1,
-
-                unitPrice:
-                  Number(
-                    item.unitPrice
-                  ) || 0,
-              })
-            )
-          : [
-              {
-                ...DEFAULT_ITEM,
-              },
-            ],
+      invoiceNumber: record.invoiceNumber || '',
+      supplier: record.supplier?._id || record.supplier || '',
+      date: record.date ? dayjs(record.date) : dayjs(),
+      status: record.status || 'received',
+      notes: record.notes || '',
+      items: record.items?.length
+        ? record.items.map((item) => ({
+            product: item.product || '',
+            productId: item.productId || '',
+            quantity: Number(item.quantity) || 1,
+            unitPrice: Number(item.unitPrice) || 0,
+          }))
+        : [{ ...DEFAULT_ITEM }],
     });
 
     setModalVisible(true);
@@ -669,43 +497,22 @@ supplier:
   // PRODUCT SELECTION
   // =========================================================
 
-  const handleProductChange = (
-    productId,
-    fieldIndex
-  ) => {
-    const product = products.find(
-      (item) =>
-        item._id === productId
-    );
+  const handleProductChange = (productId, fieldIndex) => {
+    const product = products.find((item) => item._id === productId);
 
     if (!product) {
       return;
     }
 
-    const currentItems =
-      form.getFieldValue('items') ||
-      [];
-
-    const updatedItems = [
-      ...currentItems,
-    ];
+    const currentItems = form.getFieldValue('items') || [];
+    const updatedItems = [...currentItems];
 
     updatedItems[fieldIndex] = {
       ...updatedItems[fieldIndex],
-
       product: product.name,
-
-      productId:
-        product._id,
-
-      quantity:
-        Number(
-          updatedItems[fieldIndex]
-            ?.quantity
-        ) || 1,
-
-      unitPrice:
-        getPurchasePrice(product),
+      productId: product._id,
+      quantity: Number(updatedItems[fieldIndex]?.quantity) || 1,
+      unitPrice: getPurchasePrice(product),
     };
 
     form.setFieldsValue({
@@ -717,15 +524,9 @@ supplier:
   // ADD PRODUCT MODAL
   // =========================================================
 
-  const openProductModal = async (
-    fieldIndex
-  ) => {
-    setProductTargetIndex(
-      fieldIndex
-    );
-
+  const openProductModal = async (fieldIndex) => {
+    setProductTargetIndex(fieldIndex);
     productForm.resetFields();
-
     productForm.setFieldsValue({
       costPrice: 0,
       price: 0,
@@ -733,9 +534,7 @@ supplier:
       lowStockThreshold: 10,
       unit: 'Pcs',
     });
-
     await fetchCategories();
-
     setProductModalVisible(true);
   };
 
@@ -749,256 +548,119 @@ supplier:
   // CREATE PRODUCT
   // =========================================================
 
-  const handleCreateProduct =
-    async (values) => {
-      setProductSaving(true);
+  const handleCreateProduct = async (values) => {
+    setProductSaving(true);
 
-      try {
-        const targetIndex =
-          productTargetIndex;
+    try {
+      const targetIndex = productTargetIndex;
 
-        const payload = {
-          ...values,
+      const payload = {
+        ...values,
+        sku: `PRD-${Date.now().toString().slice(-6)}`,
+        costPrice: Number(values.costPrice) || 0,
+        price: Number(values.price) || 0,
+        stock: Number(values.stock) || 0,
+        lowStockThreshold: Number(values.lowStockThreshold) || 0,
+      };
 
-          sku: `PRD-${Date.now()
-            .toString()
-            .slice(-6)}`,
+      const response = await API.post('/products', payload);
+      const newProduct = response.data?.data || response.data;
 
-          costPrice:
-            Number(
-              values.costPrice
-            ) || 0,
+      message.success('Product created successfully');
+      await fetchProducts();
+      setProductModalVisible(false);
+      productForm.resetFields();
+      setProductTargetIndex(null);
 
-          price:
-            Number(
-              values.price
-            ) || 0,
-
-          stock:
-            Number(
-              values.stock
-            ) || 0,
-
-          lowStockThreshold:
-            Number(
-              values.lowStockThreshold
-            ) || 0,
-        };
-
-        const response =
-          await API.post(
-            '/products',
-            payload
-          );
-
-        const newProduct =
-          response.data?.data ||
-          response.data;
-
-        message.success(
-          'Product created successfully'
-        );
-
-        await fetchProducts();
-
-        setProductModalVisible(
-          false
-        );
-
-        productForm.resetFields();
-
-        setProductTargetIndex(
-          null
-        );
-
-        // Automatically select
-        // the new product.
-        if (
-          newProduct?._id &&
-          targetIndex !== null
-        ) {
-          handleProductChange(
-            newProduct._id,
-            targetIndex
-          );
-        }
-      } catch (error) {
-        console.error(
-          'CREATE PRODUCT ERROR:',
-          error
-        );
-
-        message.error(
-          error.response?.data
-            ?.message ||
-            'Failed to create product'
-        );
-      } finally {
-        setProductSaving(false);
+      if (newProduct?._id && targetIndex !== null) {
+        handleProductChange(newProduct._id, targetIndex);
       }
-    };
+    } catch (error) {
+      console.error('CREATE PRODUCT ERROR:', error);
+      message.error(
+        error.response?.data?.message ||
+          'Failed to create product'
+      );
+    } finally {
+      setProductSaving(false);
+    }
+  };
 
   // =========================================================
   // SAVE PURCHASE
   // =========================================================
 
   const handleSubmit = async (values) => {
-  console.log('========== PURCHASE FORM ==========');
-  console.log('All values:', values);
-  console.log('Supplier:', values.supplier);
-  console.log('Supplier type:', typeof values.supplier);
-  console.log('===================================');
-
-  
-    if (
-      !values.items?.length
-    ) {
-      message.warning(
-        'Please add at least one product'
-      );
+    if (!values.items?.length) {
+      message.warning('Please add at least one product');
       return;
     }
 
     setSaving(true);
 
     try {
-      const formattedItems =
-        values.items.map(
-          (item, index) => {
-            const quantity =
-              Number(
-                item.quantity
-              );
+      const formattedItems = values.items.map((item, index) => {
+        const quantity = Number(item.quantity);
+        const unitPrice = Number(item.unitPrice);
+        const productName = item.product?.trim();
 
-            const unitPrice =
-              Number(
-                item.unitPrice
-              );
+        if (!productName) {
+          throw new Error(`Please select product ${index + 1}`);
+        }
 
-            const productName =
-              item.product?.trim();
+        if (!Number.isFinite(quantity) || quantity <= 0) {
+          throw new Error(`Invalid quantity for ${productName}`);
+        }
 
-            if (!productName) {
-              throw new Error(
-                `Please select product ${index + 1}`
-              );
-            }
+        if (!Number.isFinite(unitPrice) || unitPrice <= 0) {
+          throw new Error(`Invalid unit price for ${productName}`);
+        }
 
-            if (
-              !Number.isFinite(
-                quantity
-              ) ||
-              quantity <= 0
-            ) {
-              throw new Error(
-                `Invalid quantity for ${productName}`
-              );
-            }
+        return {
+          productId: item.productId || null,
+          product: productName,
+          quantity,
+          unitPrice,
+          totalPrice: quantity * unitPrice,
+        };
+      });
 
-            if (
-              !Number.isFinite(
-                unitPrice
-              ) ||
-              unitPrice <= 0
-            ) {
-              throw new Error(
-                `Invalid unit price for ${productName}`
-              );
-            }
+      const totalAmount = formattedItems.reduce(
+        (sum, item) => sum + item.totalPrice,
+        0
+      );
 
-            return {
-              productId:
-                item.productId ||
-                null,
+      const supplierId = values.supplier;
 
-              product:
-                productName,
+      if (!supplierId) {
+        message.error('Please select a supplier');
+        return;
+      }
 
-              quantity,
-
-              unitPrice,
-
-              totalPrice:
-                quantity *
-                unitPrice,
-            };
-          }
-        );
-
-      const totalAmount =
-        formattedItems.reduce(
-          (
-            sum,
-            item
-          ) =>
-            sum +
-            item.totalPrice,
-          0
-        );
-
-     const supplierId = values.supplier;
-
-if (!supplierId) {
-  message.error('Please select a supplier');
-  return;
-}
-
-const payload = {
-  invoiceNumber:
-    values.invoiceNumber?.trim(),
-
-  supplier: String(supplierId),
-
-  items: formattedItems,
-
-  totalAmount,
-
-  date: values.date
-    ? values.date.toISOString()
-    : new Date().toISOString(),
-
-  status:
-    values.status || 'received',
-
-  notes:
-    values.notes?.trim() || '',
-};
+      const payload = {
+        invoiceNumber: values.invoiceNumber?.trim(),
+        supplier: String(supplierId),
+        items: formattedItems,
+        totalAmount,
+        date: values.date ? values.date.toISOString() : new Date().toISOString(),
+        status: values.status || 'received',
+        notes: values.notes?.trim() || '',
+      };
 
       if (editingId) {
-        await API.put(
-          `/purchases/${editingId}`,
-          payload
-        );
-
-        message.success(
-          'Purchase updated successfully'
-        );
+        await API.put(`/purchases/${editingId}`, payload);
+        message.success('Purchase updated successfully');
       } else {
-        await API.post(
-          '/purchases',
-          payload
-        );
-
-        message.success(
-          'Purchase created successfully'
-        );
+        await API.post('/purchases', payload);
+        message.success('Purchase created successfully');
       }
 
       closePurchaseModal();
-
-      await fetchPurchases(
-        page,
-        search
-      );
+      await fetchPurchases(page, search);
     } catch (error) {
-      console.error(
-        'SAVE PURCHASE ERROR:',
-        error
-      );
-
+      console.error('SAVE PURCHASE ERROR:', error);
       message.error(
-        error.response?.data
-          ?.message ||
+        error.response?.data?.message ||
           error.message ||
           'Unable to save purchase'
       );
@@ -1011,39 +673,18 @@ const payload = {
   // DELETE PURCHASE
   // =========================================================
 
-  const handleDelete = async (
-    id
-  ) => {
+  const handleDelete = async (id) => {
     try {
-      await API.delete(
-        `/purchases/${id}`
-      );
+      await API.delete(`/purchases/${id}`);
+      message.success('Purchase deleted successfully');
 
-      message.success(
-        'Purchase deleted successfully'
-      );
-
-      const nextPage =
-        purchases.length === 1 &&
-        page > 1
-          ? page - 1
-          : page;
-
+      const nextPage = purchases.length === 1 && page > 1 ? page - 1 : page;
       setPage(nextPage);
-
-      await fetchPurchases(
-        nextPage,
-        search
-      );
+      await fetchPurchases(nextPage, search);
     } catch (error) {
-      console.error(
-        'DELETE PURCHASE ERROR:',
-        error
-      );
-
+      console.error('DELETE PURCHASE ERROR:', error);
       message.error(
-        error.response?.data
-          ?.message ||
+        error.response?.data?.message ||
           'Delete failed'
       );
     }
@@ -1053,172 +694,123 @@ const payload = {
   // VIEW PURCHASE
   // =========================================================
 
-  const handleView = (
-    record
-  ) => {
-    setSelectedPurchase(
-      record
-    );
-
-    setViewModalVisible(
-      true
-    );
+  const handleView = (record) => {
+    setSelectedPurchase(record);
+    setViewModalVisible(true);
   };
 
   const closeViewModal = () => {
-    setViewModalVisible(
-      false
-    );
-
-    setSelectedPurchase(
-      null
-    );
+    setViewModalVisible(false);
+    setSelectedPurchase(null);
   };
 
   // =========================================================
   // SEARCH
   // =========================================================
 
-  const handleSearch = (
-    value
-  ) => {
+  const handleSearch = (value) => {
     setSearch(value);
     setPage(1);
-
-    fetchPurchases(
-      1,
-      value
-    );
+    fetchPurchases(1, value);
   };
 
   // =========================================================
   // FORM WATCH
   // =========================================================
 
-  const purchaseItems =
-    Form.useWatch(
-      'items',
-      form
+  const purchaseItems = Form.useWatch('items', form);
+
+  const currentGrandTotal = useMemo(() => {
+    return (
+      purchaseItems?.reduce((sum, item) => {
+        const quantity = Number(item?.quantity) || 0;
+        const unitPrice = Number(item?.unitPrice) || 0;
+        return sum + quantity * unitPrice;
+      }, 0) || 0
     );
-
-  const currentGrandTotal =
-    useMemo(() => {
-      return (
-        purchaseItems?.reduce(
-          (
-            sum,
-            item
-          ) => {
-            const quantity =
-              Number(
-                item?.quantity
-              ) || 0;
-
-            const unitPrice =
-              Number(
-                item?.unitPrice
-              ) || 0;
-
-            return (
-              sum +
-              quantity *
-                unitPrice
-            );
-          },
-          0
-        ) || 0
-      );
-    }, [purchaseItems]);
+  }, [purchaseItems]);
 
   // =========================================================
   // PRODUCT OPTIONS
   // =========================================================
 
-  const productOptions =
-    useMemo(() => {
-      return products.map(
-        (product) => ({
-          value:
-            product._id,
+  const productOptions = useMemo(() => {
+    return products.map((product) => ({
+      value: product._id,
+      label: `${product.name} - ${formatCurrency(
+        getPurchasePrice(product)
+      )}`,
+    }));
+  }, [products, formatCurrency, getPurchasePrice]);
 
-          label: `${
-            product.name
-          } - ${formatCurrency(
-            getPurchasePrice(
-              product
-            )
-          )}`,
-        })
-      );
-    }, [
-      products,
-      formatCurrency,
-      getPurchasePrice,
-    ]);
-// =========================================================
-// CATEGORY TABLE COLUMNS
-// =========================================================
+  // =========================================================
+  // CATEGORY TABLE COLUMNS
+  // =========================================================
 
-const categoryColumns = useMemo(() => [
-  {
-    title: 'S.No.',
-    key: 'serialNumber',
-    width: 60,
-    align: 'center',
-    render: (_, __, index) => index + 1,
-  },
-  {
-    title: 'Category Name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'Description',
-    dataIndex: 'description',
-    key: 'description',
-    render: (text) => text || '-',
-  },
-  {
-    title: 'Status',
-    dataIndex: 'isActive',
-    key: 'isActive',
-    align: 'center',
-    render: (isActive) => (
-      <span style={{ color: isActive !== false ? '#52c41a' : '#ff4d4f' }}>
-        {isActive !== false ? 'Active' : 'Inactive'}
-      </span>
-    ),
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    width: 120,
-    align: 'center',
-    render: (_, record) => (
-      <Space size="small">
-        <Tooltip title="Edit">
-          <Button
-            type="text"
-            icon={<EditOutlined />}
-            onClick={() => handleEditCategory(record)}
-          />
-        </Tooltip>
-        <Popconfirm
-          title="Delete this category?"
-          description="This action cannot be undone."
-          okText="Delete"
-          cancelText="Cancel"
-          okButtonProps={{ danger: true }}
-          onConfirm={() => handleDeleteCategory(record._id)}
-        >
-          <Tooltip title="Delete">
-            <Button type="text" danger icon={<DeleteOutlined />} />
-          </Tooltip>
-        </Popconfirm>
-      </Space>
-    ),
-  },
-], []);
+  const categoryColumns = useMemo(
+    () => [
+      {
+        title: 'S.No.',
+        key: 'serialNumber',
+        width: 60,
+        align: 'center',
+        render: (_, __, index) => index + 1,
+      },
+      {
+        title: 'Category Name',
+        dataIndex: 'name',
+        key: 'name',
+      },
+      {
+        title: 'Description',
+        dataIndex: 'description',
+        key: 'description',
+        render: (text) => text || '-',
+      },
+      {
+        title: 'Status',
+        dataIndex: 'isActive',
+        key: 'isActive',
+        align: 'center',
+        render: (isActive) => (
+          <span style={{ color: isActive !== false ? '#52c41a' : '#ff4d4f' }}>
+            {isActive !== false ? 'Active' : 'Inactive'}
+          </span>
+        ),
+      },
+      {
+        title: 'Action',
+        key: 'action',
+        width: 120,
+        align: 'center',
+        render: (_, record) => (
+          <Space size="small">
+            <Tooltip title="Edit">
+              <Button
+                type="text"
+                icon={<EditOutlined />}
+                onClick={() => handleEditCategory(record)}
+              />
+            </Tooltip>
+            <Popconfirm
+              title="Delete this category?"
+              description="This action cannot be undone."
+              okText="Delete"
+              cancelText="Cancel"
+              okButtonProps={{ danger: true }}
+              onConfirm={() => handleDeleteCategory(record._id)}
+            >
+              <Tooltip title="Delete">
+                <Button type="text" danger icon={<DeleteOutlined />} />
+              </Tooltip>
+            </Popconfirm>
+          </Space>
+        ),
+      },
+    ],
+    []
+  );
+
   // =========================================================
   // TABLE COLUMNS
   // =========================================================
@@ -1230,200 +822,115 @@ const categoryColumns = useMemo(() => [
         key: 'serialNumber',
         width: 80,
         align: 'center',
-
-        render: (
-          _,
-          __,
-          index
-        ) =>
-          (page - 1) *
-            PAGE_SIZE +
-          index +
-          1,
+        render: (_, __, index) =>
+          (page - 1) * PAGE_SIZE + index + 1,
       },
-
       {
         title: 'Date',
-        dataIndex:
-          'date',
+        dataIndex: 'date',
         width: 130,
-
-        render: (date) =>
-          dayjs(date).format(
-            'DD-MM-YYYY'
-          ),
+        render: (date) => dayjs(date).format('DD-MM-YYYY'),
       },
-
       {
-        title:
-          'Invoice No.',
-        dataIndex:
-          'invoiceNumber',
+        title: 'Invoice No.',
+        dataIndex: 'invoiceNumber',
         width: 180,
       },
-
       {
-        title:
-          'Products',
+        title: 'Products',
         key: 'products',
         width: 300,
-
-        render: (
-          _,
-          record
-        ) => (
+        render: (_, record) => (
           <div>
-            {record.items?.map(
-              (
-                item,
-                index
-              ) => (
-                <div
-                  key={`${record._id}-${index}`}
+            {record.items?.map((item, index) => (
+              <div
+                key={`${record._id}-${index}`}
+                style={{
+                  marginBottom: 4,
+                }}
+              >
+                <strong>{item.product}</strong>
+                <span
                   style={{
-                    marginBottom: 4,
+                    color: '#888',
+                    marginLeft: 6,
                   }}
                 >
-                  <strong>
-                    {
-                      item.product
-                    }
-                  </strong>
-
-                  <span
-                    style={{
-                      color:
-                        '#888',
-                      marginLeft: 6,
-                    }}
-                  >
-                    ×{' '}
-                    {
-                      item.quantity
-                    }
-                  </span>
-                </div>
-              )
-            )}
+                  × {item.quantity}
+                </span>
+              </div>
+            ))}
           </div>
         ),
       },
-
-    {
-  title: 'Supplier',
-  dataIndex: 'supplier',
-  width: 180,
-  render: (supplier) => {
-    if (!supplier) return 'N/A';
-    
-    // If supplier is an object with name
-    if (typeof supplier === 'object' && supplier.name) {
-      return supplier.name;
-    }
-    
-    // If supplier is a string (ID), look it up
-    if (typeof supplier === 'string') {
-      const foundSupplier = suppliers.find(s => String(s._id) === String(supplier));
-      return foundSupplier ? foundSupplier.name : supplier;
-    }
-    
-    return String(supplier);
-  },
-},
       {
-        title:
-          'Total Price',
-        dataIndex:
-          'totalAmount',
+        title: 'Supplier',
+        dataIndex: 'supplier',
+        width: 180,
+        render: (supplier) => {
+          if (!supplier) return 'N/A';
+
+          if (typeof supplier === 'object' && supplier.name) {
+            return supplier.name;
+          }
+
+          if (typeof supplier === 'string') {
+            const foundSupplier = suppliers.find(
+              (s) => String(s._id) === String(supplier)
+            );
+            return foundSupplier ? foundSupplier.name : supplier;
+          }
+
+          return String(supplier);
+        },
+      },
+      {
+        title: 'Total Price',
+        dataIndex: 'totalAmount',
         width: 160,
         align: 'right',
-
-        render: (
-          value
-        ) => (
-          <strong>
-            {formatCurrency(
-              value
-            )}
-          </strong>
-        ),
+        render: (value) => <strong>{formatCurrency(value)}</strong>,
       },
-
       {
-        title:
-          'Action',
+        title: 'Action',
         key: 'action',
         width: 130,
         fixed: 'right',
-
-        render: (
-          _,
-          record
-        ) => (
+        render: (_, record) => (
           <Space size="small">
-
             <Tooltip title="View">
               <Button
                 type="text"
-                icon={
-                  <EyeOutlined />
-                }
-                onClick={() =>
-                  handleView(
-                    record
-                  )
-                }
+                icon={<EyeOutlined />}
+                onClick={() => handleView(record)}
               />
             </Tooltip>
-
             <Tooltip title="Edit">
               <Button
                 type="text"
-                icon={
-                  <EditOutlined />
-                }
-                onClick={() =>
-                  openEditPurchaseModal(
-                    record
-                  )
-                }
+                icon={<EditOutlined />}
+                onClick={() => openEditPurchaseModal(record)}
               />
             </Tooltip>
-
             <Popconfirm
               title="Delete this purchase?"
               description="This action cannot be undone."
               okText="Delete"
               cancelText="Cancel"
               okButtonProps={{
-                danger:
-                  true,
+                danger: true,
               }}
-              onConfirm={() =>
-                handleDelete(
-                  record._id
-                )
-              }
+              onConfirm={() => handleDelete(record._id)}
             >
               <Tooltip title="Delete">
-                <Button
-                  type="text"
-                  danger
-                  icon={
-                    <DeleteOutlined />
-                  }
-                />
+                <Button type="text" danger icon={<DeleteOutlined />} />
               </Tooltip>
             </Popconfirm>
-
           </Space>
         ),
       },
     ],
-    [
-      page,
-      formatCurrency,
-    ]
+    [page, formatCurrency, suppliers]
   );
 
   // =========================================================
@@ -1432,21 +939,15 @@ const categoryColumns = useMemo(() => [
 
   return (
     <div className="purchase-page">
-
       {/* =====================================================
           HEADER
       ===================================================== */}
 
       <div className="purchase-page-header">
-
         <div>
-          <Title
-            level={2}
-            className="purchase-title"
-          >
+          <Title level={2} className="purchase-title">
             Purchase Management
           </Title>
-
           <div className="purchase-subtitle">
             Manage your gym product purchases
           </div>
@@ -1456,138 +957,74 @@ const categoryColumns = useMemo(() => [
           type="primary"
           icon={<PlusOutlined />}
           className="new-purchase-button"
-          onClick={
-            openNewPurchaseModal
-          }
+          onClick={openNewPurchaseModal}
         >
           New Purchase
         </Button>
-
       </div>
 
       {/* =====================================================
           SUMMARY
       ===================================================== */}
 
-      <Row
-        gutter={[
-          16,
-          16,
-        ]}
-        className="purchase-summary"
-      >
-
-        <Col
-          xs={24}
-          sm={12}
-          md={8}
-        >
+      <Row gutter={[16, 16]} className="purchase-summary">
+        <Col xs={24} sm={12} md={8}>
           <Card className="purchase-summary-card">
-
-            <div className="summary-label">
-              Total Purchases
-            </div>
-
-            <div className="summary-value">
-              {total}
-            </div>
-
+            <div className="summary-label">Total Purchases</div>
+            <div className="summary-value">{total}</div>
           </Card>
         </Col>
 
-        <Col
-          xs={24}
-          sm={12}
-          md={8}
-        >
+        <Col xs={24} sm={12} md={8}>
           <Card className="purchase-summary-card">
-
-            <div className="summary-label">
-              Total Purchase Value
-            </div>
-
+            <div className="summary-label">Total Purchase Value</div>
             <div className="summary-value orange">
-              {formatCurrency(
-                totalAmount
-              )}
+              {formatCurrency(totalAmount)}
             </div>
-
           </Card>
         </Col>
-
       </Row>
 
       {/* =====================================================
           PURCHASE TABLE
       ===================================================== */}
 
-      <Card
-        className="purchase-table-card"
-        bordered={false}
-      >
-
+      <Card className="purchase-table-card" bordered={false}>
         <div className="purchase-table-toolbar">
-
           <Input
             allowClear
-            prefix={
-              <SearchOutlined />
-            }
+            prefix={<SearchOutlined />}
             placeholder="Search product, invoice or supplier..."
             value={search}
-            onChange={(e) =>
-              handleSearch(
-                e.target.value
-              )
-            }
+            onChange={(e) => handleSearch(e.target.value)}
             className="purchase-search"
           />
-
         </div>
 
         <Table
-          dataSource={
-            purchases
-          }
-          columns={
-            columns
-          }
+          dataSource={purchases}
+          columns={columns}
           rowKey="_id"
-          loading={
-            loading
-          }
-          scroll={{
-            x: 1100,
-          }}
+          loading={loading}
+          scroll={{ x: 700 }}
           pagination={{
             current: page,
-            pageSize:
-              PAGE_SIZE,
+            pageSize: PAGE_SIZE,
             total,
-            showSizeChanger:
-              false,
-
-            onChange: (
-              newPage
-            ) => {
-              setPage(
-                newPage
-              );
-
-              fetchPurchases(
-                newPage,
-                search
-              );
+            showSizeChanger: false,
+            responsive: true,
+            showTotal: (totalRows, range) => {
+              if (window.innerWidth < 480) {
+                return `${range[0]}-${range[1]} of ${totalRows}`;
+              }
+              return `Showing ${range[0]} to ${range[1]} of ${totalRows} entries`;
             },
-
-            showTotal: (
-              totalRows,
-              range
-            ) =>
-              `Showing ${range[0]} to ${range[1]} of ${totalRows} entries`,
+            onChange: (newPage) => {
+              setPage(newPage);
+              fetchPurchases(newPage, search);
+            },
           }}
         />
-
       </Card>
 
       {/* =====================================================
@@ -1595,42 +1032,24 @@ const categoryColumns = useMemo(() => [
       ===================================================== */}
 
       <Modal
-        title={
-          editingId
-            ? 'Edit Purchase'
-            : 'New Purchase'
-        }
-        open={
-          modalVisible
-        }
-        onCancel={
-          closePurchaseModal
-        }
+        title={editingId ? 'Edit Purchase' : 'New Purchase'}
+        open={modalVisible}
+        onCancel={closePurchaseModal}
         footer={null}
-        width={900}
+        width={window.innerWidth < 768 ? '95%' : 900}
         destroyOnClose
+        style={{ top: window.innerWidth < 768 ? 10 : 100 }}
       >
-
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={
-            handleSubmit
-          }
-        >
-
-          <Row gutter={16}>
-
-            <Col span={12}>
+        <Form form={form} layout="vertical" onFinish={handleSubmit}>
+          <Row gutter={[16, 0]}>
+            <Col xs={24} md={12}>
               <Form.Item
                 name="invoiceNumber"
                 label="Invoice No."
                 rules={[
                   {
-                    required:
-                      true,
-                    message:
-                      'Please enter invoice number',
+                    required: true,
+                    message: 'Please enter invoice number',
                   },
                 ]}
               >
@@ -1638,405 +1057,260 @@ const categoryColumns = useMemo(() => [
               </Form.Item>
             </Col>
 
-            <Col span={12}>
+            <Col xs={24} md={12}>
               <Form.Item
                 name="date"
                 label="Purchase Date"
                 rules={[
                   {
-                    required:
-                      true,
-                    message:
-                      'Please select purchase date',
+                    required: true,
+                    message: 'Please select purchase date',
                   },
                 ]}
               >
                 <DatePicker
                   style={{
-                    width:
-                      '100%',
+                    width: '100%',
                   }}
                   format="DD-MM-YYYY"
                 />
               </Form.Item>
             </Col>
-
           </Row>
 
-{/* =====================================================
-    SUPPLIER
-===================================================== */}
-
-<Form.Item
-  name="supplier"
-  label="Supplier"
-  rules={[
-    {
-      required: true,
-      message: 'Please select a supplier',
-    },
-  ]}
->
-  <Select
-    showSearch
-    allowClear
-    loading={suppliersLoading}
-    placeholder="Search / Select Supplier"
-    optionFilterProp="label"
-
-    options={suppliers.map((supplier) => ({
-      value: String(supplier._id),
-      label: supplier.phone
-        ? `${supplier.name} - ${supplier.phone}`
-        : supplier.name,
-    }))}
-
-    onChange={(value) => {
-      console.log('Selected Supplier ID:', value);
-
-      form.setFieldValue(
-        'supplier',
-        value ? String(value) : undefined
-      );
-    }}
-
-    dropdownRender={(menu) => (
-      <>
-        {menu}
-
-        <div
-          style={{
-            borderTop: '1px solid #f0f0f0',
-            padding: '8px 12px',
-          }}
-        >
-          <Button
-            type="link"
-            icon={<PlusOutlined />}
-            onClick={openSupplierModal}
+          {/* SUPPLIER */}
+          <Form.Item
+            name="supplier"
+            label="Supplier"
+            rules={[
+              {
+                required: true,
+                message: 'Please select a supplier',
+              },
+            ]}
           >
-            Add New Supplier
-          </Button>
-        </div>
-      </>
-    )}
-  />
-</Form.Item>
-          {/* PRODUCTS */}
-
-          <Form.List name="items">
-
-            {(
-              fields,
-              { add, remove }
-            ) => (
-              <>
-                {fields.map(
-                  ({
-                    key,
-                    name,
-                    ...restField
-                  }) => (
-                    <Card
-                      key={key}
-                      size="small"
-                      style={{
-                        marginBottom: 12,
-                      }}
+            <Select
+              showSearch
+              allowClear
+              loading={suppliersLoading}
+              placeholder="Search / Select Supplier"
+              optionFilterProp="label"
+              options={suppliers.map((supplier) => ({
+                value: String(supplier._id),
+                label: supplier.phone
+                  ? `${supplier.name} - ${supplier.phone}`
+                  : supplier.name,
+              }))}
+              onChange={(value) => {
+                form.setFieldValue(
+                  'supplier',
+                  value ? String(value) : undefined
+                );
+              }}
+              dropdownRender={(menu) => (
+                <>
+                  {menu}
+                  <div
+                    style={{
+                      borderTop: '1px solid #f0f0f0',
+                      padding: '8px 12px',
+                    }}
+                  >
+                    <Button
+                      type="link"
+                      icon={<PlusOutlined />}
+                      onClick={openSupplierModal}
                     >
+                      Add New Supplier
+                    </Button>
+                  </div>
+                </>
+              )}
+            />
+          </Form.Item>
 
-                      <Row
-                        gutter={12}
-                        align="middle"
-                      >
-
-                        {/* PRODUCT */}
-
-                        <Col
-                          xs={24}
-                          md={9}
+          {/* PRODUCTS */}
+          <Form.List name="items">
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map(({ key, name, ...restField }) => (
+                  <Card
+                    key={key}
+                    size="small"
+                    style={{
+                      marginBottom: 12,
+                    }}
+                  >
+                    <Row gutter={[12, 8]} align="middle">
+                      {/* PRODUCT */}
+                      <Col xs={24} md={9}>
+                        <Form.Item
+                          {...restField}
+                          name={[name, 'product']}
+                          label="Product"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Please select a product',
+                            },
+                          ]}
                         >
-                          <Form.Item
-                            {...restField}
-                            name={[
-                              name,
-                              'product',
-                            ]}
-                            label="Product"
-                            rules={[
-                              {
-                                required:
-                                  true,
-                                message:
-                                  'Please select a product',
-                              },
-                            ]}
-                          >
-                            <Select
-                              showSearch
-                              allowClear
-                              loading={
-                                productsLoading
-                              }
-                              placeholder="Search / Select Product"
-                              optionFilterProp="label"
-                              options={
-                                productOptions
-                              }
-                              onChange={(
-                                productId
-                              ) =>
-                                handleProductChange(
-                                  productId,
-                                  name
-                                )
-                              }
-                              dropdownRender={(
-                                menu
-                              ) => (
-                                <>
-                                  {menu}
-
-                                  <div
-                                    style={{
-                                      borderTop:
-                                        '1px solid #f0f0f0',
-                                      padding:
-                                        '8px 12px',
-                                    }}
+                          <Select
+                            showSearch
+                            allowClear
+                            loading={productsLoading}
+                            placeholder="Search / Select Product"
+                            optionFilterProp="label"
+                            options={productOptions}
+                            onChange={(productId) =>
+                              handleProductChange(productId, name)
+                            }
+                            dropdownRender={(menu) => (
+                              <>
+                                {menu}
+                                <div
+                                  style={{
+                                    borderTop: '1px solid #f0f0f0',
+                                    padding: '8px 12px',
+                                  }}
+                                >
+                                  <Button
+                                    type="link"
+                                    icon={<PlusOutlined />}
+                                    onClick={() => openProductModal(name)}
                                   >
+                                    Add New Product
+                                  </Button>
+                                </div>
+                              </>
+                            )}
+                          />
+                        </Form.Item>
 
-                                    <Button
-                                      type="link"
-                                      icon={
-                                        <PlusOutlined />
-                                      }
-                                      onClick={() =>
-                                        openProductModal(
-                                          name
-                                        )
-                                      }
-                                    >
-                                      Add New Product
-                                    </Button>
-
-                                  </div>
-                                </>
-                              )}
-                            />
-                          </Form.Item>
-
-                          <Form.Item
-                            {...restField}
-                            name={[
-                              name,
-                              'productId',
-                            ]}
-                            hidden
-                          >
-                            <Input />
-                          </Form.Item>
-                        </Col>
-
-                        {/* QUANTITY */}
-
-                        <Col
-                          xs={12}
-                          md={4}
+                        <Form.Item
+                          {...restField}
+                          name={[name, 'productId']}
+                          hidden
                         >
-                          <Form.Item
-                            {...restField}
-                            name={[
-                              name,
-                              'quantity',
-                            ]}
-                            label="Quantity"
-                            rules={[
-                              {
-                                required:
-                                  true,
-                                message:
-                                  'Enter quantity',
-                              },
-                            ]}
-                          >
-                            <InputNumber
-                              min={1}
-                              precision={0}
-                              style={{
-                                width:
-                                  '100%',
-                              }}
-                            />
-                          </Form.Item>
-                        </Col>
+                          <Input />
+                        </Form.Item>
+                      </Col>
 
-                        {/* UNIT PRICE */}
-
-                        <Col
-                          xs={12}
-                          md={4}
+                      {/* QUANTITY */}
+                      <Col xs={12} md={4}>
+                        <Form.Item
+                          {...restField}
+                          name={[name, 'quantity']}
+                          label="Quantity"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Enter quantity',
+                            },
+                          ]}
                         >
-                          <Form.Item
-                            {...restField}
-                            name={[
-                              name,
-                              'unitPrice',
-                            ]}
-                            label="Unit Price"
-                            rules={[
-                              {
-                                required:
-                                  true,
-                                message:
-                                  'Enter unit price',
-                              },
-                            ]}
-                          >
-                            <InputNumber
-                              min={0.01}
-                              precision={2}
-                              prefix="₹"
-                              style={{
-                                width:
-                                  '100%',
-                              }}
-                            />
-                          </Form.Item>
-                        </Col>
+                          <InputNumber
+                            min={1}
+                            precision={0}
+                            style={{
+                              width: '100%',
+                            }}
+                          />
+                        </Form.Item>
+                      </Col>
 
-                        {/* TOTAL */}
-
-                        <Col
-                          xs={20}
-                          md={5}
+                      {/* UNIT PRICE */}
+                      <Col xs={12} md={4}>
+                        <Form.Item
+                          {...restField}
+                          name={[name, 'unitPrice']}
+                          label="Unit Price"
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Enter unit price',
+                            },
+                          ]}
                         >
-                          <Form.Item label="Total Price">
-                            <Input
-                              readOnly
-                              value={formatCurrency(
-                                (
-                                  Number(
-                                    purchaseItems?.[
-                                      name
-                                    ]?.quantity
-                                  ) ||
-                                  0
-                                ) *
-                                  (
-                                    Number(
-                                      purchaseItems?.[
-                                        name
-                                      ]?.unitPrice
-                                    ) ||
-                                    0
-                                  )
-                              )}
-                            />
-                          </Form.Item>
-                        </Col>
+                          <InputNumber
+                            min={0.01}
+                            precision={2}
+                            prefix="₹"
+                            style={{
+                              width: '100%',
+                            }}
+                          />
+                        </Form.Item>
+                      </Col>
 
-                        {/* DELETE */}
+                      {/* TOTAL */}
+                      <Col xs={20} md={5}>
+                        <Form.Item label="Total Price">
+                          <Input
+                            readOnly
+                            value={formatCurrency(
+                              (Number(purchaseItems?.[name]?.quantity) || 0) *
+                                (Number(purchaseItems?.[name]?.unitPrice) || 0)
+                            )}
+                          />
+                        </Form.Item>
+                      </Col>
 
-                        <Col
-                          xs={4}
-                          md={2}
-                        >
-                          {fields.length >
-                            1 && (
-                            <Button
-                              danger
-                              type="text"
-                              icon={
-                                <DeleteOutlined />
-                              }
-                              onClick={() =>
-                                remove(
-                                  name
-                                )
-                              }
-                            />
-                          )}
-                        </Col>
-
-                      </Row>
-
-                    </Card>
-                  )
-                )}
+                      {/* DELETE */}
+                      <Col xs={4} md={2}>
+                        {fields.length > 1 && (
+                          <Button
+                            danger
+                            type="text"
+                            icon={<DeleteOutlined />}
+                            onClick={() => remove(name)}
+                          />
+                        )}
+                      </Col>
+                    </Row>
+                  </Card>
+                ))}
 
                 <Button
                   type="dashed"
                   block
-                  icon={
-                    <PlusOutlined />
-                  }
-                  onClick={() =>
-                    add({
-                      ...DEFAULT_ITEM,
-                    })
-                  }
+                  icon={<PlusOutlined />}
+                  onClick={() => add({ ...DEFAULT_ITEM })}
                 >
                   Add Product
                 </Button>
               </>
             )}
-
           </Form.List>
 
           {/* GRAND TOTAL */}
-
           <div
             style={{
-              display:
-                'flex',
-              justifyContent:
-                'flex-end',
-              marginTop:
-                20,
-              marginBottom:
-                20,
-              fontSize:
-                20,
-              fontWeight:
-                700,
+              display: 'flex',
+              justifyContent: 'flex-end',
+              marginTop: 20,
+              marginBottom: 20,
+              fontSize: 20,
+              fontWeight: 700,
             }}
           >
-            <span>
-              Grand Total:&nbsp;
-            </span>
-
+            <span>Grand Total:&nbsp;</span>
             <span
               style={{
-                color:
-                  '#159447',
+                color: '#159447',
               }}
             >
-              {formatCurrency(
-                currentGrandTotal
-              )}
+              {formatCurrency(currentGrandTotal)}
             </span>
           </div>
 
           {/* STATUS */}
-
-          <Form.Item
-            name="status"
-            label="Status"
-          >
-            <Select
-              options={
-                STATUS_OPTIONS
-              }
-            />
+          <Form.Item name="status" label="Status">
+            <Select options={STATUS_OPTIONS} />
           </Form.Item>
 
           {/* NOTES */}
-
-          <Form.Item
-            name="notes"
-            label="Notes"
-          >
+          <Form.Item name="notes" label="Notes">
             <Input.TextArea
               rows={3}
               placeholder="Additional purchase details..."
@@ -2044,32 +1318,18 @@ const categoryColumns = useMemo(() => [
           </Form.Item>
 
           {/* FOOTER */}
-
           <div className="purchase-modal-footer">
-
-            <Button
-              onClick={
-                closePurchaseModal
-              }
-            >
-              Cancel
-            </Button>
-
+            <Button onClick={closePurchaseModal}>Cancel</Button>
             <Button
               type="primary"
               htmlType="submit"
               loading={saving}
               className="new-purchase-button"
             >
-              {editingId
-                ? 'Update Purchase'
-                : 'Save Purchase'}
+              {editingId ? 'Update Purchase' : 'Save Purchase'}
             </Button>
-
           </div>
-
         </Form>
-
       </Modal>
 
       {/* =====================================================
@@ -2078,123 +1338,95 @@ const categoryColumns = useMemo(() => [
 
       <Modal
         title="Add New Product"
-        open={
-          productModalVisible
-        }
-        onCancel={
-          closeProductModal
-        }
+        open={productModalVisible}
+        onCancel={closeProductModal}
         footer={null}
-        width={750}
+        width={window.innerWidth < 768 ? '95%' : 750}
         destroyOnClose
+        style={{ top: window.innerWidth < 768 ? 10 : 100 }}
       >
-
-        <Form
-          form={productForm}
-          layout="vertical"
-          onFinish={
-            handleCreateProduct
-          }
-        >
-
-          <Row gutter={16}>
-
-            <Col span={12}>
+        <Form form={productForm} layout="vertical" onFinish={handleCreateProduct}>
+          <Row gutter={[16, 0]}>
+            <Col xs={24} md={12}>
               <Form.Item
                 name="name"
                 label="Product Name"
                 rules={[
                   {
-                    required:
-                      true,
-                    message:
-                      'Please enter product name',
+                    required: true,
+                    message: 'Please enter product name',
                   },
                 ]}
               >
-                <Input
-                  placeholder="e.g. Whey Protein 1kg"
+                <Input placeholder="e.g. Whey Protein 1kg" />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="category"
+                label="Category"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please select category',
+                  },
+                ]}
+              >
+                <Select
+                  showSearch
+                  loading={categoriesLoading}
+                  optionFilterProp="label"
+                  placeholder="Select category"
+                  options={categories
+                    .filter((category) => category.isActive !== false)
+                    .map((category) => ({
+                      value: category._id,
+                      label: category.name,
+                    }))}
+                  dropdownRender={(menu) => (
+                    <>
+                      {menu}
+                      <div
+                        style={{
+                          borderTop: '1px solid #f0f0f0',
+                          padding: '8px 12px',
+                        }}
+                      >
+                        <Button
+                          type="link"
+                          icon={<PlusOutlined />}
+                          onClick={openCategoryModal}
+                        >
+                          Add New Category
+                        </Button>
+                      </div>
+                    </>
+                  )}
                 />
               </Form.Item>
             </Col>
 
-            <Col span={12}>
-             <Form.Item
-  name="category"
-  label="Category"
-  rules={[
-    {
-      required: true,
-      message: 'Please select category',
-    },
-  ]}
->
-  <Select
-    showSearch
-    loading={categoriesLoading}
-    optionFilterProp="label"
-    placeholder="Select category"
-    options={categories
-      .filter((category) => category.isActive !== false)
-      .map((category) => ({
-        value: category._id,
-        label: category.name,
-      }))}
-    dropdownRender={(menu) => (
-      <>
-        {menu}
-        <div
-          style={{
-            borderTop: '1px solid #f0f0f0',
-            padding: '8px 12px',
-          }}
-        >
-          <Button
-            type="link"
-            icon={<PlusOutlined />}
-            onClick={openCategoryModal}
-          >
-            Add New Category
-          </Button>
-        </div>
-      </>
-    )}
-  />
-</Form.Item>
-            </Col>
-
-            <Col span={12}>
-              <Form.Item
-                name="brand"
-                label="Brand"
-              >
+            <Col xs={24} md={12}>
+              <Form.Item name="brand" label="Brand">
                 <Input placeholder="e.g. MuscleBlaze" />
               </Form.Item>
             </Col>
 
-            <Col span={12}>
-              <Form.Item
-                name="unit"
-                label="Unit"
-              >
-                <Select
-                  options={
-                    UNIT_OPTIONS
-                  }
-                />
+            <Col xs={24} md={12}>
+              <Form.Item name="unit" label="Unit">
+                <Select options={UNIT_OPTIONS} />
               </Form.Item>
             </Col>
 
-            <Col span={12}>
+            <Col xs={24} md={12}>
               <Form.Item
                 name="costPrice"
                 label="Buying Price (₹)"
                 rules={[
                   {
-                    required:
-                      true,
-                    message:
-                      'Please enter buying price',
+                    required: true,
+                    message: 'Please enter buying price',
                   },
                 ]}
               >
@@ -2203,23 +1435,20 @@ const categoryColumns = useMemo(() => [
                   precision={2}
                   prefix="₹"
                   style={{
-                    width:
-                      '100%',
+                    width: '100%',
                   }}
                 />
               </Form.Item>
             </Col>
 
-            <Col span={12}>
+            <Col xs={24} md={12}>
               <Form.Item
                 name="price"
                 label="Selling Price (₹)"
                 rules={[
                   {
-                    required:
-                      true,
-                    message:
-                      'Please enter selling price',
+                    required: true,
+                    message: 'Please enter selling price',
                   },
                 ]}
               >
@@ -2228,562 +1457,424 @@ const categoryColumns = useMemo(() => [
                   precision={2}
                   prefix="₹"
                   style={{
-                    width:
-                      '100%',
+                    width: '100%',
                   }}
                 />
               </Form.Item>
             </Col>
 
-            <Col span={12}>
-              <Form.Item
-                name="stock"
-                label="Opening Stock"
-              >
+            <Col xs={24} md={12}>
+              <Form.Item name="stock" label="Opening Stock">
                 <InputNumber
                   min={0}
                   precision={0}
                   style={{
-                    width:
-                      '100%',
+                    width: '100%',
                   }}
                 />
               </Form.Item>
             </Col>
 
-            <Col span={12}>
-              <Form.Item
-                name="lowStockThreshold"
-                label="Reorder Level"
-              >
+            <Col xs={24} md={12}>
+              <Form.Item name="lowStockThreshold" label="Reorder Level">
                 <InputNumber
                   min={0}
                   precision={0}
                   style={{
-                    width:
-                      '100%',
+                    width: '100%',
                   }}
                 />
               </Form.Item>
             </Col>
 
-            <Col span={24}>
-              <Form.Item
-                name="description"
-                label="Description"
-              >
+            <Col xs={24}>
+              <Form.Item name="description" label="Description">
                 <Input.TextArea
                   rows={3}
                   placeholder="Product description..."
                 />
               </Form.Item>
             </Col>
-
           </Row>
 
-          <div
-            className="purchase-modal-footer"
-          >
-
-            <Button
-              onClick={
-                closeProductModal
-              }
-            >
-              Cancel
-            </Button>
-
+          <div className="purchase-modal-footer">
+            <Button onClick={closeProductModal}>Cancel</Button>
             <Button
               type="primary"
               htmlType="submit"
-              loading={
-                productSaving
-              }
+              loading={productSaving}
             >
               Add Product
             </Button>
-
           </div>
-
         </Form>
-
       </Modal>
 
       {/* =====================================================
           VIEW PURCHASE MODAL
       ===================================================== */}
 
-    <Modal
-  title="Purchase Details"
-  open={viewModalVisible}
-  onCancel={closeViewModal}
-  footer={[
-    <Button
-      key="close"
-      onClick={closeViewModal}
-    >
-      Close
-    </Button>,
-  ]}
-  width={850}
->
-  {selectedPurchase && (
-    <div className="purchase-details">
-      <div className="purchase-info-grid">
-        <div className="detail-row">
-          <span>Date</span>
-          <strong>
-            {dayjs(selectedPurchase.date).format('DD-MM-YYYY')}
-          </strong>
-        </div>
-
-        <div className="detail-row">
-          <span>Invoice No.</span>
-          <strong>{selectedPurchase.invoiceNumber}</strong>
-        </div>
-
-        <div className="detail-row">
-          <span>Supplier</span>
-          <strong>
-            {typeof selectedPurchase.supplier === 'object' && selectedPurchase.supplier !== null
-              ? selectedPurchase.supplier.name || 'N/A'
-              : selectedPurchase.supplier || 'N/A'}
-          </strong>
-        </div>
-
-        <div className="detail-row">
-          <span>Status</span>
-          <strong>{selectedPurchase.status}</strong>
-        </div>
-      </div>
-
-      <div className="purchase-products-section">
-        <h3>Products</h3>
-        <Table
-          bordered
-          pagination={false}
-          rowKey={(record, index) => `${record.product}-${index}`}
-          dataSource={selectedPurchase.items || []}
-          columns={[
-            {
-              title: '#',
-              width: 60,
-              align: 'center',
-              render: (_, __, index) => index + 1,
-            },
-            {
-              title: 'Product',
-              dataIndex: 'product',
-            },
-            {
-              title: 'Quantity',
-              dataIndex: 'quantity',
-              align: 'center',
-            },
-            {
-              title: 'Unit Price',
-              dataIndex: 'unitPrice',
-              align: 'right',
-              render: (value) => formatCurrency(value),
-            },
-            {
-              title: 'Total Price',
-              dataIndex: 'totalPrice',
-              align: 'right',
-              render: (value) => (
-                <strong>{formatCurrency(value)}</strong>
-              ),
-            },
-          ]}
-        />
-      </div>
-
-      <div className="purchase-grand-total">
-        <span>Grand Total</span>
-        <strong>{formatCurrency(selectedPurchase.totalAmount)}</strong>
-      </div>
-
-      {selectedPurchase.notes && (
-        <div className="detail-notes">
-          <span>Notes</span>
-          <p>{selectedPurchase.notes}</p>
-        </div>
-      )}
-    </div>
-  )}
-</Modal>
-
-{/* =====================================================
-    ADD NEW SUPPLIER MODAL
-===================================================== */}
-
-<Modal
-  title="Add New Supplier"
-  open={supplierModalVisible}
-  onCancel={closeSupplierModal}
-  footer={null}
-  width={850}
-  destroyOnClose
->
-  <Form
-    form={supplierForm}
-    layout="vertical"
-    onFinish={handleCreateSupplier}
-  >
-
-    <Row gutter={24}>
-
-      {/* =================================================
-          SUPPLIER NAME
-      ================================================= */}
-
-      <Col xs={24} md={12}>
-        <Form.Item
-          name="name"
-          label="Supplier Name"
-          rules={[
-            {
-              required: true,
-              message:
-                'Please enter supplier name',
-            },
-          ]}
-        >
-          <Input
-            size="large"
-            placeholder="Enter Supplier Name"
-          />
-        </Form.Item>
-      </Col>
-
-
-      {/* =================================================
-          EMAIL
-      ================================================= */}
-
-      <Col xs={24} md={12}>
-        <Form.Item
-          name="email"
-          label="Email"
-          rules={[
-            {
-              type: 'email',
-              message:
-                'Please enter a valid email',
-            },
-          ]}
-        >
-          <Input
-            size="large"
-            placeholder="Enter Email"
-          />
-        </Form.Item>
-      </Col>
-
-
-      {/* =================================================
-          CONTACT PERSON
-      ================================================= */}
-
-      <Col xs={24} md={12}>
-        <Form.Item
-          name="contactPerson"
-          label="Contact Person"
-          rules={[
-            {
-              required: true,
-              message:
-                'Please enter contact person',
-            },
-          ]}
-        >
-          <Input
-            size="large"
-            placeholder="Enter Contact Person"
-          />
-        </Form.Item>
-      </Col>
-
-
-      {/* =================================================
-          LANDLINE
-      ================================================= */}
-
-      <Col xs={24} md={12}>
-        <Form.Item
-          name="landline"
-          label="Landline"
-        >
-          <Input
-            size="large"
-            placeholder="Enter Landline Number"
-          />
-        </Form.Item>
-      </Col>
-
-
-      {/* =================================================
-          PHONE
-      ================================================= */}
-
-      <Col xs={24} md={12}>
-        <Form.Item
-          name="phone"
-          label="Phone"
-          rules={[
-            {
-              required: true,
-              message:
-                'Please enter phone number',
-            },
-          ]}
-        >
-          <Input
-            size="large"
-            placeholder="Enter Phone Number"
-          />
-        </Form.Item>
-      </Col>
-
-
-      {/* =================================================
-          WEBSITE
-      ================================================= */}
-
-      <Col xs={24} md={12}>
-        <Form.Item
-          name="website"
-          label="Website"
-        >
-          <Input
-            size="large"
-            placeholder="Enter Website"
-          />
-        </Form.Item>
-      </Col>
-
-
-      {/* =================================================
-          GST NUMBER
-      ================================================= */}
-
-      <Col xs={24} md={12}>
-        <Form.Item
-          name="gstNumber"
-          label="GST Number"
-        >
-          <Input
-            size="large"
-            placeholder="Enter GST Number"
-          />
-        </Form.Item>
-      </Col>
-
-
-      {/* =================================================
-          ADDRESS
-      ================================================= */}
-
-      <Col xs={24} md={12}>
-        <Form.Item
-          name="address"
-          label="Address"
-          rules={[
-            {
-              required: true,
-              message:
-                'Please enter address',
-            },
-          ]}
-        >
-          <Input.TextArea
-            rows={4}
-            placeholder="Enter Address"
-          />
-        </Form.Item>
-      </Col>
-
-
-      {/* =================================================
-          NOTES
-      ================================================= */}
-
-      <Col xs={24} md={12}>
-        <Form.Item
-          name="notes"
-          label="Notes"
-        >
-          <Input.TextArea
-            rows={4}
-            placeholder="Enter notes"
-          />
-        </Form.Item>
-      </Col>
-
-    </Row>
-
-
-    {/* =================================================
-        BUTTONS
-    ================================================= */}
-
-    <Form.Item
-      style={{
-        marginBottom: 0,
-        textAlign: 'right',
-        marginTop: 10,
-      }}
-    >
-
-      <Button
-        onClick={
-          closeSupplierModal
-        }
-        style={{
-          marginRight: 10,
-          minWidth: 100,
-        }}
+      <Modal
+        title="Purchase Details"
+        open={viewModalVisible}
+        onCancel={closeViewModal}
+        footer={[
+          <Button key="close" onClick={closeViewModal}>
+            Close
+          </Button>,
+        ]}
+        width={window.innerWidth < 768 ? '95%' : 850}
+        style={{ top: window.innerWidth < 768 ? 10 : 100 }}
       >
-        Cancel
-      </Button>
+        {selectedPurchase && (
+          <div className="purchase-details">
+            <div className="purchase-info-grid">
+              <div className="detail-row">
+                <span>Date</span>
+                <strong>
+                  {dayjs(selectedPurchase.date).format('DD-MM-YYYY')}
+                </strong>
+              </div>
 
-      <Button
-        type="primary"
-        htmlType="submit"
-        loading={supplierSaving}
-        style={{
-          background:
-            '#ff8a00',
+              <div className="detail-row">
+                <span>Invoice No.</span>
+                <strong>{selectedPurchase.invoiceNumber}</strong>
+              </div>
 
-          borderColor:
-            '#ff8a00',
+              <div className="detail-row">
+                <span>Supplier</span>
+                <strong>
+                  {typeof selectedPurchase.supplier === 'object' &&
+                  selectedPurchase.supplier !== null
+                    ? selectedPurchase.supplier.name || 'N/A'
+                    : selectedPurchase.supplier || 'N/A'}
+                </strong>
+              </div>
 
-          minWidth: 140,
-        }}
+              <div className="detail-row">
+                <span>Status</span>
+                <strong>{selectedPurchase.status}</strong>
+              </div>
+            </div>
+
+            <div className="purchase-products-section">
+              <h3>Products</h3>
+              <Table
+                bordered
+                pagination={false}
+                rowKey={(record, index) => `${record.product}-${index}`}
+                dataSource={selectedPurchase.items || []}
+                columns={[
+                  {
+                    title: '#',
+                    width: 60,
+                    align: 'center',
+                    render: (_, __, index) => index + 1,
+                  },
+                  {
+                    title: 'Product',
+                    dataIndex: 'product',
+                  },
+                  {
+                    title: 'Quantity',
+                    dataIndex: 'quantity',
+                    align: 'center',
+                  },
+                  {
+                    title: 'Unit Price',
+                    dataIndex: 'unitPrice',
+                    align: 'right',
+                    render: (value) => formatCurrency(value),
+                  },
+                  {
+                    title: 'Total Price',
+                    dataIndex: 'totalPrice',
+                    align: 'right',
+                    render: (value) => (
+                      <strong>{formatCurrency(value)}</strong>
+                    ),
+                  },
+                ]}
+              />
+            </div>
+
+            <div className="purchase-grand-total">
+              <span>Grand Total</span>
+              <strong>{formatCurrency(selectedPurchase.totalAmount)}</strong>
+            </div>
+
+            {selectedPurchase.notes && (
+              <div className="detail-notes">
+                <span>Notes</span>
+                <p>{selectedPurchase.notes}</p>
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
+
+      {/* =====================================================
+          ADD NEW SUPPLIER MODAL
+      ===================================================== */}
+
+      <Modal
+        title="Add New Supplier"
+        open={supplierModalVisible}
+        onCancel={closeSupplierModal}
+        footer={null}
+        width={window.innerWidth < 768 ? '95%' : 850}
+        destroyOnClose
+        style={{ top: window.innerWidth < 768 ? 10 : 100 }}
       >
-        Save Supplier
-      </Button>
+        <Form form={supplierForm} layout="vertical" onFinish={handleCreateSupplier}>
+          <Row gutter={[24, 0]}>
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="name"
+                label="Supplier Name"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter supplier name',
+                  },
+                ]}
+              >
+                <Input size="large" placeholder="Enter Supplier Name" />
+              </Form.Item>
+            </Col>
 
-    </Form.Item>
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[
+                  {
+                    type: 'email',
+                    message: 'Please enter a valid email',
+                  },
+                ]}
+              >
+                <Input size="large" placeholder="Enter Email" />
+              </Form.Item>
+            </Col>
 
-  </Form>
-</Modal>
-{/* =====================================================
-    CATEGORY MANAGEMENT MODAL
-===================================================== */}
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="contactPerson"
+                label="Contact Person"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter contact person',
+                  },
+                ]}
+              >
+                <Input size="large" placeholder="Enter Contact Person" />
+              </Form.Item>
+            </Col>
 
-<Modal
-  title={
-    <Space>
-      {editingCategoryId ? 'Edit Category' : 'Add New Category'}
-    </Space>
-  }
-  open={categoryModalVisible}
-  onCancel={closeCategoryModal}
-  width={850}
-  footer={null}
-  destroyOnClose
->
-  {/* Category Form */}
-  <div
-    style={{
-      background: '#fafafa',
-      padding: 16,
-      borderRadius: 10,
-      marginBottom: 20,
-    }}
-  >
-    <h3 style={{ marginTop: 0 }}>
-      {editingCategoryId ? 'Edit Category' : 'Add New Category'}
-    </h3>
+            <Col xs={24} md={12}>
+              <Form.Item name="landline" label="Landline">
+                <Input size="large" placeholder="Enter Landline Number" />
+              </Form.Item>
+            </Col>
 
-    <Form
-      form={categoryForm}
-      layout="vertical"
-      onFinish={handleCreateCategory}
-    >
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr 120px auto',
-          gap: 12,
-          alignItems: 'end',
-        }}
-      >
-        <Form.Item
-          name="name"
-          label="Category Name"
-          rules={[
-            {
-              required: true,
-              message: 'Enter category name',
-            },
-            {
-              max: 100,
-              message: 'Maximum 100 characters',
-            },
-          ]}
-          style={{ marginBottom: 0 }}
-        >
-          <Input placeholder="e.g. Protein" />
-        </Form.Item>
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="phone"
+                label="Phone"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter phone number',
+                  },
+                ]}
+              >
+                <Input size="large" placeholder="Enter Phone Number" />
+              </Form.Item>
+            </Col>
 
-        <Form.Item
-          name="description"
-          label="Description"
-          style={{ marginBottom: 0 }}
-        >
-          <Input placeholder="Category description" />
-        </Form.Item>
+            <Col xs={24} md={12}>
+              <Form.Item name="website" label="Website">
+                <Input size="large" placeholder="Enter Website" />
+              </Form.Item>
+            </Col>
 
-        <Form.Item
-          name="isActive"
-          label="Active"
-          valuePropName="checked"
-          initialValue={true}
-          style={{ marginBottom: 0 }}
-        >
-          <Switch />
-        </Form.Item>
+            <Col xs={24} md={12}>
+              <Form.Item name="gstNumber" label="GST Number">
+                <Input size="large" placeholder="Enter GST Number" />
+              </Form.Item>
+            </Col>
 
-        <Space>
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={categorySaving}
-            icon={editingCategoryId ? <EditOutlined /> : <PlusOutlined />}
+            <Col xs={24} md={12}>
+              <Form.Item
+                name="address"
+                label="Address"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please enter address',
+                  },
+                ]}
+              >
+                <Input.TextArea rows={4} placeholder="Enter Address" />
+              </Form.Item>
+            </Col>
+
+            <Col xs={24} md={12}>
+              <Form.Item name="notes" label="Notes">
+                <Input.TextArea rows={4} placeholder="Enter notes" />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Form.Item
+            style={{
+              marginBottom: 0,
+              textAlign: 'right',
+              marginTop: 10,
+            }}
           >
-            {editingCategoryId ? 'Update' : 'Add'}
-          </Button>
-
-          {editingCategoryId && (
             <Button
-              onClick={() => {
-                setEditingCategoryId(null);
-                categoryForm.resetFields();
+              onClick={closeSupplierModal}
+              style={{
+                marginRight: 10,
+                minWidth: 100,
               }}
             >
               Cancel
             </Button>
-          )}
-        </Space>
-      </div>
-    </Form>
-  </div>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={supplierSaving}
+              style={{
+                background: '#ff8a00',
+                borderColor: '#ff8a00',
+                minWidth: 140,
+              }}
+            >
+              Save Supplier
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
 
-  {/* Category List */}
-  <Table
-    columns={categoryColumns}
-    dataSource={categories}
-    rowKey="_id"
-    pagination={{
-      pageSize: 6,
-    }}
-    size="middle"
-    loading={categoriesLoading}
-  />
-</Modal>
+      {/* =====================================================
+          CATEGORY MANAGEMENT MODAL
+      ===================================================== */}
 
+      <Modal
+        title={
+          <Space>
+            {editingCategoryId ? 'Edit Category' : 'Add New Category'}
+          </Space>
+        }
+        open={categoryModalVisible}
+        onCancel={closeCategoryModal}
+        width={window.innerWidth < 768 ? '95%' : 850}
+        footer={null}
+        destroyOnClose
+        style={{ top: window.innerWidth < 768 ? 10 : 100 }}
+      >
+        {/* Category Form */}
+        <div
+          style={{
+            background: '#fafafa',
+            padding: 16,
+            borderRadius: 10,
+            marginBottom: 20,
+          }}
+        >
+          <h3 style={{ marginTop: 0 }}>
+            {editingCategoryId ? 'Edit Category' : 'Add New Category'}
+          </h3>
+
+          <Form form={categoryForm} layout="vertical" onFinish={handleCreateCategory}>
+            <div
+              style={{
+                display: window.innerWidth < 768 ? 'block' : 'grid',
+                gridTemplateColumns: '1fr 1fr 120px auto',
+                gap: 12,
+                alignItems: 'end',
+              }}
+            >
+              <Form.Item
+                name="name"
+                label="Category Name"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Enter category name',
+                  },
+                  {
+                    max: 100,
+                    message: 'Maximum 100 characters',
+                  },
+                ]}
+                style={{ marginBottom: window.innerWidth < 768 ? 12 : 0 }}
+              >
+                <Input placeholder="e.g. Protein" />
+              </Form.Item>
+
+              <Form.Item
+                name="description"
+                label="Description"
+                style={{ marginBottom: window.innerWidth < 768 ? 12 : 0 }}
+              >
+                <Input placeholder="Category description" />
+              </Form.Item>
+
+              <Form.Item
+                name="isActive"
+                label="Active"
+                valuePropName="checked"
+                initialValue={true}
+                style={{ marginBottom: window.innerWidth < 768 ? 12 : 0 }}
+              >
+                <Switch />
+              </Form.Item>
+
+              <Space style={{ width: window.innerWidth < 768 ? '100%' : 'auto' }}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={categorySaving}
+                  icon={editingCategoryId ? <EditOutlined /> : <PlusOutlined />}
+                  style={{ width: window.innerWidth < 768 ? '100%' : 'auto' }}
+                >
+                  {editingCategoryId ? 'Update' : 'Add'}
+                </Button>
+
+                {editingCategoryId && (
+                  <Button
+                    onClick={() => {
+                      setEditingCategoryId(null);
+                      categoryForm.resetFields();
+                    }}
+                    style={{ width: window.innerWidth < 768 ? '100%' : 'auto' }}
+                  >
+                    Cancel
+                  </Button>
+                )}
+              </Space>
+            </div>
+          </Form>
+        </div>
+
+        {/* Category List */}
+        <Table
+          columns={categoryColumns}
+          dataSource={categories}
+          rowKey="_id"
+          pagination={{
+            pageSize: 6,
+          }}
+          size="middle"
+          loading={categoriesLoading}
+          scroll={{ x: window.innerWidth < 768 ? 600 : 'auto' }}
+        />
+      </Modal>
     </div>
   );
 };

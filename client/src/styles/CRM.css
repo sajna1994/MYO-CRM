@@ -1,0 +1,669 @@
+/* CRM.css - Fully Responsive */
+
+/* ─────────────────────────────────────────────
+   PAGE CONTAINER
+   ───────────────────────────────────────────── */
+
+.supplier-management {
+  padding: 20px;
+  max-width: 100%;
+  overflow-x: hidden;
+  min-height: 100%;
+}
+
+/* ─────────────────────────────────────────────
+   HEADER
+   ───────────────────────────────────────────── */
+
+.supplier-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.supplier-title {
+  margin: 0 !important;
+  font-weight: 700 !important;
+  font-size: 28px !important;
+  color: #1a1a2e !important;
+}
+
+.supplier-add-btn {
+  background: #ff8a00 !important;
+  border-color: #ff8a00 !important;
+  height: 46px;
+  padding: 0 25px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(255, 138, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.supplier-add-btn:hover {
+  background: #ffa726 !important;
+  border-color: #ffa726 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 138, 0, 0.3) !important;
+}
+
+.supplier-add-btn:active {
+  transform: translateY(0);
+}
+
+/* ─────────────────────────────────────────────
+   TABLE CARD
+   ───────────────────────────────────────────── */
+
+.supplier-table-card {
+  border-radius: 10px !important;
+  border: 1px solid #e5e5e5 !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04) !important;
+  overflow: hidden;
+}
+
+.supplier-table-card .ant-card-body {
+  padding: 16px 20px;
+}
+
+/* ─────────────────────────────────────────────
+   TABLE
+   ───────────────────────────────────────────── */
+
+.supplier-table-card .ant-table {
+  font-size: 14px;
+}
+
+.supplier-table-card .ant-table-thead > tr > th {
+  background: #fafafa !important;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 12px 14px !important;
+  color: #1a1a2e;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.supplier-table-card .ant-table-tbody > tr > td {
+  padding: 10px 14px !important;
+  font-size: 13px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.supplier-table-card .ant-table-tbody > tr:hover > td {
+  background: #fffaf4 !important;
+}
+
+.supplier-table-card .ant-table-tbody > tr:last-child > td {
+  border-bottom: none;
+}
+
+/* ─────────────────────────────────────────────
+   ACTION BUTTONS
+   ───────────────────────────────────────────── */
+
+.supplier-edit-btn {
+  color: #555 !important;
+  font-size: 18px !important;
+  transition: all 0.3s ease;
+}
+
+.supplier-edit-btn:hover {
+  color: #ff8a00 !important;
+  transform: scale(1.1);
+}
+
+.supplier-delete-btn {
+  font-size: 18px !important;
+  transition: all 0.3s ease;
+}
+
+.supplier-delete-btn:hover {
+  transform: scale(1.1);
+}
+
+/* ─────────────────────────────────────────────
+   PAGINATION
+   ───────────────────────────────────────────── */
+
+.supplier-table-card .ant-pagination {
+  margin-top: 16px;
+}
+
+.supplier-table-card .ant-pagination .ant-pagination-item-active {
+  background: #ff8a00;
+  border-color: #ff8a00;
+}
+
+.supplier-table-card .ant-pagination .ant-pagination-item-active a {
+  color: #ffffff;
+}
+
+.supplier-table-card .ant-pagination .ant-pagination-item-active:hover {
+  border-color: #ff7200;
+}
+
+.supplier-table-card .ant-pagination .ant-pagination-item-active:hover a {
+  color: #ffffff;
+}
+
+/* ─────────────────────────────────────────────
+   MODAL
+   ───────────────────────────────────────────── */
+
+.supplier-modal .ant-modal-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.supplier-modal .ant-modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.supplier-modal .ant-modal-body {
+  padding: 24px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.supplier-modal .ant-modal-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.supplier-modal .ant-modal-body::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 4px;
+}
+
+.supplier-modal .ant-modal-body::-webkit-scrollbar-thumb {
+  background: #d9d9d9;
+  border-radius: 4px;
+}
+
+.supplier-modal .ant-modal-body::-webkit-scrollbar-thumb:hover {
+  background: #bfbfbf;
+}
+
+/* ─────────────────────────────────────────────
+   FORM FIELDS
+   ───────────────────────────────────────────── */
+
+.supplier-modal .ant-form-item {
+  margin-bottom: 16px;
+}
+
+.supplier-modal .ant-form-item-label > label {
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+}
+
+.supplier-modal .ant-input,
+.supplier-modal .ant-input-affix-wrapper {
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.supplier-modal .ant-input:hover,
+.supplier-modal .ant-input-affix-wrapper:hover {
+  border-color: #ff8a00;
+}
+
+.supplier-modal .ant-input:focus,
+.supplier-modal .ant-input-affix-wrapper:focus {
+  border-color: #ff8a00;
+  box-shadow: 0 0 0 2px rgba(255, 138, 0, 0.1);
+}
+
+.supplier-modal .ant-input-lg {
+  height: 44px;
+  font-size: 15px;
+}
+
+.supplier-textarea {
+  border-radius: 8px !important;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.supplier-textarea:hover {
+  border-color: #ff8a00;
+}
+
+.supplier-textarea:focus {
+  border-color: #ff8a00;
+  box-shadow: 0 0 0 2px rgba(255, 138, 0, 0.1);
+}
+
+/* ─────────────────────────────────────────────
+   MODAL ACTIONS
+   ───────────────────────────────────────────── */
+
+.supplier-modal-actions {
+  margin-bottom: 0 !important;
+  text-align: right;
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.supplier-modal-cancel {
+  min-width: 100px;
+  height: 44px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.supplier-modal-submit {
+  background: #ff8a00 !important;
+  border-color: #ff8a00 !important;
+  min-width: 140px;
+  height: 44px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  box-shadow: 0 4px 12px rgba(255, 138, 0, 0.2);
+}
+
+.supplier-modal-submit:hover {
+  background: #ffa726 !important;
+  border-color: #ffa726 !important;
+  box-shadow: 0 6px 20px rgba(255, 138, 0, 0.3) !important;
+}
+
+/* ─────────────────────────────────────────────
+   RESPONSIVE BREAKPOINTS
+   ───────────────────────────────────────────── */
+
+/* Tablets and small laptops */
+@media (max-width: 992px) {
+  .supplier-management {
+    padding: 16px;
+  }
+
+  .supplier-title {
+    font-size: 24px !important;
+  }
+
+  .supplier-add-btn {
+    height: 42px;
+    padding: 0 18px;
+    font-size: 14px;
+  }
+
+  .supplier-table-card .ant-card-body {
+    padding: 12px 16px;
+  }
+
+  .supplier-table-card .ant-table {
+    font-size: 13px;
+  }
+
+  .supplier-table-card .ant-table-thead > tr > th {
+    font-size: 12px;
+    padding: 10px 12px !important;
+  }
+
+  .supplier-table-card .ant-table-tbody > tr > td {
+    padding: 8px 12px !important;
+    font-size: 12px;
+  }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+  .supplier-management {
+    padding: 12px;
+  }
+
+  .supplier-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .supplier-title {
+    font-size: 22px !important;
+  }
+
+  .supplier-add-btn {
+    width: 100%;
+    justify-content: center;
+    height: 40px;
+    font-size: 14px;
+    padding: 0 16px;
+  }
+
+  .supplier-table-card .ant-card-body {
+    padding: 8px 12px;
+  }
+
+  .supplier-table-card .ant-table {
+    font-size: 12px;
+  }
+
+  .supplier-table-card .ant-table-thead > tr > th {
+    font-size: 11px;
+    padding: 8px 8px !important;
+  }
+
+  .supplier-table-card .ant-table-tbody > tr > td {
+    padding: 6px 8px !important;
+    font-size: 12px;
+  }
+
+  .supplier-edit-btn,
+  .supplier-delete-btn {
+    font-size: 16px !important;
+  }
+
+  .supplier-table-card .ant-pagination {
+    font-size: 12px;
+  }
+
+  .supplier-table-card .ant-pagination .ant-pagination-item {
+    min-width: 28px;
+    height: 28px;
+    line-height: 28px;
+  }
+
+  .supplier-table-card .ant-pagination .ant-pagination-prev,
+  .supplier-table-card .ant-pagination .ant-pagination-next {
+    min-width: 28px;
+    height: 28px;
+    line-height: 28px;
+  }
+
+  .supplier-table-card .ant-pagination .ant-pagination-item a {
+    font-size: 12px;
+  }
+
+  /* Modal on mobile */
+  .supplier-modal .ant-modal-header {
+    padding: 12px 16px;
+  }
+
+  .supplier-modal .ant-modal-title {
+    font-size: 17px;
+  }
+
+  .supplier-modal .ant-modal-body {
+    padding: 16px;
+    max-height: 65vh;
+  }
+
+  .supplier-modal .ant-form-item-label > label {
+    font-size: 13px;
+  }
+
+  .supplier-modal .ant-input-lg {
+    height: 38px;
+    font-size: 14px;
+  }
+
+  .supplier-modal-actions {
+    flex-direction: column-reverse;
+    gap: 10px;
+  }
+
+  .supplier-modal-cancel,
+  .supplier-modal-submit {
+    width: 100%;
+    height: 40px;
+    min-width: unset;
+  }
+
+  .supplier-modal-submit {
+    font-size: 14px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .supplier-management {
+    padding: 8px;
+  }
+
+  .supplier-title {
+    font-size: 20px !important;
+  }
+
+  .supplier-add-btn {
+    height: 36px;
+    font-size: 13px;
+    padding: 0 12px;
+  }
+
+  .supplier-table-card .ant-card-body {
+    padding: 4px 8px;
+  }
+
+  .supplier-table-card .ant-table {
+    font-size: 11px;
+  }
+
+  .supplier-table-card .ant-table-thead > tr > th {
+    font-size: 10px;
+    padding: 6px 4px !important;
+  }
+
+  .supplier-table-card .ant-table-tbody > tr > td {
+    padding: 4px 4px !important;
+    font-size: 11px;
+  }
+
+  .supplier-edit-btn,
+  .supplier-delete-btn {
+    font-size: 14px !important;
+    padding: 0 4px !important;
+  }
+
+  .supplier-table-card .ant-pagination {
+    font-size: 11px;
+  }
+
+  .supplier-table-card .ant-pagination .ant-pagination-item {
+    min-width: 24px;
+    height: 24px;
+    line-height: 24px;
+  }
+
+  .supplier-table-card .ant-pagination .ant-pagination-prev,
+  .supplier-table-card .ant-pagination .ant-pagination-next {
+    min-width: 24px;
+    height: 24px;
+    line-height: 24px;
+  }
+
+  .supplier-table-card .ant-pagination .ant-pagination-item a {
+    font-size: 11px;
+  }
+
+  .supplier-table-card .ant-pagination .ant-pagination-total-text {
+    font-size: 10px !important;
+  }
+
+  .supplier-modal .ant-modal-body {
+    padding: 12px;
+  }
+
+  .supplier-modal .ant-input-lg {
+    height: 34px;
+    font-size: 13px;
+  }
+
+  .supplier-modal .ant-form-item {
+    margin-bottom: 12px;
+  }
+
+  .supplier-modal .ant-form-item-label > label {
+    font-size: 12px;
+  }
+
+  .supplier-modal-cancel,
+  .supplier-modal-submit {
+    height: 36px;
+    font-size: 13px;
+  }
+
+  .supplier-textarea {
+    min-height: 60px;
+    font-size: 13px;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   SCROLLBAR STYLING FOR TABLE
+   ───────────────────────────────────────────── */
+
+.supplier-table-card .ant-table-body::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+.supplier-table-card .ant-table-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.supplier-table-card .ant-table-body::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.supplier-table-card .ant-table-body::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* ─────────────────────────────────────────────
+   ANIMATIONS
+   ───────────────────────────────────────────── */
+
+.supplier-add-btn,
+.supplier-modal-submit,
+.supplier-edit-btn,
+.supplier-delete-btn {
+  transition: all 0.3s ease;
+}
+
+.supplier-table-card .ant-table-tbody > tr {
+  transition: background 0.2s ease;
+}
+
+/* ─────────────────────────────────────────────
+   DARK MODE SUPPORT (Optional)
+   ───────────────────────────────────────────── */
+
+@media (prefers-color-scheme: dark) {
+  .supplier-title {
+    color: #e8e8e8 !important;
+  }
+
+  .supplier-table-card {
+    background: #1a1a2e !important;
+    border-color: #2a2a4a !important;
+  }
+
+  .supplier-table-card .ant-table-thead > tr > th {
+    background: #1f1f3a !important;
+    color: #e8e8e8 !important;
+    border-bottom-color: #2a2a4a !important;
+  }
+
+  .supplier-table-card .ant-table-tbody > tr > td {
+    border-bottom-color: #2a2a4a;
+    color: #d0d0d0;
+  }
+
+  .supplier-table-card .ant-table-tbody > tr:hover > td {
+    background: #2a2a4a !important;
+  }
+
+  .supplier-modal .ant-modal-content {
+    background: #1a1a2e;
+  }
+
+  .supplier-modal .ant-modal-header {
+    background: #1a1a2e;
+    border-bottom-color: #2a2a4a;
+  }
+
+  .supplier-modal .ant-modal-title {
+    color: #e8e8e8;
+  }
+
+  .supplier-modal .ant-modal-close-x {
+    color: #d0d0d0;
+  }
+
+  .supplier-modal .ant-form-item-label > label {
+    color: #d0d0d0;
+  }
+
+  .supplier-modal .ant-input {
+    background: #2a2a4a;
+    border-color: #3a3a5a;
+    color: #d0d0d0;
+  }
+
+  .supplier-modal .ant-input::placeholder {
+    color: #666;
+  }
+
+  .supplier-modal .ant-input:hover {
+    border-color: #ff8a00;
+  }
+
+  .supplier-modal .ant-input-textarea textarea {
+    background: #2a2a4a;
+    border-color: #3a3a5a;
+    color: #d0d0d0;
+  }
+
+  .supplier-modal .ant-input-textarea textarea::placeholder {
+    color: #666;
+  }
+
+  .supplier-modal .ant-input-textarea textarea:hover {
+    border-color: #ff8a00;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   PRINT STYLES
+   ───────────────────────────────────────────── */
+
+@media print {
+  .supplier-management {
+    padding: 0;
+  }
+
+  .supplier-add-btn {
+    display: none !important;
+  }
+
+  .supplier-table-card .ant-table-thead > tr > th {
+    background: #f0f0f0 !important;
+    color: #000 !important;
+  }
+
+  .supplier-table-card .ant-table-tbody > tr > td {
+    color: #000 !important;
+  }
+
+  .supplier-table-card {
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+  }
+
+  .supplier-edit-btn,
+  .supplier-delete-btn {
+    display: none !important;
+  }
+}
