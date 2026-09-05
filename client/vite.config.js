@@ -15,11 +15,15 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false,
-    // Reduce chunk size warnings
-    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          antd: ['antd'],
+        },
+      },
+    },
   },
-  // Define environment variables
-  define: {
-    'process.env': process.env
-  }
+  // Ensure _redirects file is copied
+  publicDir: 'public',
 });
