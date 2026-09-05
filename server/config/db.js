@@ -17,7 +17,7 @@ const connectDB = async () => {
     });
 
     console.log(`✅  MongoDB Atlas Connected: ${conn.connection.host}`);
-    return;
+    return conn;
   } catch (error) {
     console.warn(`⚠️  Atlas connection failed: ${error.message}`);
     console.log('⏳  Falling back to in-memory MongoDB...');
@@ -34,9 +34,11 @@ const connectDB = async () => {
     console.log(`✅  In-Memory MongoDB Connected: ${conn.connection.host}`);
     console.log('⚠️  NOTE: Data will be lost when the server restarts.');
     console.log('   To persist data, fix your Atlas connection or use mobile hotspot.\n');
+    return conn;
   } catch (memError) {
     console.error(`❌  In-memory MongoDB also failed: ${memError.message}`);
     console.error('   Run: npm install mongodb-memory-server');
+    throw memError;
   }
 };
 

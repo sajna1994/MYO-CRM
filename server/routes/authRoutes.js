@@ -7,6 +7,9 @@ const {
   updateMe,
   changePassword,
 } = require('../controllers/authController');
+
+// ✅ FIX: Correct the import path
+// To: require('../middleware/protect')
 const { protect } = require('../middleware/protect');
 
 // ─── Public Routes ───────────────────────────────────────────────────────────
