@@ -22,9 +22,10 @@ const app = express();
 app.use(
   cors({
     origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
       
-      // Allow local frontend
+      // Allow local frontend (development)
       if (origin === "http://localhost:3000") {
         return callback(null, true);
       }
@@ -34,17 +35,29 @@ app.use(
         return callback(null, true);
       }
       
-    // Allow Vercel deployments
+      // Allow Render deployments
+      if (origin && origin.includes(".onrender.com")) {
+        return callback(null, true);
+      }
+      
+      // Allow Vercel deployments
       if (origin && origin.includes(".vercel.app")) {
         return callback(null, true);
       }
       
-      // In production, you might want to be more restrictive
-      // For now, allow all origins in development
+      // Allow Netlify deployments
+      if (origin && origin.includes(".netlify.app")) {
+        return callback(null, true);
+      }
+      
+      // In production, be more restrictive
+      // For development, allow all origins
       if (process.env.NODE_ENV === 'development') {
         return callback(null, true);
       }
       
+      // Log blocked origins for debugging
+      console.log(`Blocked CORS request from: ${origin}`);
       return callback(new Error("Blocked by CORS"));
     },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],

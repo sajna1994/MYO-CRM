@@ -15,8 +15,10 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     sourcemap: false,
+    // Reduce chunk size warnings
+    chunkSizeWarningLimit: 1000,
   },
-  // Add this for environment variables
+  // Define environment variables
   define: {
     'process.env': process.env
   }
