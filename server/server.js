@@ -8,31 +8,51 @@ dotenv.config();
 
 const app = express();
 
-// ─── Simplified CORS Configuration ──────────────────────────────────────────
-// Allow all origins (for testing)
-app.use(cors({
-  origin: '*',
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-  credentials: true,
-  optionsSuccessStatus: 200
-}));
-
-// ─── Then restrict later after testing ──────────────────────────────────────
-// app.use(
-//   cors({
-//     origin: [
-//       'http://localhost:3000',
-//       'http://localhost:5173',
-//       'https://myo-crm-frontend.onrender.com',
-//       'https://*.onrender.com'
-//     ],
-//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-//     allowedHeaders: ["Content-Type", "Authorization"],
-//     credentials: true,
-//     optionsSuccessStatus: 200
-//   })
-// );
+// ─── Global Middleware ───────────────────────────────────────────────────────
+// IMPORTANT: When using credentials: true, you CANNOT use origin: '*'
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      // List of allowed origins
+      const allowedOrigins = [
+        'http://localhost:3000',
+        'http://localhost:5173',
+        'https://myo-crm-frontend.onrender.com',
+        process.env.CLIENT_ORIGIN,
+      ].filter(Boolean); // Remove undefined values
+      
+      // Check if origin is allowed
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      
+      // Allow any .onrender.com domain
+      if (origin.includes('.onrender.com')) {
+        return callback(null, true);
+      }
+      
+      // Allow any .vercel.app domain
+      if (origin.includes('.vercel.app')) {
+        return callback(null, true);
+      }
+      
+      // For development, allow all (but still need specific origins for credentials)
+      if (process.env.NODE_ENV === 'development') {
+        return callback(null, true);
+      }
+      
+      console.log(`Blocked CORS request from: ${origin}`);
+      return callback(new Error('Not allowed by CORS'));
+    },
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+    credentials: true, // This requires specific origins, not '*'
+    optionsSuccessStatus: 200
+  })
+);
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -46,20 +66,17 @@ app.get('/api/health', (_req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
-// ─── Global Middleware ───────────────────────────────────────────────────────
-// CORS must come BEFORE routes
-app.use(cors({
-  origin: '*',
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-  credentials: true,
-  optionsSuccessStatus: 200
-}));
 
-// Then JSON middleware
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true }));
-
+// ─── Test CORS Route ─────────────────────────────────────────────────────────
+app.options('/api/test', cors());
+app.get('/api/test', (req, res) => {
+  res.json({
+    success: true,
+    message: 'CORS test successful!',
+    origin: req.headers.origin,
+    timestamp: new Date().toISOString()
+  });
+});
 
 // ─── API Routes ──────────────────────────────────────────────────────────────
 app.use('/api/auth', require('./routes/authRoutes'));
