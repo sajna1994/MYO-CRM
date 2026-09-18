@@ -1,7 +1,12 @@
+/* =========================================================
+   PURCHASE MANAGEMENT PAGE
+========================================================= */
+
 .purchase-page {
   width: 100%;
   min-height: 100%;
   padding: 0;
+  box-sizing: border-box;
 }
 
 /* =========================================================
@@ -17,33 +22,39 @@
   gap: 12px;
 }
 
+.purchase-heading-content {
+  min-width: 0;
+}
+
 .purchase-title {
   margin: 0 !important;
   font-size: 30px !important;
+  line-height: 1.2 !important;
   font-weight: 700 !important;
   color: #111318 !important;
 }
 
 .purchase-subtitle {
-  margin-top: 4px;
+  margin-top: 5px;
   color: #858990;
   font-size: 14px;
 }
 
 /* =========================================================
-   ORANGE BUTTON
+   NEW PURCHASE BUTTON
 ========================================================= */
 
 .new-purchase-button {
   height: 50px;
   padding: 0 24px;
   border: none !important;
-  border-radius: 7px !important;
+  border-radius: 8px !important;
   background: linear-gradient(135deg, #ff9800, #ff7200) !important;
   font-size: 16px;
   font-weight: 600;
-  box-shadow: 0 5px 12px rgba(255, 126, 0, 0.18);
   white-space: nowrap;
+  box-shadow: 0 5px 12px rgba(255, 126, 0, 0.18);
+  transition: all 0.25s ease;
 }
 
 .new-purchase-button:hover {
@@ -57,6 +68,18 @@
 }
 
 /* =========================================================
+   MOBILE / DESKTOP BUTTON TEXT
+========================================================= */
+
+.mobile-button-text {
+  display: none;
+}
+
+.desktop-button-text {
+  display: inline;
+}
+
+/* =========================================================
    SUMMARY
 ========================================================= */
 
@@ -65,27 +88,34 @@
 }
 
 .purchase-summary-card {
+  height: 100%;
   border-radius: 10px !important;
   border: 1px solid #eeeeee !important;
+  background: #ffffff;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
-  height: 100%;
   transition: all 0.3s ease;
 }
 
 .purchase-summary-card:hover {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.07);
   transform: translateY(-2px);
 }
 
+.purchase-summary-card .ant-card-body {
+  padding: 18px !important;
+}
+
 .summary-label {
-  color: #777;
+  color: #777777;
   font-size: 14px;
+  font-weight: 500;
 }
 
 .summary-value {
   margin-top: 5px;
   color: #15171a;
   font-size: 25px;
+  line-height: 1.2;
   font-weight: 700;
 }
 
@@ -93,20 +123,25 @@
   color: #f58200;
 }
 
+.summary-small {
+  display: none;
+}
+
 /* =========================================================
    TABLE CARD
 ========================================================= */
 
 .purchase-table-card {
+  width: 100%;
   background: #ffffff;
   border-radius: 10px !important;
-  border: 1px solid #e9e9e9;
+  border: 1px solid #e9e9e9 !important;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
   overflow: hidden;
 }
 
 .purchase-table-card .ant-card-body {
-  padding: 20px;
+  padding: 20px !important;
 }
 
 /* =========================================================
@@ -116,6 +151,7 @@
 .purchase-table-toolbar {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   margin-bottom: 18px;
   flex-wrap: wrap;
   gap: 12px;
@@ -124,35 +160,49 @@
 .purchase-search {
   width: 330px;
   height: 42px;
-  border-radius: 7px;
+  border-radius: 8px !important;
+}
+
+.purchase-search .ant-input {
+  font-size: 14px;
 }
 
 /* =========================================================
-   TABLE
+   DESKTOP TABLE
 ========================================================= */
 
 .purchase-table-card .ant-table {
   font-size: 15px;
 }
 
+.purchase-table-card .ant-table-container {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
 .purchase-table-card .ant-table-thead > tr > th {
   background: #ffffff !important;
-  color: #222 !important;
+  color: #222222 !important;
   font-size: 14px;
   font-weight: 600;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5 !important;
   padding: 12px 16px !important;
+  white-space: nowrap;
 }
 
 .purchase-table-card .ant-table-tbody > tr > td {
   height: 67px;
-  border-bottom: 1px solid #eeeeee;
-  color: #222;
+  color: #222222;
+  border-bottom: 1px solid #eeeeee !important;
   padding: 8px 16px !important;
 }
 
 .purchase-table-card .ant-table-tbody > tr:hover > td {
   background: #fffaf4 !important;
+}
+
+.purchase-table-card .ant-table-tbody > tr:last-child > td {
+  border-bottom: none !important;
 }
 
 /* =========================================================
@@ -177,37 +227,68 @@
 .purchase-view-btn {
   color: #ed6c5c !important;
   font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+.purchase-view-btn:hover {
+  color: #dc5849 !important;
+  transform: scale(1.08);
 }
 
 .purchase-edit-btn {
   color: #f28a00 !important;
   font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+.purchase-edit-btn:hover {
+  color: #dd7600 !important;
+  transform: scale(1.08);
 }
 
 /* =========================================================
    PAGINATION
 ========================================================= */
 
-.purchase-table-card .ant-pagination .ant-pagination-item-active {
+.purchase-table-card .ant-pagination {
+  margin-top: 18px;
+}
+
+.purchase-table-card
+  .ant-pagination
+  .ant-pagination-item-active {
   background: #ff8500;
   border-color: #ff8500;
 }
 
-.purchase-table-card .ant-pagination .ant-pagination-item-active a {
+.purchase-table-card
+  .ant-pagination
+  .ant-pagination-item-active
+  a {
   color: #ffffff;
 }
 
-.purchase-table-card .ant-pagination {
-  margin-top: 16px;
+.purchase-table-card
+  .ant-pagination
+  .ant-pagination-item:hover {
+  border-color: #ff8500;
+}
+
+.purchase-table-card
+  .ant-pagination
+  .ant-pagination-item:hover
+  a {
+  color: #ff8500;
 }
 
 /* =========================================================
-   MODAL
+   MODAL FOOTER
 ========================================================= */
 
 .purchase-modal-footer {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 10px;
   margin-top: 20px;
   flex-wrap: wrap;
@@ -215,10 +296,12 @@
 
 .purchase-modal-footer .ant-btn {
   min-width: 100px;
+  height: 42px;
+  border-radius: 8px;
 }
 
 /* =========================================================
-   DETAILS
+   PURCHASE DETAILS
 ========================================================= */
 
 .purchase-details {
@@ -236,18 +319,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 15px;
   padding: 10px 0;
   border-bottom: 1px solid #f0f0f0;
 }
 
 .detail-row span {
-  color: #666;
+  color: #666666;
   font-size: 14px;
 }
 
 .detail-row strong {
   color: #171717;
   font-size: 14px;
+  text-align: right;
 }
 
 .detail-total {
@@ -255,14 +340,19 @@
   font-size: 18px;
 }
 
+/* =========================================================
+   PURCHASE PRODUCTS SECTION
+========================================================= */
+
 .purchase-products-section {
   margin-top: 20px;
 }
 
 .purchase-products-section h3 {
-  margin-bottom: 12px;
+  margin: 0 0 12px;
   font-size: 18px;
   font-weight: 600;
+  color: #222222;
 }
 
 .purchase-products-section .ant-table {
@@ -274,6 +364,14 @@
   font-weight: 600;
 }
 
+.purchase-products-section .ant-table-tbody > tr > td {
+  padding: 10px 12px;
+}
+
+/* =========================================================
+   GRAND TOTAL
+========================================================= */
+
 .purchase-grand-total {
   display: flex;
   justify-content: flex-end;
@@ -281,7 +379,7 @@
   gap: 20px;
   margin-top: 20px;
   padding-top: 18px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid #dddddd;
   font-size: 20px;
   font-weight: 700;
   flex-wrap: wrap;
@@ -292,33 +390,50 @@
   font-size: 24px;
 }
 
+/* =========================================================
+   NOTES
+========================================================= */
+
 .detail-notes {
   margin-top: 20px;
   padding: 15px;
   background: #fafafa;
-  border: 1px solid #eee;
+  border: 1px solid #eeeeee;
   border-radius: 8px;
 }
 
 .detail-notes span {
   display: block;
   margin-bottom: 8px;
+  color: #333333;
   font-weight: 600;
-  color: #333;
 }
 
 .detail-notes p {
   margin: 0;
-  color: #555;
+  color: #555555;
+  line-height: 1.6;
   white-space: pre-wrap;
 }
 
 /* =========================================================
-   RESPONSIVE BREAKPOINTS
+   HIDDEN MOBILE COMPONENTS
 ========================================================= */
 
-/* Tablets and small laptops */
+.mobile-purchase-list {
+  display: none;
+}
+
+.mobile-pagination {
+  display: none;
+}
+
+/* =========================================================
+   TABLETS
+========================================================= */
+
 @media (max-width: 992px) {
+
   .purchase-title {
     font-size: 26px !important;
   }
@@ -340,354 +455,1221 @@
     padding: 6px 12px !important;
     height: 60px;
   }
+
+  .purchase-summary-card .ant-card-body {
+    padding: 16px !important;
+  }
 }
 
-/* Mobile devices */
+/* =========================================================
+   MOBILE APP UI
+========================================================= */
+
 @media (max-width: 768px) {
+
+  /* =======================================================
+     PAGE
+  ======================================================= */
+
+  .purchase-page {
+    width: 100%;
+    min-height: 100%;
+    padding: 0 0 90px 0;
+    box-sizing: border-box;
+  }
+
+  /* =======================================================
+     HEADER
+  ======================================================= */
+
   .purchase-page-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
     margin-bottom: 16px;
   }
 
+  .purchase-heading-content {
+    min-width: 0;
+    flex: 1;
+  }
+
   .purchase-title {
-    font-size: 22px !important;
+    margin: 0 !important;
+    font-size: 21px !important;
+    line-height: 1.2 !important;
+    font-weight: 700 !important;
   }
 
   .purchase-subtitle {
-    font-size: 13px;
+    margin-top: 4px;
+    color: #8a8d93;
+    font-size: 12px;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
+  /* =======================================================
+     NEW PURCHASE BUTTON
+  ======================================================= */
+
   .new-purchase-button {
-    width: 100%;
+    width: auto !important;
+    min-width: 48px;
     height: 44px;
-    font-size: 15px;
-    justify-content: center;
+    padding: 0 14px;
+    border-radius: 12px !important;
+    flex-shrink: 0;
+    font-size: 13px;
+    box-shadow: 0 4px 12px rgba(255, 126, 0, 0.18);
+  }
+
+  .new-purchase-button:hover {
+    transform: none;
+  }
+
+  .desktop-button-text {
+    display: none;
+  }
+
+  .mobile-button-text {
+    display: inline;
+  }
+
+  /* =======================================================
+     SUMMARY
+  ======================================================= */
+
+  .purchase-summary {
+    margin: 0 0 12px;
+  }
+
+  .purchase-summary .ant-col {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+
+  .purchase-summary-card {
+    min-height: 92px;
+    border-radius: 14px !important;
+    border: 1px solid #eeeeee !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  }
+
+  .purchase-summary-card:hover {
+    transform: none;
+  }
+
+  .purchase-summary-card .ant-card-body {
+    padding: 14px !important;
+  }
+
+  .summary-label {
+    color: #858990;
+    font-size: 11px;
+    line-height: 1.3;
+  }
+
+  .summary-value {
+    margin-top: 5px;
+    color: #15171a;
+    font-size: 21px;
+    line-height: 1.2;
+    font-weight: 700;
+  }
+
+  .summary-value.orange {
+    color: #f58200;
+  }
+
+  .summary-small {
+    display: block;
+    margin-top: 4px;
+    color: #a0a2a6;
+    font-size: 10px;
+  }
+
+  /* =======================================================
+     TABLE CONTAINER
+  ======================================================= */
+
+  .purchase-table-card {
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible;
+  }
+
+  .purchase-table-card .ant-card-body {
+    padding: 0 !important;
+  }
+
+  /* =======================================================
+     SEARCH
+  ======================================================= */
+
+  .purchase-table-toolbar {
+    width: 100%;
+    display: block;
+    margin-bottom: 12px;
   }
 
   .purchase-search {
     width: 100%;
-    height: 38px;
+    height: 46px;
+    border-radius: 13px !important;
+    background: #ffffff;
+    border: 1px solid #ececec !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
   }
 
-  .purchase-table-toolbar {
-    justify-content: stretch;
-    margin-bottom: 14px;
+  .purchase-search:hover,
+  .purchase-search:focus,
+  .purchase-search.ant-input-affix-wrapper-focused {
+    border-color: #ff9a24 !important;
+    box-shadow: 0 0 0 2px rgba(255, 138, 0, 0.08);
   }
 
-  .purchase-table-card .ant-card-body {
-    padding: 12px;
+  .purchase-search .ant-input {
+    font-size: 14px;
   }
 
-  .purchase-table-card .ant-table {
-    font-size: 13px;
+  /* =======================================================
+     HIDE DESKTOP TABLE
+  ======================================================= */
+
+  .purchase-table-card > .ant-card-body > .ant-table-wrapper {
+    display: none !important;
   }
 
-  .purchase-table-card .ant-table-thead > tr > th {
-    font-size: 12px;
-    padding: 8px 10px !important;
-  }
+  /* =======================================================
+     MOBILE PURCHASE LIST
+  ======================================================= */
 
-  .purchase-table-card .ant-table-tbody > tr > td {
-    padding: 6px 10px !important;
-    height: 54px;
-    font-size: 12px;
-  }
-
-  .purchase-table-card .ant-pagination {
-    font-size: 12px;
-  }
-
-  .purchase-table-card .ant-pagination .ant-pagination-item {
-    min-width: 28px;
-    height: 28px;
-    line-height: 28px;
-  }
-
-  .purchase-table-card .ant-pagination .ant-pagination-prev,
-  .purchase-table-card .ant-pagination .ant-pagination-next {
-    min-width: 28px;
-    height: 28px;
-    line-height: 28px;
-  }
-
-  /* Summary cards on mobile */
-  .purchase-summary .ant-col {
-    margin-bottom: 8px;
-  }
-
-  .purchase-summary-card .summary-value {
-    font-size: 20px;
-  }
-
-  .purchase-summary-card .summary-label {
-    font-size: 12px;
-  }
-
-  /* Modal on mobile */
-  .purchase-modal-footer {
-    flex-direction: column-reverse;
-  }
-
-  .purchase-modal-footer .ant-btn {
+  .mobile-purchase-list {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
     width: 100%;
   }
 
-  /* Purchase details on mobile */
+  /* =======================================================
+     PURCHASE CARD
+  ======================================================= */
+
+  .mobile-purchase-card {
+    width: 100%;
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 1px solid #eeeeee;
+    border-radius: 16px;
+    padding: 15px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.045);
+    transition: transform 0.15s ease;
+  }
+
+  .mobile-purchase-card:active {
+    transform: scale(0.99);
+  }
+
+  /* =======================================================
+     CARD TOP
+  ======================================================= */
+
+  .mobile-purchase-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f1f1f1;
+  }
+
+  .mobile-invoice-label {
+    color: #999999;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.7px;
+    text-transform: uppercase;
+  }
+
+  .mobile-invoice-number {
+    margin-top: 2px;
+    color: #17191c;
+    font-size: 15px;
+    line-height: 1.3;
+    font-weight: 700;
+    word-break: break-word;
+  }
+
+  /* =======================================================
+     STATUS
+  ======================================================= */
+
+  .mobile-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 25px;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 10px;
+    line-height: 1;
+    font-weight: 600;
+    text-transform: capitalize;
+    white-space: nowrap;
+  }
+
+  .mobile-status-received {
+    background: #eaf8ef;
+    color: #159447;
+  }
+
+  .mobile-status-pending {
+    background: #fff4df;
+    color: #d97706;
+  }
+
+  .mobile-status-cancelled {
+    background: #fff0f0;
+    color: #dc2626;
+  }
+
+  /* =======================================================
+     META INFORMATION
+  ======================================================= */
+
+  .mobile-purchase-meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    padding: 13px 0;
+  }
+
+  .mobile-meta-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .mobile-meta-item > svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+    color: #f58200;
+    font-size: 15px;
+  }
+
+  .mobile-meta-item div {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .mobile-meta-item span {
+    display: block;
+    color: #999999;
+    font-size: 9px;
+    line-height: 1.3;
+  }
+
+  .mobile-meta-item strong {
+    display: block;
+    margin-top: 2px;
+    color: #222222;
+    font-size: 12px;
+    line-height: 1.4;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* =======================================================
+     PRODUCTS
+  ======================================================= */
+
+  .mobile-products {
+    background: #fafafa;
+    border-radius: 11px;
+    padding: 10px;
+  }
+
+  .mobile-section-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 7px;
+    color: #555555;
+    font-size: 11px;
+    line-height: 1.3;
+    font-weight: 600;
+  }
+
+  .mobile-section-title svg {
+    flex-shrink: 0;
+    color: #f58200;
+    font-size: 13px;
+  }
+
+  .mobile-product-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 0;
+    border-bottom: 1px solid #eeeeee;
+  }
+
+  .mobile-product-row:last-child {
+    border-bottom: none;
+  }
+
+  .mobile-product-name {
+    min-width: 0;
+    color: #222222;
+    font-size: 12px;
+    line-height: 1.4;
+    font-weight: 500;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .mobile-product-quantity {
+    color: #888888;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .mobile-product-price {
+    color: #333333;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .mobile-more-products {
+    padding-top: 7px;
+    color: #f58200;
+    font-size: 10px;
+    line-height: 1.3;
+    font-weight: 600;
+  }
+
+  /* =======================================================
+     PURCHASE BOTTOM
+  ======================================================= */
+
+  .mobile-purchase-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-top: 13px;
+  }
+
+  .mobile-purchase-bottom > div:first-child {
+    min-width: 0;
+  }
+
+  .mobile-purchase-bottom > div:first-child span {
+    display: block;
+    color: #999999;
+    font-size: 9px;
+    line-height: 1.3;
+  }
+
+  .mobile-purchase-bottom > div:first-child strong {
+    display: block;
+    margin-top: 2px;
+    color: #159447;
+    font-size: 18px;
+    line-height: 1.2;
+    font-weight: 700;
+  }
+
+  /* =======================================================
+     ACTION BUTTONS
+  ======================================================= */
+
+  .mobile-purchase-actions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+  }
+
+  .mobile-action-button {
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    padding: 0 !important;
+    border-radius: 10px !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-action-button.view {
+    color: #ed6c5c !important;
+    border-color: #f0d8d4 !important;
+    background: #fffafa;
+  }
+
+  .mobile-action-button.view:hover {
+    color: #dc5849 !important;
+    border-color: #edbdb5 !important;
+  }
+
+  .mobile-action-button.edit {
+    color: #f28a00 !important;
+    border-color: #f2dfc8 !important;
+    background: #fffdf9;
+  }
+
+  .mobile-action-button.edit:hover {
+    color: #dd7600 !important;
+    border-color: #eccb9e !important;
+  }
+
+  /* =======================================================
+     EMPTY STATE
+  ======================================================= */
+
+  .mobile-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 220px;
+    padding: 55px 20px;
+    box-sizing: border-box;
+    background: #ffffff;
+    border: 1px solid #eeeeee;
+    border-radius: 16px;
+    text-align: center;
+  }
+
+  .mobile-empty-state > svg {
+    margin-bottom: 12px;
+    color: #dddddd;
+    font-size: 40px;
+  }
+
+  .mobile-empty-state strong {
+    color: #333333;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .mobile-empty-state span {
+    max-width: 280px;
+    margin-top: 5px;
+    color: #999999;
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  /* =======================================================
+     LOADING
+  ======================================================= */
+
+  .mobile-loading {
+    padding: 50px 20px;
+    color: #999999;
+    font-size: 13px;
+    text-align: center;
+  }
+
+  /* =======================================================
+     MOBILE PAGINATION
+  ======================================================= */
+
+  .mobile-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 0 20px;
+  }
+
+  .mobile-pagination .ant-btn {
+    min-width: 82px;
+    height: 38px;
+    padding: 0 12px;
+    border-radius: 10px;
+    font-size: 12px;
+  }
+
+  .mobile-pagination span {
+    color: #777777;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  /* =======================================================
+     MOBILE MODALS
+  ======================================================= */
+
+  .ant-modal-root .ant-modal {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding-bottom: 0 !important;
+    top: 0 !important;
+  }
+
+  .ant-modal-root .ant-modal-wrap {
+    padding: 0 !important;
+  }
+
+  .ant-modal-root .ant-modal-content {
+    min-height: 100vh;
+    border-radius: 0 !important;
+    overflow: hidden;
+    box-shadow: none !important;
+  }
+
+  .ant-modal-root .ant-modal-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    margin-bottom: 0 !important;
+    padding: 15px 52px 15px 16px !important;
+    background: #ffffff;
+    border-bottom: 1px solid #eeeeee;
+  }
+
+  .ant-modal-root .ant-modal-title {
+    color: #17191c;
+    font-size: 17px !important;
+    line-height: 1.3;
+    font-weight: 700;
+  }
+
+  .ant-modal-root .ant-modal-close {
+    top: 10px;
+    right: 10px;
+    width: 38px;
+    height: 38px;
+  }
+
+  .ant-modal-root .ant-modal-body {
+    max-height: calc(100vh - 65px);
+    padding: 16px !important;
+    padding-bottom: 110px !important;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* =======================================================
+     MOBILE FORM
+  ======================================================= */
+
+  .ant-modal-root .ant-form-item {
+    margin-bottom: 16px !important;
+  }
+
+  .ant-modal-root .ant-form-item-label {
+    padding-bottom: 5px !important;
+  }
+
+  .ant-modal-root .ant-form-item-label > label {
+    color: #444444;
+    font-size: 12px !important;
+    line-height: 1.3;
+    font-weight: 600;
+  }
+
+  .ant-modal-root
+    .ant-form-item-label
+    > label::after {
+    margin-left: 3px;
+  }
+
+  /* =======================================================
+     INPUTS
+  ======================================================= */
+
+  .ant-modal-root .ant-input {
+    min-height: 46px !important;
+    border-radius: 11px !important;
+    font-size: 14px !important;
+  }
+
+  .ant-modal-root .ant-input-affix-wrapper {
+    min-height: 46px !important;
+    border-radius: 11px !important;
+  }
+
+  .ant-modal-root .ant-input-number {
+    width: 100%;
+    min-height: 46px !important;
+    height: 46px !important;
+    border-radius: 11px !important;
+  }
+
+  .ant-modal-root .ant-input-number-input {
+    height: 44px !important;
+    font-size: 14px !important;
+  }
+
+  .ant-modal-root .ant-picker {
+    width: 100%;
+    min-height: 46px !important;
+    height: 46px !important;
+    border-radius: 11px !important;
+  }
+
+  .ant-modal-root .ant-picker-input > input {
+    font-size: 14px !important;
+  }
+
+  .ant-modal-root .ant-select {
+    width: 100%;
+  }
+
+  .ant-modal-root .ant-select-selector {
+    min-height: 46px !important;
+    height: 46px !important;
+    border-radius: 11px !important;
+    font-size: 14px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .ant-modal-root .ant-select-selection-item,
+  .ant-modal-root .ant-select-selection-placeholder {
+    line-height: 44px !important;
+    font-size: 14px !important;
+  }
+
+  .ant-modal-root .ant-input-textarea textarea {
+    min-height: 90px;
+    padding: 11px 12px;
+    border-radius: 11px !important;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* =======================================================
+     FOCUS STATES
+  ======================================================= */
+
+  .ant-modal-root .ant-input:focus,
+  .ant-modal-root .ant-input-focused,
+  .ant-modal-root .ant-input-number:focus,
+  .ant-modal-root .ant-picker-focused,
+  .ant-modal-root .ant-select-focused .ant-select-selector {
+    border-color: #ff9800 !important;
+    box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.08) !important;
+  }
+
+  /* =======================================================
+     PRODUCT FORM CARDS
+  ======================================================= */
+
+  .ant-modal-root .ant-form-list-item {
+    margin-bottom: 0;
+  }
+
+  .ant-modal-root .ant-form-list-item-card {
+    margin-bottom: 0;
+  }
+
+  .ant-modal-root .ant-card {
+    border-radius: 14px !important;
+    border: 1px solid #eeeeee !important;
+    box-shadow: none !important;
+    background: #ffffff;
+  }
+
+  .ant-modal-root .ant-card-small > .ant-card-body {
+    padding: 13px !important;
+  }
+
+  /* =======================================================
+     PRODUCT TOTAL INPUT
+  ======================================================= */
+
+  .ant-modal-root .ant-form-item .ant-input[readonly] {
+    background: #f8f8f8;
+    color: #159447;
+    font-weight: 600;
+  }
+
+  /* =======================================================
+     ADD PRODUCT BUTTON
+  ======================================================= */
+
+  .ant-modal-root .ant-btn-dashed {
+    min-height: 44px;
+    border-radius: 11px !important;
+    color: #f58200;
+    border-color: #f2c48e;
+    font-weight: 600;
+  }
+
+  .ant-modal-root .ant-btn-dashed:hover {
+    color: #e57200 !important;
+    border-color: #f58200 !important;
+  }
+
+  /* =======================================================
+     MODAL GRAND TOTAL
+  ======================================================= */
+
+  .purchase-modal-footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 15;
+    margin: 20px -16px -100px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.97);
+    border-top: 1px solid #eeeeee;
+    box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.04);
+  }
+
+  .purchase-modal-footer .ant-btn {
+    flex: 1;
+    min-width: 0;
+    height: 44px;
+    border-radius: 11px !important;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .purchase-modal-footer .new-purchase-button {
+    flex: 1.4;
+  }
+
+  /* =======================================================
+     PURCHASE DETAILS MOBILE
+  ======================================================= */
+
+  .purchase-details {
+    padding: 0;
+  }
+
   .purchase-info-grid {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 0;
+    margin-bottom: 20px;
   }
 
   .detail-row {
-    padding: 8px 0;
+    min-height: 44px;
+    padding: 10px 0;
   }
 
   .detail-row span {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .detail-row strong {
+    max-width: 60%;
     font-size: 13px;
   }
 
+  /* =======================================================
+     PURCHASE PRODUCT TABLE MOBILE
+  ======================================================= */
+
+  .purchase-products-section {
+    margin-top: 15px;
+  }
+
   .purchase-products-section h3 {
+    margin-bottom: 10px;
     font-size: 16px;
   }
 
+  .purchase-products-section .ant-table-wrapper {
+    overflow-x: auto;
+  }
+
   .purchase-products-section .ant-table {
+    min-width: 560px;
     font-size: 12px;
   }
 
   .purchase-products-section .ant-table-thead > tr > th {
-    padding: 6px 8px !important;
+    padding: 9px 8px !important;
     font-size: 11px;
   }
 
   .purchase-products-section .ant-table-tbody > tr > td {
-    padding: 4px 8px !important;
+    padding: 9px 8px !important;
     font-size: 12px;
   }
 
+  /* =======================================================
+     GRAND TOTAL MOBILE
+  ======================================================= */
+
   .purchase-grand-total {
-    font-size: 16px;
+    justify-content: space-between;
     gap: 10px;
-    flex-direction: column;
-    align-items: flex-end;
+    margin-top: 16px;
+    padding-top: 15px;
+    font-size: 16px;
   }
 
   .purchase-grand-total strong {
-    font-size: 20px;
+    font-size: 21px;
   }
 
+  /* =======================================================
+     NOTES MOBILE
+  ======================================================= */
+
   .detail-notes {
-    padding: 12px;
+    margin-top: 16px;
+    padding: 13px;
+    border-radius: 11px;
+  }
+
+  .detail-notes span {
+    margin-bottom: 6px;
+    font-size: 12px;
   }
 
   .detail-notes p {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  /* =======================================================
+     SUPPLIER / PRODUCT DROPDOWN
+  ======================================================= */
+
+  .ant-modal-root .ant-select-dropdown {
+    border-radius: 12px !important;
+  }
+
+  .ant-modal-root .ant-select-item {
+    min-height: 44px;
+    padding: 10px 12px !important;
     font-size: 13px;
   }
+
+  /* =======================================================
+     CATEGORY MANAGEMENT
+  ======================================================= */
+
+  .ant-modal-root .ant-switch {
+    min-width: 44px;
+    height: 24px;
+  }
+
+  .ant-modal-root .ant-switch-handle {
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Category table horizontal scroll */
+  .ant-modal-root .ant-table-wrapper {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  /* =======================================================
+     MOBILE CATEGORY TABLE
+  ======================================================= */
+
+  .ant-modal-root .ant-table {
+    font-size: 12px;
+  }
+
+  .ant-modal-root .ant-table-thead > tr > th {
+    padding: 9px 8px !important;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .ant-modal-root .ant-table-tbody > tr > td {
+    padding: 9px 8px !important;
+    font-size: 12px;
+  }
+
+  /* =======================================================
+     DRAWER / DROPDOWN Z-INDEX
+  ======================================================= */
+
+  .ant-modal-root {
+    z-index: 1100;
+  }
+
+  .ant-modal-mask {
+    z-index: 1099;
+  }
+
+  /* =======================================================
+     MOBILE SCROLLBAR
+  ======================================================= */
+
+  .ant-modal-root .ant-modal-body::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .ant-modal-root .ant-modal-body::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .ant-modal-root .ant-modal-body::-webkit-scrollbar-thumb {
+    background: #d8d8d8;
+    border-radius: 10px;
+  }
+
+  /* =======================================================
+     SAFE AREA
+  ======================================================= */
+
+  .purchase-page {
+    padding-bottom: calc(90px + env(safe-area-inset-bottom));
+  }
+
 }
 
-/* Small mobile devices */
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
 @media (max-width: 480px) {
+
+  .purchase-page {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
   .purchase-title {
     font-size: 20px !important;
   }
 
-  .purchase-page-header {
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-
-  .new-purchase-button {
-    height: 40px;
-    font-size: 14px;
-    padding: 0 16px;
-  }
-
-  .purchase-table-card .ant-card-body {
-    padding: 8px;
-  }
-
-  .purchase-table-card .ant-table-thead > tr > th {
-    padding: 6px 6px !important;
-    font-size: 10px;
-  }
-
-  .purchase-table-card .ant-table-tbody > tr > td {
-    padding: 4px 6px !important;
-    height: 48px;
+  .purchase-subtitle {
     font-size: 11px;
   }
 
-  .summary-value {
-    font-size: 18px !important;
+  .new-purchase-button {
+    min-width: 44px;
+    height: 42px;
+    padding: 0 11px;
+    font-size: 12px;
   }
 
-  .purchase-modal-footer .ant-btn {
-    min-width: 80px;
-    font-size: 13px;
-    height: 38px;
+  .purchase-summary-card {
+    min-height: 88px;
   }
 
-  .purchase-grand-total {
-    font-size: 14px;
-  }
-
-  .purchase-grand-total strong {
-    font-size: 18px;
-  }
-
-  /* Table horizontal scroll indicator */
-  .purchase-table-card .ant-table-wrapper {
-    position: relative;
-  }
-
-  .purchase-table-card .ant-table-wrapper::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 20px;
-    background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.03));
-    pointer-events: none;
-    display: none;
-  }
-
-  .purchase-table-card .ant-table-wrapper .ant-table-body {
-    overflow-x: auto;
-  }
-}
-
-/* =========================================================
-   MODAL RESPONSIVE OVERRIDES
-========================================================= */
-
-@media (max-width: 768px) {
-  .ant-modal {
-    max-width: 95% !important;
-    margin: 10px auto !important;
-  }
-
-  .ant-modal-body {
-    padding: 16px !important;
-    max-height: 70vh;
-    overflow-y: auto;
-  }
-
-  .ant-modal-header {
-    padding: 12px 16px !important;
-  }
-
-  .ant-modal-title {
-    font-size: 16px !important;
-  }
-
-  /* Form inside modal */
-  .ant-form-item {
-    margin-bottom: 12px !important;
-  }
-
-  .ant-form-item-label > label {
-    font-size: 13px !important;
-  }
-
-  /* Product items in form */
-  .ant-card {
-    margin-bottom: 8px !important;
-  }
-
-  .ant-card-body {
+  .purchase-summary-card .ant-card-body {
     padding: 12px !important;
   }
 
-  .ant-col {
-    padding: 0 4px !important;
+  .summary-label {
+    font-size: 10px;
   }
 
-  /* Select dropdown */
-  .ant-select {
-    font-size: 13px !important;
+  .summary-value {
+    font-size: 19px;
   }
 
-  .ant-input,
-  .ant-input-number,
-  .ant-picker {
-    font-size: 13px !important;
-    height: 36px !important;
+  .summary-small {
+    font-size: 9px;
   }
 
-  .ant-input-textarea textarea {
-    font-size: 13px !important;
+  .mobile-purchase-card {
+    padding: 13px;
+    border-radius: 15px;
   }
 
-  .ant-btn {
-    font-size: 13px !important;
-    height: 36px !important;
+  .mobile-invoice-number {
+    font-size: 14px;
   }
+
+  .mobile-status {
+    padding: 5px 8px;
+    font-size: 9px;
+  }
+
+  .mobile-purchase-meta {
+    gap: 8px;
+  }
+
+  .mobile-meta-item {
+    gap: 6px;
+  }
+
+  .mobile-meta-item > svg {
+    font-size: 13px;
+  }
+
+  .mobile-meta-item span {
+    font-size: 8px;
+  }
+
+  .mobile-meta-item strong {
+    font-size: 11px;
+  }
+
+  .mobile-products {
+    padding: 9px;
+  }
+
+  .mobile-product-name {
+    font-size: 11px;
+  }
+
+  .mobile-product-quantity,
+  .mobile-product-price {
+    font-size: 10px;
+  }
+
+  .mobile-purchase-bottom > div:first-child strong {
+    font-size: 17px;
+  }
+
+  .mobile-action-button {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+  }
+
+  .mobile-pagination .ant-btn {
+    min-width: 75px;
+    height: 36px;
+    padding: 0 9px;
+    font-size: 11px;
+  }
+
+  .mobile-pagination span {
+    font-size: 10px;
+  }
+
+  /* Smaller modal spacing */
+
+  .ant-modal-root .ant-modal-body {
+    padding: 14px !important;
+    padding-bottom: 105px !important;
+  }
+
+  .ant-modal-root .ant-modal-header {
+    padding: 14px 48px 14px 14px !important;
+  }
+
+  .ant-modal-root .ant-modal-title {
+    font-size: 16px !important;
+  }
+
+  .ant-modal-root .ant-card-small > .ant-card-body {
+    padding: 11px !important;
+  }
+
+  .purchase-modal-footer {
+    margin-left: -14px;
+    margin-right: -14px;
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
 }
 
-/* Very small screens */
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
 @media (max-width: 360px) {
+
   .purchase-title {
     font-size: 18px !important;
   }
 
-  .purchase-table-card .ant-table-thead > tr > th {
-    padding: 4px 4px !important;
-    font-size: 9px !important;
+  .purchase-subtitle {
+    max-width: 180px;
   }
 
-  .purchase-table-card .ant-table-tbody > tr > td {
-    padding: 3px 4px !important;
-    font-size: 10px !important;
-    height: 42px;
+  .new-purchase-button {
+    padding: 0 9px;
   }
 
-  .ant-modal-body {
-    padding: 12px !important;
+  .purchase-summary-card .ant-card-body {
+    padding: 10px !important;
   }
 
-  .ant-form-item {
-    margin-bottom: 8px !important;
+  .summary-value {
+    font-size: 17px;
   }
+
+  .mobile-purchase-card {
+    padding: 11px;
+  }
+
+  .mobile-purchase-meta {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .mobile-purchase-bottom {
+    align-items: flex-end;
+  }
+
+  .mobile-purchase-bottom > div:first-child strong {
+    font-size: 16px;
+  }
+
+  .mobile-action-button {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+  }
+
+  .mobile-pagination .ant-btn {
+    min-width: 68px;
+    padding: 0 7px;
+  }
+
 }
 
 /* =========================================================
-   ANIMATIONS
+   ACCESSIBILITY / TOUCH
 ========================================================= */
 
-.purchase-summary-card,
-.new-purchase-button {
-  transition: all 0.3s ease;
-}
+@media (max-width: 768px) {
 
-.purchase-table-card .ant-table-tbody > tr {
-  transition: background 0.2s ease;
+  button,
+  .ant-btn,
+  .ant-select-selector,
+  .ant-picker,
+  .ant-input,
+  .ant-input-number {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-action-button,
+  .mobile-purchase-card,
+  .new-purchase-button {
+    touch-action: manipulation;
+  }
+
 }
 
 /* =========================================================
-   SCROLLBAR STYLING FOR TABLES
+   REDUCED MOTION
 ========================================================= */
 
-.purchase-table-card .ant-table-body::-webkit-scrollbar {
-  height: 6px;
-  width: 6px;
-}
+@media (prefers-reduced-motion: reduce) {
 
-.purchase-table-card .ant-table-body::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-}
+  .purchase-summary-card,
+  .new-purchase-button,
+  .mobile-purchase-card,
+  .purchase-view-btn,
+  .purchase-edit-btn {
+    transition: none !important;
+  }
 
-.purchase-table-card .ant-table-body::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 3px;
-}
-
-.purchase-table-card .ant-table-body::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
 }

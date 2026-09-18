@@ -1,58 +1,84 @@
-/* Products.css - Fully Responsive */
-
-/* ─────────────────────────────────────────────
-   PAGE CONTAINER
-   ───────────────────────────────────────────── */
+/* =========================================================
+   PRODUCTS PAGE
+   MYO FITNESS STUDIO
+   Fully Responsive / Mobile-App Style
+========================================================= */
 
 .product-editor-screen {
-  padding: 20px;
-  max-width: 100%;
+  width: 100%;
+  min-height: 100%;
+  padding: 0;
   overflow-x: hidden;
+  box-sizing: border-box;
 }
 
-/* ─────────────────────────────────────────────
-   HEADER
-   ───────────────────────────────────────────── */
+/* =========================================================
+   PAGE HEADER
+========================================================= */
 
 .product-editor-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
   flex-wrap: wrap;
-  gap: 12px;
 }
 
 .product-editor-screen__title {
-  font-size: 28px;
-  font-weight: 700;
   margin: 0;
-  color: #1a1a2e;
+  color: #17191c;
+  font-size: 30px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.3px;
 }
 
 .manage-categories-btn {
-  height: 40px;
-  border-radius: 8px;
-  font-weight: 500;
+  height: 44px;
+  padding: 0 18px;
+  border-radius: 9px !important;
+  font-size: 14px;
+  font-weight: 600;
+  border-color: #e7e7e7 !important;
+  background: #fff !important;
+  color: #333 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
 }
 
-/* ─────────────────────────────────────────────
-   PRODUCT FORM
-   ───────────────────────────────────────────── */
+.manage-categories-btn:hover {
+  color: #f58200 !important;
+  border-color: #f58200 !important;
+  background: #fffaf4 !important;
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   PRODUCT EDITOR CARD
+========================================================= */
 
 .product-editor {
-  background: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  width: 100%;
+  background: #fff;
+  border: 1px solid #eeeeee;
+  border-radius: 14px;
+  padding: 26px;
+  box-sizing: border-box;
+  box-shadow: 0 3px 15px rgba(0, 0, 0, 0.045);
 }
 
 .product-editor__heading {
+  margin: 0 0 24px;
+  color: #17191c;
   font-size: 22px;
-  font-weight: 600;
-  margin: 0 0 20px 0;
-  color: #1a1a2e;
+  line-height: 1.3;
+  font-weight: 650;
 }
+
+/* =========================================================
+   PRODUCT FORM
+========================================================= */
 
 .product-editor__form {
   width: 100%;
@@ -61,308 +87,856 @@
 .product-editor__fields {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 24px 32px;
+  gap: 0 34px;
 }
 
 .product-editor__column {
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 0;
 }
 
 .product-editor__column .ant-form-item {
-  margin-bottom: 16px;
+  margin-bottom: 18px;
 }
 
-.product-editor__column .ant-form-item:last-child {
-  margin-bottom: 0;
+/* =========================================================
+   FORM LABELS
+========================================================= */
+
+.product-editor .ant-form-item-label {
+  padding-bottom: 6px !important;
 }
 
-/* ─────────────────────────────────────────────
+.product-editor .ant-form-item-label > label {
+  color: #444;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.product-editor .ant-form-item-required::before {
+  color: #f58200 !important;
+}
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.product-editor .ant-input,
+.product-editor .ant-input-number,
+.product-editor .ant-select-selector {
+  min-height: 44px !important;
+  border-radius: 9px !important;
+  border-color: #dedede !important;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.product-editor .ant-input {
+  padding: 9px 12px;
+}
+
+.product-editor .ant-input-number {
+  width: 100%;
+}
+
+.product-editor .ant-input-number-input {
+  height: 42px !important;
+  font-size: 14px;
+}
+
+.product-editor .ant-select-selector {
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 12px !important;
+}
+
+.product-editor .ant-select-selection-item,
+.product-editor .ant-select-selection-placeholder {
+  line-height: 42px !important;
+  font-size: 14px;
+}
+
+.product-editor textarea.ant-input {
+  min-height: 105px;
+  resize: vertical;
+}
+
+/* Focus */
+
+.product-editor .ant-input:focus,
+.product-editor .ant-input-focused,
+.product-editor .ant-input-number:focus,
+.product-editor .ant-input-number-focused,
+.product-editor .ant-select-focused .ant-select-selector {
+  border-color: #f58200 !important;
+  box-shadow: 0 0 0 2px rgba(245, 130, 0, 0.08) !important;
+}
+
+/* =========================================================
    IMAGE UPLOAD
-   ───────────────────────────────────────────── */
+========================================================= */
 
 .product-image-field {
   grid-column: 1 / -1;
   margin-top: 8px;
+  padding-top: 20px;
+  border-top: 1px solid #f1f1f1;
 }
 
-.product-image-field label {
+.product-image-field > label {
   display: block;
-  font-weight: 500;
-  margin-bottom: 8px;
-  font-size: 14px;
-  color: #333;
+  margin-bottom: 9px;
+  color: #444;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .product-image-upload {
-  width: 140px;
-  height: 140px;
-  border: 2px dashed #d9d9d9;
-  border-radius: 10px;
+  width: 145px;
+  height: 145px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background: #fafafa;
   overflow: hidden;
+  background: #fafafa;
+  border: 2px dashed #d9d9d9;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s ease;
 }
 
 .product-image-upload:hover {
-  border-color: #1890ff;
-  background: #f0f7ff;
+  border-color: #f58200;
+  background: #fffaf4;
+}
+
+.product-image-upload .anticon {
+  margin-bottom: 6px;
+  color: #999;
+  font-size: 25px;
+}
+
+.product-image-upload span {
+  color: #999;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .product-image-upload img {
   width: 100%;
   height: 100%;
+  display: block;
   object-fit: cover;
 }
 
-.product-image-upload .anticon {
-  font-size: 24px;
-  color: #999;
-  margin-bottom: 4px;
-}
-
-.product-image-upload span {
-  font-size: 13px;
-  color: #999;
-}
-
-/* ─────────────────────────────────────────────
+/* =========================================================
    FORM ACTIONS
-   ───────────────────────────────────────────── */
+========================================================= */
 
 .product-editor__actions {
   display: flex;
-  gap: 12px;
-  margin-top: 24px;
+  align-items: center;
+  gap: 10px;
+  margin-top: 26px;
   padding-top: 20px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid #eeeeee;
   flex-wrap: wrap;
 }
 
 .product-editor__actions .ant-btn {
-  min-width: 120px;
+  min-width: 125px;
   height: 44px;
-}
-
-.product-editor__actions .ant-btn-primary {
-  background: linear-gradient(135deg, #ff9800, #ff7200) !important;
-  border: none !important;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: 600;
 }
 
-.product-editor__actions .ant-btn-primary:hover {
-  background: linear-gradient(135deg, #ffad26, #ff7d00) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 126, 0, 0.25);
+/* SAVE / UPDATE */
+
+.product-editor__actions .ant-btn-primary {
+  border: none !important;
+  background: linear-gradient(
+    135deg,
+    #ff9800,
+    #ff7200
+  ) !important;
+  box-shadow: 0 5px 12px rgba(255, 126, 0, 0.18);
 }
 
-/* ─────────────────────────────────────────────
+.product-editor__actions .ant-btn-primary:hover {
+  background: linear-gradient(
+    135deg,
+    #ffad26,
+    #ff7d00
+  ) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 7px 16px rgba(255, 126, 0, 0.25);
+}
+
+/* CANCEL */
+
+.product-editor__actions .ant-btn:not(.ant-btn-primary) {
+  border-color: #dedede;
+  background: #fff;
+  color: #555;
+}
+
+.product-editor__actions .ant-btn:not(.ant-btn-primary):hover {
+  border-color: #f58200;
+  color: #f58200;
+}
+
+/* =========================================================
    CATEGORY MODAL
-   ───────────────────────────────────────────── */
+========================================================= */
 
 .category-form-container {
-  background: #fafafa;
-  padding: 16px;
-  border-radius: 10px;
   margin-bottom: 20px;
+  padding: 18px;
+  background: #fafafa;
+  border: 1px solid #eeeeee;
+  border-radius: 12px;
+}
+
+.category-form-container h3 {
+  margin: 0 0 18px;
+  color: #222;
+  font-size: 17px;
+  font-weight: 600;
 }
 
 .category-form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 120px auto;
-  gap: 12px;
+  grid-template-columns: minmax(180px, 1fr)
+                         minmax(180px, 1fr)
+                         100px
+                         auto;
   align-items: end;
+  gap: 12px;
+}
+
+.category-form-grid .ant-form-item {
+  margin-bottom: 0 !important;
+}
+
+.category-form-grid .ant-form-item-label {
+  padding-bottom: 5px !important;
+}
+
+.category-form-grid .ant-form-item-label > label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #555;
+}
+
+.category-form-grid .ant-input {
+  height: 42px;
+  border-radius: 8px;
 }
 
 .category-form-actions {
   display: flex;
+  align-items: center;
   gap: 8px;
 }
 
 .category-form-actions .ant-btn {
+  height: 42px;
   min-width: 80px;
+  border-radius: 8px;
+  font-weight: 600;
 }
 
-/* ─────────────────────────────────────────────
-   RESPONSIVE BREAKPOINTS
-   ───────────────────────────────────────────── */
+.category-form-actions .ant-btn-primary {
+  background: linear-gradient(
+    135deg,
+    #ff9800,
+    #ff7200
+  ) !important;
+  border: none !important;
+}
 
-/* Tablets and small laptops */
+/* =========================================================
+   CATEGORY TABLE
+========================================================= */
+
+.ant-modal .ant-table {
+  font-size: 14px;
+}
+
+.ant-modal .ant-table-thead > tr > th {
+  background: #fafafa !important;
+  color: #333 !important;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 11px 12px !important;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.ant-modal .ant-table-tbody > tr > td {
+  padding: 11px 12px !important;
+  color: #333;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.ant-modal .ant-table-tbody > tr:hover > td {
+  background: #fffaf4 !important;
+}
+
+/* =========================================================
+   CATEGORY TAG
+========================================================= */
+
+.ant-modal .ant-tag {
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 2px 8px;
+}
+
+/* =========================================================
+   CATEGORY ACTION BUTTONS
+========================================================= */
+
+.ant-modal .ant-table .ant-btn {
+  border-radius: 7px;
+}
+
+.ant-modal .ant-table .ant-btn:hover {
+  background: #fff5e8;
+}
+
+/* =========================================================
+   MODAL GENERAL
+========================================================= */
+
+.ant-modal-content {
+  border-radius: 14px !important;
+  overflow: hidden;
+}
+
+.ant-modal-header {
+  padding: 18px 22px !important;
+  margin-bottom: 0 !important;
+  border-bottom: 1px solid #eeeeee;
+}
+
+.ant-modal-title {
+  color: #202124 !important;
+  font-size: 18px !important;
+  font-weight: 650 !important;
+}
+
+.ant-modal-body {
+  padding: 20px 22px !important;
+}
+
+/* =========================================================
+   MODAL FORM
+========================================================= */
+
+.ant-modal .ant-form-item {
+  margin-bottom: 16px;
+}
+
+.ant-modal .ant-form-item-label {
+  padding-bottom: 5px !important;
+}
+
+.ant-modal .ant-form-item-label > label {
+  color: #444;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ant-modal .ant-input,
+.ant-modal .ant-input-number,
+.ant-modal .ant-select-selector {
+  border-radius: 8px !important;
+}
+
+.ant-modal .ant-input {
+  min-height: 42px;
+}
+
+.ant-modal .ant-input-number {
+  min-height: 42px;
+}
+
+.ant-modal .ant-select-selector {
+  min-height: 42px !important;
+}
+
+.ant-modal .ant-input-number-input {
+  height: 40px !important;
+}
+
+/* =========================================================
+   SWITCH
+========================================================= */
+
+.ant-modal .ant-switch {
+  min-width: 42px;
+}
+
+/* =========================================================
+   TABLE HORIZONTAL SCROLL
+========================================================= */
+
+.ant-table-wrapper {
+  max-width: 100%;
+}
+
+.ant-table-content {
+  overflow-x: auto !important;
+}
+
+/* =========================================================
+   TABLET
+========================================================= */
+
 @media (max-width: 992px) {
+
   .product-editor-screen {
-    padding: 16px;
+    padding: 0;
+  }
+
+  .product-editor-screen__title {
+    font-size: 26px;
   }
 
   .product-editor {
-    padding: 20px;
+    padding: 22px;
   }
 
   .product-editor__fields {
-    gap: 16px 24px;
+    gap: 0 22px;
   }
 
-  .product-editor-screen__title {
-    font-size: 24px;
+  .category-form-grid {
+    grid-template-columns: 1fr 1fr;
   }
 
-  .product-editor__heading {
-    font-size: 20px;
+  .category-form-actions {
+    grid-column: 1 / -1;
   }
+
 }
 
-/* Mobile devices */
+/* =========================================================
+   MOBILE APP MODE
+========================================================= */
+
 @media (max-width: 768px) {
+
+  /* -------------------------------------------------------
+     PAGE
+  ------------------------------------------------------- */
+
   .product-editor-screen {
-    padding: 12px;
+    width: 100%;
+    padding: 0;
+    padding-bottom: 85px;
   }
 
+  /* -------------------------------------------------------
+     HEADER
+  ------------------------------------------------------- */
+
   .product-editor-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 15px;
   }
 
   .product-editor-screen__title {
-    font-size: 22px;
+    min-width: 0;
+    margin: 0;
+    font-size: 21px;
+    line-height: 1.2;
+    font-weight: 700;
   }
 
   .manage-categories-btn {
-    width: 100%;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    padding: 0 !important;
+    border-radius: 12px !important;
+    display: flex;
+    align-items: center;
     justify-content: center;
+    flex-shrink: 0;
   }
+
+  /*
+     Hide text and keep category icon.
+     This makes the header look like an app toolbar.
+  */
+
+  .manage-categories-btn .anticon {
+    margin: 0 !important;
+    font-size: 18px;
+  }
+
+  .manage-categories-btn {
+    font-size: 0;
+  }
+
+  /* -------------------------------------------------------
+     PRODUCT CARD
+  ------------------------------------------------------- */
 
   .product-editor {
     padding: 16px;
-    border-radius: 10px;
+    border: 1px solid #eeeeee;
+    border-radius: 15px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.04);
   }
 
   .product-editor__heading {
+    margin-bottom: 18px;
     font-size: 18px;
-    margin-bottom: 16px;
+    line-height: 1.3;
   }
 
+  /* -------------------------------------------------------
+     FORM
+  ------------------------------------------------------- */
+
   .product-editor__fields {
-    grid-template-columns: 1fr;
+    display: flex;
+    flex-direction: column;
     gap: 0;
   }
 
-  .product-editor__column .ant-form-item {
-    margin-bottom: 12px;
+  .product-editor__column {
+    width: 100%;
   }
 
+  .product-editor__column .ant-form-item {
+    margin-bottom: 14px;
+  }
+
+  /* -------------------------------------------------------
+     FORM LABELS
+  ------------------------------------------------------- */
+
+  .product-editor .ant-form-item-label {
+    padding-bottom: 5px !important;
+  }
+
+  .product-editor .ant-form-item-label > label {
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* -------------------------------------------------------
+     INPUTS
+  ------------------------------------------------------- */
+
+  .product-editor .ant-input,
+  .product-editor .ant-input-number,
+  .product-editor .ant-select-selector {
+    min-height: 46px !important;
+    height: 46px !important;
+    border-radius: 11px !important;
+    font-size: 14px !important;
+  }
+
+  .product-editor .ant-input {
+    padding: 10px 12px;
+  }
+
+  .product-editor .ant-input-number-input {
+    height: 44px !important;
+    font-size: 14px;
+  }
+
+  .product-editor .ant-select-selector {
+    padding: 0 12px !important;
+  }
+
+  .product-editor .ant-select-selection-item,
+  .product-editor .ant-select-selection-placeholder {
+    line-height: 44px !important;
+    font-size: 14px;
+  }
+
+  .product-editor textarea.ant-input {
+    min-height: 100px;
+    height: auto !important;
+    padding: 11px 12px;
+    line-height: 1.5;
+  }
+
+  /* -------------------------------------------------------
+     IMAGE
+  ------------------------------------------------------- */
+
   .product-image-field {
-    margin-top: 8px;
+    margin-top: 6px;
+    padding-top: 18px;
+  }
+
+  .product-image-field > label {
+    margin-bottom: 8px;
+    font-size: 12px;
   }
 
   .product-image-upload {
-    width: 120px;
-    height: 120px;
+    width: 125px;
+    height: 125px;
+    border-radius: 13px;
   }
 
+  .product-image-upload .anticon {
+    font-size: 23px;
+  }
+
+  .product-image-upload span {
+    font-size: 11px;
+  }
+
+  /* -------------------------------------------------------
+     ACTIONS
+  ------------------------------------------------------- */
+
   .product-editor__actions {
-    flex-direction: column-reverse;
-    gap: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin-top: 20px;
+    padding-top: 18px;
   }
 
   .product-editor__actions .ant-btn {
     width: 100%;
-    min-width: unset;
+    min-width: 0;
+    height: 46px;
+    border-radius: 11px;
+    font-size: 14px;
+  }
+
+  /*
+     Save button first
+  */
+
+  .product-editor__actions .ant-btn-primary {
+    order: 1;
+  }
+
+  .product-editor__actions .ant-btn:not(.ant-btn-primary) {
+    order: 2;
+  }
+
+  /* -------------------------------------------------------
+     MODAL — FULL MOBILE APP SCREEN
+  ------------------------------------------------------- */
+
+  .ant-modal-root .ant-modal {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    top: 0 !important;
+  }
+
+  .ant-modal-root .ant-modal-wrap {
+    padding: 0 !important;
+  }
+
+  .ant-modal-root .ant-modal-content {
+    min-height: 100vh;
+    border-radius: 0 !important;
+    overflow: hidden;
+  }
+
+  .ant-modal-root .ant-modal-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    padding: 15px 16px !important;
+    background: #fff;
+    border-bottom: 1px solid #eeeeee;
+  }
+
+  .ant-modal-root .ant-modal-title {
+    font-size: 17px !important;
+    font-weight: 650 !important;
+  }
+
+  .ant-modal-root .ant-modal-close {
+    top: 10px;
+    right: 10px;
+    width: 40px;
     height: 40px;
   }
 
-  /* Category Modal - Mobile */
+  .ant-modal-root .ant-modal-body {
+    padding: 15px !important;
+    max-height: calc(100vh - 65px);
+    overflow-y: auto;
+    padding-bottom: 100px !important;
+  }
+
+  /* -------------------------------------------------------
+     CATEGORY FORM
+  ------------------------------------------------------- */
+
+  .category-form-container {
+    padding: 14px;
+    margin-bottom: 16px;
+    border-radius: 13px;
+  }
+
+  .category-form-container h3 {
+    margin-bottom: 15px;
+    font-size: 15px;
+  }
+
   .category-form-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
   }
 
   .category-form-grid .ant-form-item {
-    margin-bottom: 0 !important;
+    width: 100%;
+    margin-bottom: 13px !important;
   }
+
+  .category-form-grid .ant-form-item-label {
+    padding-bottom: 5px !important;
+  }
+
+  .category-form-grid .ant-form-item-label > label {
+    font-size: 12px;
+  }
+
+  .category-form-grid .ant-input {
+    height: 45px;
+    border-radius: 10px;
+  }
+
+  /* Active switch */
+
+  .category-form-grid
+    .ant-form-item:nth-child(3) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .category-form-grid
+    .ant-form-item:nth-child(3)
+    .ant-form-item-label {
+    padding: 0 !important;
+  }
+
+  /* -------------------------------------------------------
+     CATEGORY ACTIONS
+  ------------------------------------------------------- */
 
   .category-form-actions {
     width: 100%;
+    display: flex !important;
     flex-direction: column;
+    gap: 8px;
   }
 
   .category-form-actions .ant-btn {
     width: 100%;
+    height: 45px;
+    border-radius: 10px;
   }
 
-  /* Modal responsive overrides */
-  .ant-modal {
-    max-width: 95% !important;
-    margin: 10px auto !important;
+  /* -------------------------------------------------------
+     CATEGORY TABLE
+  ------------------------------------------------------- */
+
+  .ant-modal .ant-table-wrapper {
+    overflow-x: auto;
   }
 
-  .ant-modal-body {
-    padding: 16px !important;
-    max-height: 70vh;
-    overflow-y: auto;
+  .ant-modal .ant-table {
+    min-width: 500px;
+    font-size: 12px;
   }
 
-  .ant-modal-header {
-    padding: 12px 16px !important;
+  .ant-modal .ant-table-thead > tr > th {
+    padding: 9px 8px !important;
+    font-size: 11px;
   }
 
-  .ant-modal-title {
-    font-size: 16px !important;
+  .ant-modal .ant-table-tbody > tr > td {
+    padding: 9px 8px !important;
+    font-size: 12px;
   }
 
-  /* Form fields on mobile */
-  .ant-form-item-label > label {
-    font-size: 13px !important;
+  .ant-modal .ant-table .ant-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
   }
 
-  .ant-input,
-  .ant-input-number,
-  .ant-select-selector,
-  .ant-picker {
-    font-size: 14px !important;
-    height: 38px !important;
+  /* -------------------------------------------------------
+     MOBILE MODAL FORM
+  ------------------------------------------------------- */
+
+  .ant-modal .ant-form-item {
+    margin-bottom: 14px !important;
   }
 
-  .ant-input-number-input {
-    height: 36px !important;
+  .ant-modal .ant-form-item-label {
+    padding-bottom: 5px !important;
   }
 
-  .ant-btn {
-    font-size: 14px !important;
-    height: 38px !important;
-  }
-
-  /* Table on mobile */
-  .ant-table {
-    font-size: 13px;
-  }
-
-  .ant-table-thead > tr > th {
-    padding: 8px 8px !important;
+  .ant-modal .ant-form-item-label > label {
     font-size: 12px !important;
   }
 
-  .ant-table-tbody > tr > td {
-    padding: 6px 8px !important;
-    font-size: 12px !important;
+  .ant-modal .ant-input,
+  .ant-modal .ant-input-number,
+  .ant-modal .ant-select-selector {
+    min-height: 45px !important;
+    height: 45px !important;
+    border-radius: 10px !important;
+    font-size: 14px !important;
   }
 
-  .ant-tag {
-    font-size: 11px !important;
-    padding: 0 6px !important;
+  .ant-modal .ant-input-number-input {
+    height: 43px !important;
   }
+
+  .ant-modal textarea.ant-input {
+    min-height: 90px;
+    height: auto !important;
+  }
+
+  /* -------------------------------------------------------
+     MOBILE TAGS
+  ------------------------------------------------------- */
+
+  .ant-modal .ant-tag {
+    font-size: 9px !important;
+    padding: 2px 7px !important;
+  }
+
 }
 
-/* Small mobile devices */
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
 @media (max-width: 480px) {
+
   .product-editor-screen {
-    padding: 8px;
+    padding-bottom: 85px;
   }
 
   .product-editor-screen__title {
@@ -370,100 +944,143 @@
   }
 
   .product-editor {
+    padding: 13px;
+    border-radius: 14px;
+  }
+
+  .product-editor__heading {
+    font-size: 17px;
+  }
+
+  .manage-categories-btn {
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+  }
+
+  .product-editor .ant-input,
+  .product-editor .ant-input-number,
+  .product-editor .ant-select-selector {
+    min-height: 44px !important;
+    height: 44px !important;
+  }
+
+  .product-editor .ant-input-number-input {
+    height: 42px !important;
+  }
+
+  .product-image-upload {
+    width: 115px;
+    height: 115px;
+  }
+
+  .product-editor__actions .ant-btn {
+    height: 44px;
+  }
+
+  .category-form-container {
     padding: 12px;
-    border-radius: 8px;
+  }
+
+  .ant-modal-root .ant-modal-body {
+    padding: 12px !important;
+  }
+
+}
+
+/* =========================================================
+   VERY SMALL DEVICES
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .product-editor-screen__title {
+    font-size: 18px;
+  }
+
+  .product-editor {
+    padding: 11px;
   }
 
   .product-editor__heading {
     font-size: 16px;
   }
 
+  .product-editor .ant-form-item-label > label {
+    font-size: 11px;
+  }
+
+  .product-editor .ant-input,
+  .product-editor .ant-input-number,
+  .product-editor .ant-select-selector {
+    font-size: 13px !important;
+  }
+
   .product-image-upload {
-    width: 100px;
-    height: 100px;
+    width: 105px;
+    height: 105px;
   }
 
-  .product-image-upload .anticon {
-    font-size: 20px;
-  }
-
-  .product-image-upload span {
-    font-size: 12px;
-  }
-
-  .product-editor__actions .ant-btn {
-    height: 36px;
-    font-size: 13px !important;
-  }
-
-  .ant-modal-body {
-    padding: 12px !important;
-  }
-
-  .ant-form-item {
-    margin-bottom: 10px !important;
-  }
-
-  .ant-input,
-  .ant-input-number,
-  .ant-select-selector,
-  .ant-picker {
-    height: 34px !important;
-    font-size: 13px !important;
-  }
-
-  .ant-btn {
-    height: 34px !important;
-    font-size: 13px !important;
-  }
-
-  /* Table on very small screens */
-  .ant-table-thead > tr > th {
-    padding: 4px 4px !important;
-    font-size: 10px !important;
-  }
-
-  .ant-table-tbody > tr > td {
-    padding: 4px 4px !important;
-    font-size: 11px !important;
-  }
-
-  .ant-table .anticon {
-    font-size: 14px !important;
-  }
 }
 
-/* ─────────────────────────────────────────────
-   SCROLLBAR STYLING
-   ───────────────────────────────────────────── */
+/* =========================================================
+   SCROLLBAR
+========================================================= */
 
-.ant-modal-body::-webkit-scrollbar {
+.ant-modal-body::-webkit-scrollbar,
+.ant-table-content::-webkit-scrollbar {
   width: 4px;
+  height: 4px;
 }
 
-.ant-modal-body::-webkit-scrollbar-track {
-  background: #f0f0f0;
-  border-radius: 4px;
+.ant-modal-body::-webkit-scrollbar-track,
+.ant-table-content::-webkit-scrollbar-track {
+  background: #f4f4f4;
+  border-radius: 5px;
 }
 
-.ant-modal-body::-webkit-scrollbar-thumb {
-  background: #d9d9d9;
-  border-radius: 4px;
+.ant-modal-body::-webkit-scrollbar-thumb,
+.ant-table-content::-webkit-scrollbar-thumb {
+  background: #d5d5d5;
+  border-radius: 5px;
 }
 
-.ant-modal-body::-webkit-scrollbar-thumb:hover {
-  background: #bfbfbf;
+.ant-modal-body::-webkit-scrollbar-thumb:hover,
+.ant-table-content::-webkit-scrollbar-thumb:hover {
+  background: #bdbdbd;
 }
 
-/* ─────────────────────────────────────────────
+/* =========================================================
    ANIMATIONS
-   ───────────────────────────────────────────── */
+========================================================= */
 
 .product-image-upload,
-.product-editor__actions .ant-btn {
-  transition: all 0.3s ease;
+.product-editor__actions .ant-btn,
+.manage-categories-btn,
+.product-editor {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease;
 }
 
-.ant-modal {
-  transition: all 0.3s ease;
+/* =========================================================
+   ACCESSIBILITY / TOUCH
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .product-editor button,
+  .product-editor .ant-btn,
+  .ant-modal button,
+  .ant-modal .ant-btn {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .product-editor .ant-btn:active,
+  .ant-modal .ant-btn:active {
+    transform: scale(0.98);
+  }
+
 }

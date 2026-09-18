@@ -295,13 +295,13 @@ const Products = () => {
           Product Management
         </h1>
 
-        <Button
-          icon={<AppstoreOutlined />}
-          onClick={openCategoryModal}
-          className="manage-categories-btn"
-        >
-          Manage Categories
-        </Button>
+       <Button
+  icon={<AppstoreOutlined />}
+  onClick={openCategoryModal}
+  className="manage-categories-btn"
+>
+  Manage Categories
+</Button>
       </div>
 
       {/* PRODUCT FORM */}

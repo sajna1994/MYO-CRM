@@ -12,16 +12,23 @@ import {
   Row,
   Col,
   Card,
+  Pagination,
+  Spin,
+  Empty,
 } from 'antd';
 
 import {
   PlusOutlined,
   EditOutlined,
   DeleteOutlined,
+  PhoneOutlined,
+  MailOutlined,
+  GlobalOutlined,
+  EnvironmentOutlined,
 } from '@ant-design/icons';
 
 import API from '../api/axios';
-import '../styles/CRM.css'; // We'll create this
+import '../styles/CRM.css';
 
 const { Title } = Typography;
 
@@ -32,6 +39,9 @@ const CRM = () => {
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [editingId, setEditingId] = useState(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 5;
 
   const [form] = Form.useForm();
 
@@ -47,8 +57,10 @@ const CRM = () => {
       setSuppliers(res.data.data || []);
     } catch (error) {
       console.error(error);
+
       message.error(
-        error.response?.data?.message || 'Failed to fetch suppliers'
+        error.response?.data?.message ||
+          'Failed to fetch suppliers'
       );
     } finally {
       setLoading(false);
@@ -66,6 +78,7 @@ const CRM = () => {
   const showModal = (record = null) => {
     if (record) {
       setEditingId(record._id);
+
       form.setFieldsValue({
         name: record.name,
         contactPerson: record.contactPerson,
@@ -104,19 +117,35 @@ const CRM = () => {
 
     try {
       if (editingId) {
-        await API.put(`/suppliers/${editingId}`, values);
-        message.success('Supplier updated successfully');
+        await API.put(
+          `/suppliers/${editingId}`,
+          values
+        );
+
+        message.success(
+          'Supplier updated successfully'
+        );
       } else {
         await API.post('/suppliers', values);
-        message.success('Supplier added successfully');
+
+        message.success(
+          'Supplier added successfully'
+        );
       }
 
       handleCancel();
-      fetchSuppliers();
+      await fetchSuppliers();
+
+      // Go back to first page after adding
+      if (!editingId) {
+        setCurrentPage(1);
+      }
     } catch (error) {
       console.error(error);
+
       message.error(
-        error.response?.data?.message || 'Unable to save supplier'
+        error.response?.data?.message ||
+          'Unable to save supplier'
       );
     } finally {
       setSaving(false);
@@ -130,12 +159,32 @@ const CRM = () => {
   const handleDelete = async (id) => {
     try {
       await API.delete(`/suppliers/${id}`);
-      message.success('Supplier deleted successfully');
-      fetchSuppliers();
+
+      message.success(
+        'Supplier deleted successfully'
+      );
+
+      await fetchSuppliers();
+
+      // If deleting the last item on current page,
+      // move back one page
+      const maxPage = Math.max(
+        1,
+        Math.ceil(
+          Math.max(suppliers.length - 1, 0) /
+            PAGE_SIZE
+        )
+      );
+
+      if (currentPage > maxPage) {
+        setCurrentPage(maxPage);
+      }
     } catch (error) {
       console.error(error);
+
       message.error(
-        error.response?.data?.message || 'Unable to delete supplier'
+        error.response?.data?.message ||
+          'Unable to delete supplier'
       );
     }
   };
@@ -149,57 +198,252 @@ const CRM = () => {
       title: 'Supplier Name',
       dataIndex: 'name',
       key: 'name',
-      render: (value) => <strong>{value}</strong>,
+      render: (value) => (
+        <strong>{value || '-'}</strong>
+      ),
     },
+
     {
       title: 'Contact Person',
       dataIndex: 'contactPerson',
       key: 'contactPerson',
       responsive: ['sm'],
+      render: (value) => value || '-',
     },
+
     {
       title: 'Phone',
       dataIndex: 'phone',
       key: 'phone',
       responsive: ['md'],
+      render: (value) => value || '-',
     },
+
     {
       title: 'Email',
       dataIndex: 'email',
       key: 'email',
       responsive: ['lg'],
+      render: (value) => value || '-',
     },
+
     {
       title: 'Action',
       key: 'action',
       width: 120,
       align: 'center',
+
       render: (_, record) => (
         <Space size="small">
           <Button
             type="text"
             icon={<EditOutlined />}
-            onClick={() => showModal(record)}
+            onClick={() =>
+              showModal(record)
+            }
             className="supplier-edit-btn"
+            aria-label={`Edit ${record.name}`}
           />
+
           <Popconfirm
             title="Delete Supplier"
-            description="Are you sure you want to delete this supplier?"
+            description={`Delete ${record.name}?`}
             okText="Yes"
             cancelText="No"
-            onConfirm={() => handleDelete(record._id)}
+            okButtonProps={{
+              danger: true,
+            }}
+            onConfirm={() =>
+              handleDelete(record._id)
+            }
           >
             <Button
               type="text"
               danger
               icon={<DeleteOutlined />}
               className="supplier-delete-btn"
+              aria-label={`Delete ${record.name}`}
             />
           </Popconfirm>
         </Space>
       ),
     },
   ];
+
+  // ============================================================
+  // MOBILE PAGINATED DATA
+  // ============================================================
+
+  const startIndex =
+    (currentPage - 1) * PAGE_SIZE;
+
+  const paginatedSuppliers =
+    suppliers.slice(
+      startIndex,
+      startIndex + PAGE_SIZE
+    );
+
+  // ============================================================
+  // MOBILE SUPPLIER CARD
+  // ============================================================
+
+  const renderSupplierCard = (supplier) => {
+    return (
+      <div
+        className="supplier-mobile-card"
+        key={supplier._id}
+      >
+        {/* Card Header */}
+        <div className="supplier-card-header">
+          <div className="supplier-card-title-area">
+            <div className="supplier-card-icon">
+              {supplier.name
+                ?.charAt(0)
+                ?.toUpperCase() || 'S'}
+            </div>
+
+            <div>
+              <h3 className="supplier-card-name">
+                {supplier.name || 'Unnamed Supplier'}
+              </h3>
+
+              <p className="supplier-card-contact">
+                {supplier.contactPerson ||
+                  'No contact person'}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Contact Details */}
+        <div className="supplier-card-details">
+
+          {supplier.phone && (
+            <div className="supplier-detail-row">
+              <div className="supplier-detail-icon">
+                <PhoneOutlined />
+              </div>
+
+              <div className="supplier-detail-content">
+                <span>Phone</span>
+                <strong>
+                  {supplier.phone}
+                </strong>
+              </div>
+            </div>
+          )}
+
+          {supplier.email && (
+            <div className="supplier-detail-row">
+              <div className="supplier-detail-icon">
+                <MailOutlined />
+              </div>
+
+              <div className="supplier-detail-content">
+                <span>Email</span>
+                <strong className="supplier-email">
+                  {supplier.email}
+                </strong>
+              </div>
+            </div>
+          )}
+
+          {supplier.website && (
+            <div className="supplier-detail-row">
+              <div className="supplier-detail-icon">
+                <GlobalOutlined />
+              </div>
+
+              <div className="supplier-detail-content">
+                <span>Website</span>
+                <strong>
+                  {supplier.website}
+                </strong>
+              </div>
+            </div>
+          )}
+
+          {supplier.address && (
+            <div className="supplier-detail-row">
+              <div className="supplier-detail-icon">
+                <EnvironmentOutlined />
+              </div>
+
+              <div className="supplier-detail-content">
+                <span>Address</span>
+                <strong className="supplier-address">
+                  {supplier.address}
+                </strong>
+              </div>
+            </div>
+          )}
+
+        </div>
+
+        {/* Extra Information */}
+        {(supplier.gstNumber ||
+          supplier.landline) && (
+          <div className="supplier-card-extra">
+
+            {supplier.gstNumber && (
+              <div>
+                <span>GST Number</span>
+                <strong>
+                  {supplier.gstNumber}
+                </strong>
+              </div>
+            )}
+
+            {supplier.landline && (
+              <div>
+                <span>Landline</span>
+                <strong>
+                  {supplier.landline}
+                </strong>
+              </div>
+            )}
+
+          </div>
+        )}
+
+        {/* Actions */}
+        <div className="supplier-card-actions">
+
+          <Button
+            icon={<EditOutlined />}
+            onClick={() =>
+              showModal(supplier)
+            }
+            className="supplier-mobile-edit"
+          >
+            Edit
+          </Button>
+
+          <Popconfirm
+            title="Delete Supplier"
+            description={`Delete ${supplier.name}?`}
+            okText="Delete"
+            cancelText="Cancel"
+            okButtonProps={{
+              danger: true,
+            }}
+            onConfirm={() =>
+              handleDelete(supplier._id)
+            }
+          >
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              className="supplier-mobile-delete"
+            >
+              Delete
+            </Button>
+          </Popconfirm>
+
+        </div>
+      </div>
+    );
+  };
 
   // ============================================================
   // UI
@@ -213,9 +457,19 @@ const CRM = () => {
       ====================================================== */}
 
       <div className="supplier-header">
-        <Title level={2} className="supplier-title">
-          Suppliers Management
-        </Title>
+
+        <div className="supplier-heading">
+          <Title
+            level={2}
+            className="supplier-title"
+          >
+            Suppliers
+          </Title>
+
+          <p className="supplier-subtitle">
+            Manage your supplier contacts
+          </p>
+        </div>
 
         <Button
           type="primary"
@@ -225,32 +479,86 @@ const CRM = () => {
         >
           Add Supplier
         </Button>
+
       </div>
 
       {/* ======================================================
-          SUPPLIER TABLE
+          SUPPLIER LIST
       ====================================================== */}
 
       <Card className="supplier-table-card">
-        <Table
-          dataSource={suppliers}
-          columns={columns}
-          rowKey="_id"
-          loading={loading}
-          pagination={{
-            pageSize: 5,
-            showSizeChanger: false,
-            responsive: true,
-            showTotal: (total, range) => {
-              if (window.innerWidth < 480) {
-                return `${range[0]}-${range[1]} of ${total}`;
-              }
-              return `Showing ${range[0]} to ${range[1]} of ${total} entries`;
-            },
-          }}
-          scroll={{ x: 600 }}
-          size="middle"
-        />
+
+        {/* DESKTOP / TABLET */}
+        <div className="supplier-desktop-view">
+
+          <Table
+            dataSource={suppliers}
+            columns={columns}
+            rowKey="_id"
+            loading={loading}
+            pagination={{
+              current: currentPage,
+              pageSize: PAGE_SIZE,
+              total: suppliers.length,
+              showSizeChanger: false,
+              responsive: true,
+
+              showTotal: (
+                total,
+                range
+              ) => {
+                return `Showing ${range[0]} to ${range[1]} of ${total} suppliers`;
+              },
+
+              onChange: (page) => {
+                setCurrentPage(page);
+              },
+            }}
+            scroll={{
+              x: 600,
+            }}
+            size="middle"
+          />
+
+        </div>
+
+        {/* MOBILE */}
+        <div className="supplier-mobile-view">
+
+          {loading ? (
+            <div className="supplier-mobile-loading">
+              <Spin size="large" />
+              <p>Loading suppliers...</p>
+            </div>
+          ) : suppliers.length === 0 ? (
+            <Empty
+              description="No suppliers found"
+            />
+          ) : (
+            <>
+              <div className="supplier-mobile-list">
+                {paginatedSuppliers.map(
+                  renderSupplierCard
+                )}
+              </div>
+
+              <div className="supplier-mobile-pagination">
+                <Pagination
+                  current={currentPage}
+                  pageSize={PAGE_SIZE}
+                  total={suppliers.length}
+                  showSizeChanger={false}
+                  showQuickJumper={false}
+                  onChange={(page) =>
+                    setCurrentPage(page)
+                  }
+                />
+              </div>
+            </>
+          )}
+
+        </div>
+
       </Card>
 
       {/* ======================================================
@@ -258,21 +566,27 @@ const CRM = () => {
       ====================================================== */}
 
       <Modal
-        title={editingId ? 'Edit Supplier' : 'Add New Supplier'}
+        title={
+          editingId
+            ? 'Edit Supplier'
+            : 'Add New Supplier'
+        }
         open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
-        width={window.innerWidth < 768 ? '95%' : 850}
+        width="min(850px, 95vw)"
         destroyOnClose
-        style={{ top: window.innerWidth < 768 ? 10 : 100 }}
+        centered
         className="supplier-modal"
       >
+
         <Form
           form={form}
           layout="vertical"
           onFinish={onFinish}
         >
-          <Row gutter={[24, 0]}>
+
+          <Row gutter={[20, 0]}>
 
             {/* Supplier Name */}
             <Col xs={24} md={12}>
@@ -282,13 +596,14 @@ const CRM = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Please enter supplier name',
+                    message:
+                      'Please enter supplier name',
                   },
                 ]}
               >
                 <Input
                   size="large"
-                  placeholder="Enter Supplier Name"
+                  placeholder="Enter supplier name"
                 />
               </Form.Item>
             </Col>
@@ -301,13 +616,14 @@ const CRM = () => {
                 rules={[
                   {
                     type: 'email',
-                    message: 'Please enter a valid email',
+                    message:
+                      'Please enter a valid email',
                   },
                 ]}
               >
                 <Input
                   size="large"
-                  placeholder="Enter Email"
+                  placeholder="Enter email"
                 />
               </Form.Item>
             </Col>
@@ -320,13 +636,14 @@ const CRM = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Please enter contact person',
+                    message:
+                      'Please enter contact person',
                   },
                 ]}
               >
                 <Input
                   size="large"
-                  placeholder="Enter Contact Person"
+                  placeholder="Enter contact person"
                 />
               </Form.Item>
             </Col>
@@ -339,7 +656,7 @@ const CRM = () => {
               >
                 <Input
                   size="large"
-                  placeholder="Enter Landline Number"
+                  placeholder="Enter landline number"
                 />
               </Form.Item>
             </Col>
@@ -352,13 +669,14 @@ const CRM = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Please enter phone number',
+                    message:
+                      'Please enter phone number',
                   },
                 ]}
               >
                 <Input
                   size="large"
-                  placeholder="Enter Phone Number"
+                  placeholder="Enter phone number"
                 />
               </Form.Item>
             </Col>
@@ -371,7 +689,7 @@ const CRM = () => {
               >
                 <Input
                   size="large"
-                  placeholder="Enter Website"
+                  placeholder="Enter website"
                 />
               </Form.Item>
             </Col>
@@ -384,7 +702,7 @@ const CRM = () => {
               >
                 <Input
                   size="large"
-                  placeholder="Enter GST Number"
+                  placeholder="Enter GST number"
                 />
               </Form.Item>
             </Col>
@@ -397,13 +715,14 @@ const CRM = () => {
                 rules={[
                   {
                     required: true,
-                    message: 'Please enter address',
+                    message:
+                      'Please enter address',
                   },
                 ]}
               >
                 <Input.TextArea
                   rows={4}
-                  placeholder="Enter Address"
+                  placeholder="Enter address"
                   className="supplier-textarea"
                 />
               </Form.Item>
@@ -425,10 +744,9 @@ const CRM = () => {
 
           </Row>
 
-          {/* Buttons */}
-          <Form.Item
-            className="supplier-modal-actions"
-          >
+          {/* Modal Buttons */}
+          <div className="supplier-modal-actions">
+
             <Button
               onClick={handleCancel}
               className="supplier-modal-cancel"
@@ -442,11 +760,15 @@ const CRM = () => {
               loading={saving}
               className="supplier-modal-submit"
             >
-              {editingId ? 'Update Supplier' : 'Save Supplier'}
+              {editingId
+                ? 'Update Supplier'
+                : 'Save Supplier'}
             </Button>
-          </Form.Item>
+
+          </div>
 
         </Form>
+
       </Modal>
 
     </div>

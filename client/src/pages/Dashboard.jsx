@@ -28,7 +28,7 @@ import {
 import dayjs from 'dayjs';
 import API from '../api/axios';
 
-import '../styles/Dashboard.css'; 
+import '../styles/Dashboard.css';
 
 const Dashboard = () => {
   const { user } = useSelector((state) => state.auth);
@@ -519,59 +519,55 @@ const Dashboard = () => {
   return (
     <div className="fitness-dashboard">
 
-      {/* ===================================================
-          HEADER
-      =================================================== */}
-
+      {/* HEADER */}
       <header className="fitness-dashboard__header">
-
         <div>
+          <span className="dashboard-eyebrow">
+            MYO FITNESS STUDIO
+          </span>
+
           <h1>Dashboard</h1>
+
           <p>
-            Welcome back,{' '}
-            {user?.name || 'Admin'}!
+            Welcome back, {user?.name || 'Admin'} 👋
           </p>
         </div>
 
         <div className="dashboard-date">
-          {dayjs().format(
-            'DD MMMM YYYY'
-          )}
+          {dayjs().format('DD MMM YYYY')}
         </div>
-
       </header>
 
 
-      {/* ===================================================
-          STAT CARDS
-      =================================================== */}
-
+      {/* STAT CARDS */}
       <Row
-        gutter={[16, 16]}
+        gutter={[12, 12]}
         className="fitness-stats"
       >
-
         {cards.map((card) => (
-
           <Col
-            xs={24}
+            xs={12}
             sm={12}
             md={8}
             xl={6}
             key={card.title}
           >
-
             <Card
               className={`fitness-stat fitness-stat--${card.tone}`}
-              bodyStyle={{ padding: '16px' }}
+              styles={{
+                body: {
+                  padding: 14,
+                },
+              }}
             >
-
               <div className="fitness-stat__content">
+
                 <span className="fitness-stat__icon">
                   {card.icon}
                 </span>
 
                 <div className="fitness-stat__info">
+
                   <p className="fitness-stat__title">
                     {card.title}
                   </p>
@@ -583,26 +579,61 @@ const Dashboard = () => {
                   <small className="fitness-stat__note">
                     {card.note}
                   </small>
+
                 </div>
+
               </div>
-
             </Card>
-
           </Col>
-
         ))}
-
       </Row>
 
 
-      {/* ===================================================
-          PURCHASES + LOW STOCK
-      =================================================== */}
+      {/* QUICK SUMMARY */}
+      <div className="dashboard-summary-grid">
 
+        <Link
+          to="/billing"
+          className="dashboard-summary-card dashboard-summary-card--sales"
+        >
+          <div className="dashboard-summary-icon">
+            <DollarOutlined />
+          </div>
+
+          <div>
+            <span>Today's Sales</span>
+            <strong>{formatCurrency(todaySales)}</strong>
+            <small>
+              {todayInvoiceCount} invoice(s)
+            </small>
+          </div>
+        </Link>
+
+
+        <Link
+          to="/purchases"
+          className="dashboard-summary-card dashboard-summary-card--purchase"
+        >
+          <div className="dashboard-summary-icon">
+            <ShoppingCartOutlined />
+          </div>
+
+          <div>
+            <span>Today's Purchases</span>
+            <strong>{formatCurrency(todayPurchases)}</strong>
+            <small>
+              Purchase value today
+            </small>
+          </div>
+        </Link>
+
+      </div>
+
+
+      {/* PURCHASES + LOW STOCK */}
       <Row gutter={[16, 16]}>
 
         <Col xs={24} xl={16}>
-
           <Card
             className="fitness-panel"
             title={
@@ -614,30 +645,78 @@ const Dashboard = () => {
           >
 
             {recentPurchases.length === 0 ? (
-
               <Empty
                 description="No purchases found"
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
               />
-
             ) : (
+              <>
+                {/* DESKTOP TABLE */}
+                <div className="desktop-dashboard-table">
+                  <Table
+                    className="fitness-table"
+                    columns={purchaseColumns}
+                    dataSource={recentPurchases}
+                    pagination={false}
+                    scroll={{ x: 700 }}
+                    size="middle"
+                  />
+                </div>
 
-              <Table
-                className="fitness-table"
-                columns={purchaseColumns}
-                dataSource={recentPurchases}
-                pagination={false}
-                scroll={{ x: 700 }}
-                size="middle"
-              />
+                {/* MOBILE CARDS */}
+                <div className="mobile-dashboard-list">
+                  {recentPurchases.map((purchase) => (
+                    <div
+                      className="dashboard-list-card"
+                      key={purchase.key}
+                    >
+                      <div className="dashboard-list-card__top">
 
+                        <div>
+                          <strong>
+                            {purchase.product}
+                          </strong>
+
+                          <span>
+                            {purchase.invoiceNumber}
+                          </span>
+                        </div>
+
+                        <strong className="dashboard-list-card__amount">
+                          {formatCurrency(purchase.total)}
+                        </strong>
+
+                      </div>
+
+                      <div className="dashboard-list-card__bottom">
+
+                        <span>
+                          {purchase.date}
+                        </span>
+
+                        <span>
+                          <span>
+                            {typeof purchase.supplier === 'object'
+                              ? purchase.supplier?.name || 'N/A'
+                              : purchase.supplier || 'N/A'}
+                          </span>                     </span>
+
+                        <b>
+                          Qty: {purchase.qty}
+                        </b>
+
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
             )}
 
           </Card>
-
         </Col>
 
 
+        {/* LOW STOCK */}
         <Col xs={24} xl={8}>
 
           <Card
@@ -653,10 +732,14 @@ const Dashboard = () => {
             {lowStockProducts.length === 0 ? (
 
               <div className="no-low-stock">
-                <span className="no-low-stock__icon">✓</span>
+                <span className="no-low-stock__icon">
+                  ✓
+                </span>
+
                 <strong>
-                  All stock levels are healthy
+                  Stock levels are healthy
                 </strong>
+
                 <small>
                   No products need reordering.
                 </small>
@@ -665,28 +748,23 @@ const Dashboard = () => {
             ) : (
 
               <div className="low-stock-list">
+
                 {lowStockProducts
                   .slice(0, 6)
                   .map((product) => {
 
-                    const stock =
-                      getStock(product);
+                    const stock = getStock(product);
 
                     const threshold =
-                      getLowStockThreshold(
-                        product
-                      );
+                      getLowStockThreshold(product);
 
                     const initials =
                       product.name
                         ?.split(' ')
-                        .map((word) =>
-                          word[0]
-                        )
+                        .map((word) => word[0])
                         .join('')
                         .substring(0, 3)
-                        .toUpperCase() ||
-                      'PRD';
+                        .toUpperCase() || 'PRD';
 
                     return (
                       <div
@@ -699,29 +777,34 @@ const Dashboard = () => {
                         </span>
 
                         <div className="low-stock-item__info">
+
                           <strong>
                             {product.name}
                           </strong>
+
                           <small>
-                            Reorder level:{' '}
-                            {threshold}
+                            Reorder level: {threshold}
                           </small>
+
                         </div>
 
                         <div className="low-stock-item__count">
+
                           <span>
-                            Low Stock
+                            LOW
                           </span>
+
                           <b>
-                            {stock} pcs
+                            {stock}
                           </b>
+
                         </div>
 
                       </div>
                     );
                   })}
-              </div>
 
+              </div>
             )}
 
           </Card>
@@ -731,15 +814,10 @@ const Dashboard = () => {
       </Row>
 
 
-      {/* ===================================================
-          RECENT SALES
-      =================================================== */}
-
+      {/* RECENT SALES */}
       <Row
         gutter={[16, 16]}
-        style={{
-          marginTop: 16,
-        }}
+        className="dashboard-sales-row"
       >
 
         <Col xs={24}>
@@ -748,7 +826,7 @@ const Dashboard = () => {
             className="fitness-panel"
             title={
               <PanelTitle
-                title="Recent Sales / Billing"
+                title="Recent Sales"
                 to="/billing"
               />
             }
@@ -762,16 +840,81 @@ const Dashboard = () => {
               />
 
             ) : (
+              <>
+                {/* DESKTOP TABLE */}
+                <div className="desktop-dashboard-table">
 
-              <Table
-                className="fitness-table"
-                columns={salesColumns}
-                dataSource={recentSales}
-                pagination={false}
-                scroll={{ x: 700 }}
-                size="middle"
-              />
+                  <Table
+                    className="fitness-table"
+                    columns={salesColumns}
+                    dataSource={recentSales}
+                    pagination={false}
+                    scroll={{ x: 700 }}
+                    size="middle"
+                  />
 
+                </div>
+
+
+                {/* MOBILE SALES CARDS */}
+                <div className="mobile-dashboard-list">
+
+                  {recentSales.map((invoice) => (
+
+                    <div
+                      className="dashboard-list-card sales-card"
+                      key={invoice.key}
+                    >
+
+                      <div className="dashboard-list-card__top">
+
+                        <div>
+
+                          <strong>
+                            {invoice.invoiceNumber}
+                          </strong>
+
+                          <span>
+                            {invoice.customer}
+                          </span>
+
+                        </div>
+
+                        <strong className="dashboard-list-card__amount">
+                          {formatCurrency(invoice.total)}
+                        </strong>
+
+                      </div>
+
+
+                      <div className="dashboard-list-card__bottom">
+
+                        <span>
+                          {invoice.date}
+                        </span>
+
+                        <Tag
+                          color={
+                            invoice.status === 'paid'
+                              ? 'green'
+                              : invoice.status === 'partial'
+                                ? 'blue'
+                                : invoice.status === 'overdue'
+                                  ? 'red'
+                                  : 'orange'
+                          }
+                        >
+                          {String(invoice.status).toUpperCase()}
+                        </Tag>
+
+                      </div>
+
+                    </div>
+
+                  ))}
+
+                </div>
+              </>
             )}
 
           </Card>

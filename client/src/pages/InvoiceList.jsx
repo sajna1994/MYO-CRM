@@ -14,7 +14,8 @@ import {
   Empty,
   Statistic,
   Row,
-  Col,
+    Col,
+  Pagination,
 } from 'antd';
 
 import {
@@ -45,7 +46,7 @@ const InvoiceList = () => {
   const [total, setTotal] = useState(0);
 
   const [totalSales, setTotalSales] = useState(0);
-
+  const [mobilePage, setMobilePage] = useState(1);
   // --------------------------------------------------
   // FETCH INVOICES
   // --------------------------------------------------
@@ -95,7 +96,13 @@ const InvoiceList = () => {
   useEffect(() => {
     fetchInvoices(1, '', '');
   }, [fetchInvoices]);
-
+useEffect(() => {
+  setMobilePage(1);
+}, [search, status]);
+const mobileInvoices = invoices.slice(
+  (mobilePage - 1) * PAGE_SIZE,
+  mobilePage * PAGE_SIZE
+);
   // --------------------------------------------------
   // SEARCH
   // --------------------------------------------------
@@ -515,45 +522,194 @@ const InvoiceList = () => {
         </div>
       </Card>
 
-      {/* INVOICE TABLE */}
-      <Card className="invoice-table-card">
-        {invoices.length === 0 &&
-        !loading ? (
-          <Empty
-            description="No invoices found"
-          />
+     {/* INVOICE LIST */}
+<Card className="invoice-table-card">
+
+  {invoices.length === 0 && !loading ? (
+    <Empty description="No invoices found" />
+  ) : (
+    <>
+      {/* DESKTOP TABLE */}
+      <div className="invoice-desktop-table">
+        <Table
+          rowKey="_id"
+          loading={loading}
+          columns={columns}
+          dataSource={invoices}
+          bordered
+          size="middle"
+          scroll={{
+            x: 1000,
+          }}
+          pagination={{
+            current: page,
+            pageSize: PAGE_SIZE,
+            total,
+            showSizeChanger: false,
+            showTotal: (value) =>
+              `Total ${value} invoices`,
+            onChange: (newPage) => {
+              setPage(newPage);
+              fetchInvoices(
+                newPage,
+                search,
+                status
+              );
+            },
+          }}
+        />
+      </div>
+
+      {/* MOBILE APP STYLE */}
+      <div className="invoice-mobile-list">
+
+        {loading ? (
+          <div className="invoice-mobile-loading">
+            Loading invoices...
+          </div>
         ) : (
-          <Table
-            rowKey="_id"
-            loading={loading}
-            columns={columns}
-            dataSource={invoices}
-            bordered
-            size="middle"
-            scroll={{
-              x: 1000,
-            }}
-            pagination={{
-              current: page,
-              pageSize: PAGE_SIZE,
-              total,
-              showSizeChanger: false,
-              showTotal: (value) =>
-                `Total ${value} invoices`,
-              onChange: (
-                newPage
-              ) => {
-                setPage(newPage);
-                fetchInvoices(
-                  newPage,
-                  search,
-                  status
-                );
-              },
-            }}
-          />
+          invoices.map((invoice) => {
+            const invoiceStatus =
+              invoice.status || 'unknown';
+
+            return (
+              <div
+                className={`invoice-mobile-card invoice-mobile-card--${invoiceStatus}`}
+                key={invoice._id}
+              >
+
+                {/* TOP */}
+                <div className="invoice-mobile-top">
+
+                  <div className="invoice-mobile-number">
+                    <div className="invoice-mobile-icon">
+                      <FileTextOutlined />
+                    </div>
+
+                    <div>
+                      <span className="invoice-mobile-label">
+                        Invoice
+                      </span>
+
+                      <strong>
+                        {invoice.invoiceNumber || '-'}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div className="invoice-mobile-status">
+                    {renderStatus(invoice.status)}
+                  </div>
+
+                </div>
+
+                {/* CUSTOMER */}
+                <div className="invoice-mobile-customer">
+
+                  <span className="invoice-mobile-field-label">
+                    Customer
+                  </span>
+
+                  <strong>
+                    {invoice.customerName ||
+                      'Walk-in Customer'}
+                  </strong>
+
+                  {invoice.phone && (
+                    <span className="invoice-mobile-phone">
+                      {invoice.phone}
+                    </span>
+                  )}
+
+                </div>
+
+                {/* DETAILS */}
+                <div className="invoice-mobile-details">
+
+                  <div>
+                    <span>Date</span>
+                    <strong>
+                      {invoice.invoiceDate ||
+                      invoice.createdAt
+                        ? dayjs(
+                            invoice.invoiceDate ||
+                              invoice.createdAt
+                          ).format('DD MMM YYYY')
+                        : '-'}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>Items</span>
+                    <strong>
+                      {getTotalItems(invoice)}
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>Total</span>
+                    <strong className="invoice-mobile-total">
+                      {formatCurrency(
+                        invoice.totalAmount
+                      )}
+                    </strong>
+                  </div>
+
+                </div>
+
+                {/* ACTIONS */}
+                <div className="invoice-mobile-actions">
+
+                  <Button
+                    icon={<EyeOutlined />}
+                    onClick={() =>
+                      handleView(invoice)
+                    }
+                  >
+                    View
+                  </Button>
+
+                  <Button
+                    icon={<PrinterOutlined />}
+                    onClick={() =>
+                      handlePrint(invoice)
+                    }
+                  >
+                    Print
+                  </Button>
+
+                  <Popconfirm
+                    title="Delete Invoice"
+                    description={`Delete ${invoice.invoiceNumber}?`}
+                    okText="Delete"
+                    cancelText="Cancel"
+                    okButtonProps={{
+                      danger: true,
+                    }}
+                    onConfirm={() =>
+                      handleDelete(invoice._id)
+                    }
+                  >
+                    <Button
+                      danger
+                      icon={<DeleteOutlined />}
+                    >
+                      Delete
+                    </Button>
+                  </Popconfirm>
+
+                </div>
+
+              </div>
+            );
+          })
         )}
-      </Card>
+
+      </div>
+
+    </>
+  )}
+</Card>
     </div>
   );
 };

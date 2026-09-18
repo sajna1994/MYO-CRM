@@ -3,23 +3,24 @@ import {
   BarChartOutlined,
   FileTextOutlined,
   TagOutlined,
-  InboxOutlined
+  InboxOutlined,
 } from '@ant-design/icons';
 
 import gymImage from '../images/gym.png';
 import bgImage from '../images/background.jpeg';
-import '../styles/AuthLayout.css'; // We'll create this
+import '../styles/AuthLayout.css';
 
 const features = [
-  [InboxOutlined, <>Stock<br />Management</>],
-  [FileTextOutlined, <>Sales<br />Billing</>],
-  [TagOutlined, <>Price<br />Display</>],
-  [BarChartOutlined, <>Reports &amp;<br />Analytics</>],
+  [InboxOutlined, 'Stock'],
+  [FileTextOutlined, 'Billing'],
+  [TagOutlined, 'Prices'],
+  [BarChartOutlined, 'Reports'],
 ];
 
 const AuthLayout = () => (
   <div className="auth-shell">
 
+    {/* BRAND / APP HEADER */}
     <aside
       className="auth-brand"
       style={{ backgroundImage: `url(${bgImage})` }}
@@ -34,8 +35,10 @@ const AuthLayout = () => (
           className="auth-eyebrow"
         />
 
-        <h1>MYO</h1>
-        <h2>FITNESS STUDIO</h2>
+        <div className="auth-brand-name">
+          <h1>MYO</h1>
+          <h2>FITNESS STUDIO</h2>
+        </div>
 
         <span className="auth-brand-rule" />
 
@@ -45,7 +48,10 @@ const AuthLayout = () => (
 
         <div className="auth-features">
           {features.map(([Icon, label], index) => (
-            <div key={index}>
+            <div
+              className="auth-feature"
+              key={index}
+            >
               <Icon />
               <span>{label}</span>
             </div>
@@ -55,14 +61,34 @@ const AuthLayout = () => (
       </div>
     </aside>
 
+    {/* AUTH AREA */}
     <main className="auth-panel">
+
       <div className="auth-card">
-        <Outlet />
+
+        {/* Mobile-only brand */}
+        <div className="mobile-brand">
+          <img
+            src={gymImage}
+            alt="MYO Fitness Studio"
+          />
+
+          <div>
+            <strong>MYO</strong>
+            <span>FITNESS STUDIO</span>
+          </div>
+        </div>
+
+        <div className="auth-content">
+          <Outlet />
+        </div>
+
       </div>
 
       <p className="auth-copyright">
         © {new Date().getFullYear()} MYO Fitness Studio
       </p>
+
     </main>
 
   </div>

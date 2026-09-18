@@ -1,458 +1,1094 @@
-/* Quotes.css - Fully Responsive */
-
-/* ─────────────────────────────────────────────
-   PAGE CONTAINER
-   ───────────────────────────────────────────── */
+/* =========================================================
+   PRODUCT / PRICE LIST
+   Mobile-App Style + Fully Responsive
+   ========================================================= */
 
 .price-list-page {
-  padding: 20px;
-  max-width: 100%;
-  overflow-x: hidden;
+  width: 100%;
   min-height: 100%;
+  padding: 24px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  background: #f6f7f9;
 }
 
-/* ─────────────────────────────────────────────
+
+/* =========================================================
    HEADER
-   ───────────────────────────────────────────── */
+   ========================================================= */
 
 .price-list-page__head {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 18px;
 }
 
-.price-list-page__head h1 {
-  font-size: 28px;
-  font-weight: 700;
-  margin: 0;
-  color: #1a1a2e;
+.price-list-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
 }
+
+.price-list-title__icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: linear-gradient(
+    135deg,
+    #ff9800,
+    #ff7200
+  );
+
+  color: #ffffff;
+  font-size: 22px;
+
+  box-shadow:
+    0 6px 16px rgba(255, 126, 0, 0.22);
+}
+
+.price-list-title h1 {
+  margin: 0;
+  color: #18181b;
+
+  font-size: 26px;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+.price-list-title p {
+  margin: 4px 0 0;
+
+  color: #8a8f98;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+
+/* =========================================================
+   ADD PRODUCT BUTTON
+   ========================================================= */
 
 .add-product-btn {
   height: 44px;
-  padding: 0 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  background: linear-gradient(135deg, #ff9800, #ff7200) !important;
+  padding: 0 20px;
+
   border: none !important;
-  box-shadow: 0 4px 12px rgba(255, 126, 0, 0.2);
-  transition: all 0.3s ease;
+  border-radius: 11px !important;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  background: linear-gradient(
+    135deg,
+    #ff9800,
+    #ff7200
+  ) !important;
+
+  box-shadow:
+    0 5px 14px rgba(255, 126, 0, 0.20);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .add-product-btn:hover {
-  background: linear-gradient(135deg, #ffad26, #ff7d00) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 126, 0, 0.3) !important;
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 7px 18px rgba(255, 126, 0, 0.28);
 }
 
 .add-product-btn:active {
-  transform: translateY(0);
+  transform: scale(0.98);
 }
 
-/* ─────────────────────────────────────────────
-   TABLE
-   ───────────────────────────────────────────── */
+
+/* =========================================================
+   PRODUCT SUMMARY
+   ========================================================= */
+
+.product-summary {
+  display: flex;
+  align-items: center;
+
+  margin-bottom: 12px;
+
+  color: #777d87;
+  font-size: 13px;
+}
+
+.product-summary strong {
+  color: #ff7a00;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   DESKTOP TABLE CONTAINER
+   ========================================================= */
+
+.desktop-product-list {
+  width: 100%;
+}
 
 .price-list-table {
-  background: white;
-  border-radius: 12px;
-  padding: 4px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  width: 100%;
+
+  background: #ffffff;
+
+  border-radius: 14px;
+
   overflow: hidden;
+
+  border: 1px solid #eeeeee;
+
+  box-shadow:
+    0 3px 14px rgba(0, 0, 0, 0.05);
 }
 
+
+/* =========================================================
+   TABLE HEADER
+   ========================================================= */
+
 .price-list-table .ant-table {
+  background: #ffffff;
   font-size: 14px;
 }
 
 .price-list-table .ant-table-thead > tr > th {
   background: #fafafa !important;
-  color: #1a1a2e !important;
-  font-weight: 600;
-  font-size: 13px;
-  padding: 12px 14px !important;
-  border-bottom: 2px solid #f0f0f0;
+
+  color: #52565d !important;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  padding: 13px 14px !important;
+
+  border-bottom: 1px solid #eeeeee !important;
+
+  white-space: nowrap;
 }
 
 .price-list-table .ant-table-tbody > tr > td {
-  padding: 10px 14px !important;
-  border-bottom: 1px solid #f5f5f5;
+  padding: 12px 14px !important;
+
+  color: #4b4f56;
+
   font-size: 13px;
+
+  border-bottom: 1px solid #f1f1f1 !important;
+
+  vertical-align: middle;
+}
+
+.price-list-table .ant-table-tbody > tr {
+  transition: background 0.15s ease;
 }
 
 .price-list-table .ant-table-tbody > tr:hover > td {
-  background: #fffaf4 !important;
+  background: #fffaf5 !important;
 }
 
 .price-list-table .ant-table-tbody > tr:last-child > td {
-  border-bottom: none;
+  border-bottom: none !important;
 }
 
-/* ─────────────────────────────────────────────
-   PAGINATION
-   ───────────────────────────────────────────── */
 
-.price-list-table .ant-pagination {
-  margin-top: 16px;
-  padding: 0 4px;
+/* =========================================================
+   DESKTOP PRODUCT NAME
+   ========================================================= */
+
+.desktop-product-name {
+  color: #202124;
+  font-weight: 600;
 }
 
-.price-list-table .ant-pagination .ant-pagination-item-active {
-  background: #ff8500;
-  border-color: #ff8500;
+
+/* =========================================================
+   DESKTOP PRICE
+   ========================================================= */
+
+.desktop-price {
+  color: #e87500;
+  font-size: 14px;
+  font-weight: 700;
 }
 
-.price-list-table .ant-pagination .ant-pagination-item-active a {
-  color: #ffffff;
+
+/* =========================================================
+   DESKTOP STOCK
+   ========================================================= */
+
+.desktop-stock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
 }
 
-.price-list-table .ant-pagination .ant-pagination-item-active:hover {
-  border-color: #ff7200;
+.desktop-stock strong {
+  color: #27292d;
+  font-size: 14px;
 }
 
-.price-list-table .ant-pagination .ant-pagination-item-active:hover a {
-  color: #ffffff;
+
+/* =========================================================
+   STOCK STATUS
+   ========================================================= */
+
+.stock-good {
+  margin: 0 !important;
+
+  color: #1f8a4c !important;
+  background: #eaf8f0 !important;
+  border-color: #c9efd9 !important;
+
+  border-radius: 20px !important;
+
+  font-size: 10px !important;
+  font-weight: 600;
+
+  line-height: 20px !important;
 }
 
-/* ─────────────────────────────────────────────
-   ACTION BUTTONS
-   ───────────────────────────────────────────── */
+.stock-low {
+  margin: 0 !important;
+
+  color: #b86b00 !important;
+  background: #fff4df !important;
+  border-color: #ffe0a3 !important;
+
+  border-radius: 20px !important;
+
+  font-size: 10px !important;
+  font-weight: 600;
+
+  line-height: 20px !important;
+}
+
+.stock-out {
+  margin: 0 !important;
+
+  color: #d43838 !important;
+  background: #fff0f0 !important;
+  border-color: #ffd1d1 !important;
+
+  border-radius: 20px !important;
+
+  font-size: 10px !important;
+  font-weight: 600;
+
+  line-height: 20px !important;
+}
+
+
+/* =========================================================
+   PRODUCT IMAGE - DESKTOP
+   ========================================================= */
+
+.product-table-image-empty {
+  width: 45px;
+  height: 45px;
+
+  margin: auto;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+
+  background: #f5f5f5;
+
+  color: #b5b5b5;
+
+  font-size: 17px;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS - DESKTOP
+   ========================================================= */
+
+.price-list-table .ant-btn {
+  width: 34px;
+  height: 34px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+}
 
 .price-list-edit {
   color: #f28a00 !important;
+
   font-size: 16px;
-  transition: all 0.3s ease;
+
+  background: #fff7ed !important;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .price-list-edit:hover {
-  color: #ff8500 !important;
-  transform: scale(1.1);
+  color: #e87500 !important;
+  background: #ffeedc !important;
+
+  transform: translateY(-1px);
 }
 
 .price-list-table .ant-btn-dangerous {
-  color: #ff4d4f !important;
-  transition: all 0.3s ease;
+  color: #e05252 !important;
+
+  background: #fff1f1 !important;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 .price-list-table .ant-btn-dangerous:hover {
-  color: #ff7875 !important;
-  transform: scale(1.1);
+  color: #cf3535 !important;
+
+  background: #ffe3e3 !important;
+
+  transform: translateY(-1px);
 }
 
-/* ─────────────────────────────────────────────
-   RESPONSIVE BREAKPOINTS
-   ───────────────────────────────────────────── */
 
-/* Tablets and small laptops */
+/* =========================================================
+   PAGINATION
+   ========================================================= */
+
+.price-list-table .ant-pagination {
+  margin: 16px 14px !important;
+}
+
+.price-list-table
+  .ant-pagination
+  .ant-pagination-item-active {
+  background: #ff8500 !important;
+  border-color: #ff8500 !important;
+}
+
+.price-list-table
+  .ant-pagination
+  .ant-pagination-item-active
+  a {
+  color: #ffffff !important;
+}
+
+.price-list-table
+  .ant-pagination
+  .ant-pagination-item {
+  border-radius: 7px;
+}
+
+
+/* =========================================================
+   MOBILE LIST
+   ========================================================= */
+
+.mobile-product-list {
+  display: none;
+}
+
+
+/* =========================================================
+   TABLET
+   ========================================================= */
+
 @media (max-width: 992px) {
+
   .price-list-page {
-    padding: 16px;
+    padding: 18px;
   }
 
-  .price-list-page__head h1 {
-    font-size: 24px;
+  .price-list-title h1 {
+    font-size: 23px;
   }
 
-  .add-product-btn {
-    height: 40px;
-    padding: 0 20px;
-    font-size: 14px;
-  }
+  .price-list-title__icon {
+    width: 44px;
+    height: 44px;
 
-  .price-list-table .ant-table {
-    font-size: 13px;
-  }
+    border-radius: 12px;
 
-  .price-list-table .ant-table-thead > tr > th {
-    font-size: 12px;
-    padding: 10px 12px !important;
-  }
-
-  .price-list-table .ant-table-tbody > tr > td {
-    padding: 8px 12px !important;
-    font-size: 12px;
-  }
-}
-
-/* Mobile devices */
-@media (max-width: 768px) {
-  .price-list-page {
-    padding: 12px;
-  }
-
-  .price-list-page__head {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  .price-list-page__head h1 {
-    font-size: 22px;
-  }
-
-  .add-product-btn {
-    width: 100%;
-    justify-content: center;
-    height: 38px;
-    font-size: 14px;
-  }
-
-  .price-list-table {
-    border-radius: 10px;
-    padding: 0;
-  }
-
-  .price-list-table .ant-table {
-    font-size: 12px;
-  }
-
-  .price-list-table .ant-table-thead > tr > th {
-    font-size: 11px;
-    padding: 8px 8px !important;
-  }
-
-  .price-list-table .ant-table-tbody > tr > td {
-    padding: 6px 8px !important;
-    font-size: 12px;
-  }
-
-  .price-list-table .ant-pagination {
-    font-size: 12px;
-  }
-
-  .price-list-table .ant-pagination .ant-pagination-item {
-    min-width: 28px;
-    height: 28px;
-    line-height: 28px;
-  }
-
-  .price-list-table .ant-pagination .ant-pagination-prev,
-  .price-list-table .ant-pagination .ant-pagination-next {
-    min-width: 28px;
-    height: 28px;
-    line-height: 28px;
-  }
-
-  .price-list-table .ant-pagination .ant-pagination-item a {
-    font-size: 12px;
-  }
-
-  /* Smaller images on mobile */
-  .price-list-table .ant-image {
-    width: 35px !important;
-    height: 35px !important;
-  }
-
-  .price-list-table .ant-image img {
-    width: 35px !important;
-    height: 35px !important;
-  }
-
-  .price-list-edit {
-    font-size: 14px;
-  }
-
-  .price-list-table .ant-btn {
-    font-size: 12px !important;
-    height: 28px !important;
-    padding: 0 6px !important;
-  }
-
-  .price-list-table .ant-btn .anticon {
-    font-size: 14px !important;
-  }
-}
-
-/* Small mobile devices */
-@media (max-width: 480px) {
-  .price-list-page {
-    padding: 8px;
-  }
-
-  .price-list-page__head h1 {
     font-size: 20px;
   }
 
   .add-product-btn {
-    height: 36px;
-    font-size: 13px;
-    padding: 0 16px;
-  }
-
-  .price-list-table {
-    border-radius: 8px;
-  }
-
-  .price-list-table .ant-table {
-    font-size: 11px;
+    height: 42px;
   }
 
   .price-list-table .ant-table-thead > tr > th {
-    font-size: 10px;
-    padding: 6px 4px !important;
+    padding: 11px 10px !important;
   }
 
   .price-list-table .ant-table-tbody > tr > td {
-    padding: 4px 4px !important;
-    font-size: 11px;
+    padding: 10px !important;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+  .price-list-page {
+    padding: 14px 12px 24px;
+
+    background: #f6f7f9;
   }
 
-  /* Even smaller images on very small screens */
-  .price-list-table .ant-image {
-    width: 28px !important;
-    height: 28px !important;
+
+  /* HEADER */
+
+  .price-list-page__head {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    gap: 14px;
+
+    margin-bottom: 14px;
   }
 
-  .price-list-table .ant-image img {
-    width: 28px !important;
-    height: 28px !important;
+  .price-list-title {
+    gap: 11px;
   }
 
-  .price-list-edit {
+  .price-list-title__icon {
+    width: 43px;
+    height: 43px;
+
+    border-radius: 12px;
+
+    font-size: 19px;
+  }
+
+  .price-list-title h1 {
+    font-size: 21px;
+    letter-spacing: -0.2px;
+  }
+
+  .price-list-title p {
+    margin-top: 3px;
+
     font-size: 12px;
   }
 
-  .price-list-table .ant-btn {
-    font-size: 11px !important;
-    height: 24px !important;
-    padding: 0 4px !important;
+
+  /* ADD BUTTON */
+
+  .add-product-btn {
+    width: 100%;
+    height: 46px;
+
+    border-radius: 12px !important;
+
+    font-size: 14px;
   }
 
-  .price-list-table .ant-btn .anticon {
-    font-size: 12px !important;
+
+  /* SUMMARY */
+
+  .product-summary {
+    margin: 2px 3px 10px;
+
+    font-size: 12px;
   }
 
-  .price-list-table .ant-pagination {
+
+  /* HIDE DESKTOP TABLE */
+
+  .desktop-product-list {
+    display: none;
+  }
+
+
+  /* SHOW MOBILE CARDS */
+
+  .mobile-product-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 11px;
+
+    width: 100%;
+  }
+
+
+  /* =====================================================
+     PRODUCT CARD
+     ===================================================== */
+
+  .mobile-product-card {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 13px;
+
+    background: #ffffff;
+
+    border: 1px solid #eeeeee;
+
+    border-radius: 14px;
+
+    box-shadow:
+      0 3px 12px rgba(0, 0, 0, 0.045);
+
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  .mobile-product-card:active {
+    transform: scale(0.99);
+
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.06);
+  }
+
+
+  /* =====================================================
+     CARD TOP
+     ===================================================== */
+
+  .mobile-product-card__top {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+  }
+
+
+  /* PRODUCT IMAGE */
+
+  .mobile-product-card__image {
+    width: 64px;
+    height: 64px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    border-radius: 11px;
+
+    background: #f5f5f5;
+  }
+
+  .mobile-product-image {
+    display: block;
+
+    width: 64px !important;
+    height: 64px !important;
+
+    object-fit: cover;
+
+    border-radius: 11px;
+  }
+
+  .mobile-product-image--empty {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    color: #b5b5b5;
+
+    font-size: 20px;
+  }
+
+
+  /* PRODUCT INFO */
+
+  .mobile-product-card__info {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+  }
+
+  .mobile-product-card__info h3 {
+    margin: 0;
+
+    color: #202124;
+
+    font-size: 15px;
+    line-height: 1.3;
+
+    font-weight: 700;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+  }
+
+  .mobile-product-category {
+    color: #777d86;
+
+    font-size: 12px;
+
+    line-height: 1.3;
+  }
+
+  .mobile-product-brand {
+    color: #9a9da3;
+
+    font-size: 11px;
+
+    line-height: 1.3;
+  }
+
+
+  /* =====================================================
+     CARD DETAILS
+     ===================================================== */
+
+  .mobile-product-card__details {
+    display: grid;
+
+    grid-template-columns:
+      1fr
+      1fr
+      1.15fr;
+
+    gap: 8px;
+
+    margin-top: 13px;
+
+    padding-top: 11px;
+
+    border-top: 1px solid #f0f0f0;
+  }
+
+  .mobile-detail {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+  }
+
+  .mobile-detail > span:first-child {
+    color: #999ea6;
+
+    font-size: 10px;
+
+    font-weight: 500;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.25px;
+  }
+
+  .mobile-detail strong {
+    color: #292b30;
+
+    font-size: 13px;
+
+    font-weight: 700;
+  }
+
+  .mobile-product-price {
+    color: #e87500 !important;
+
+    font-size: 14px !important;
+  }
+
+  .mobile-detail .ant-tag {
+    width: fit-content;
+
+    margin: 0 !important;
+
+    padding: 0 7px !important;
+
+    border-radius: 20px !important;
+
+    font-size: 9px !important;
+
+    line-height: 20px !important;
+  }
+
+
+  /* =====================================================
+     CARD ACTIONS
+     ===================================================== */
+
+  .mobile-product-card__actions {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 8px;
+
+    margin-top: 12px;
+  }
+
+  .mobile-product-card__actions .ant-btn {
+    height: 40px;
+
+    border-radius: 9px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+  }
+
+  .mobile-edit-btn {
+    color: #e87500 !important;
+
+    background: #fff7ed !important;
+
+    border-color: #ffe1bf !important;
+  }
+
+  .mobile-edit-btn:active {
+    background: #ffeedc !important;
+  }
+
+  .mobile-delete-btn {
+    background: #fff5f5 !important;
+
+    border-color: #ffd7d7 !important;
+  }
+
+
+  /* =====================================================
+     MOBILE FOOTER
+     ===================================================== */
+
+  .mobile-product-footer {
+    padding: 8px 0 2px;
+
+    text-align: center;
+
+    color: #a0a4aa;
+
     font-size: 11px;
   }
 
-  .price-list-table .ant-pagination .ant-pagination-item {
-    min-width: 24px;
-    height: 24px;
-    line-height: 24px;
+
+  /* =====================================================
+     MOBILE EMPTY STATE
+     ===================================================== */
+
+  .mobile-empty {
+    padding: 40px 20px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    background: #ffffff;
+
+    border: 1px solid #eeeeee;
+
+    border-radius: 14px;
   }
 
-  .price-list-table .ant-pagination .ant-pagination-prev,
-  .price-list-table .ant-pagination .ant-pagination-next {
-    min-width: 24px;
-    height: 24px;
-    line-height: 24px;
+  .mobile-empty-btn {
+    height: 40px;
+
+    margin-top: 4px;
+
+    border-radius: 9px !important;
+
+    background: #ff8500 !important;
+
+    border-color: #ff8500 !important;
   }
 
-  .price-list-table .ant-pagination .ant-pagination-item a {
-    font-size: 11px;
-  }
 
-  .price-list-table .ant-pagination .ant-pagination-total-text {
-    font-size: 10px !important;
+  /* =====================================================
+     MOBILE LOADING
+     ===================================================== */
+
+  .mobile-loading {
+    min-height: 220px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    color: #8d9299;
+
+    font-size: 13px;
+
+    background: #ffffff;
+
+    border-radius: 14px;
+
+    border: 1px solid #eeeeee;
   }
 }
 
-/* ─────────────────────────────────────────────
-   SCROLLBAR STYLING FOR TABLES
-   ───────────────────────────────────────────── */
+
+/* =========================================================
+   SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+  .price-list-page {
+    padding: 11px 10px 20px;
+  }
+
+  .price-list-title__icon {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 11px;
+
+    font-size: 18px;
+  }
+
+  .price-list-title h1 {
+    font-size: 19px;
+  }
+
+  .price-list-title p {
+    font-size: 11px;
+  }
+
+  .add-product-btn {
+    height: 44px;
+
+    font-size: 13px;
+  }
+
+  .mobile-product-card {
+    padding: 11px;
+
+    border-radius: 13px;
+  }
+
+  .mobile-product-card__image {
+    width: 58px;
+    height: 58px;
+  }
+
+  .mobile-product-image {
+    width: 58px !important;
+    height: 58px !important;
+
+    border-radius: 10px;
+  }
+
+  .mobile-product-card__info h3 {
+    font-size: 14px;
+  }
+
+  .mobile-product-category {
+    font-size: 11px;
+  }
+
+  .mobile-product-brand {
+    font-size: 10px;
+  }
+
+  .mobile-product-card__details {
+    margin-top: 11px;
+
+    padding-top: 10px;
+
+    gap: 5px;
+  }
+
+  .mobile-detail > span:first-child {
+    font-size: 9px;
+  }
+
+  .mobile-detail strong {
+    font-size: 12px;
+  }
+
+  .mobile-product-price {
+    font-size: 13px !important;
+  }
+
+  .mobile-product-card__actions {
+    margin-top: 10px;
+
+    gap: 7px;
+  }
+
+  .mobile-product-card__actions .ant-btn {
+    height: 38px;
+
+    font-size: 12px;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
+
+@media (max-width: 360px) {
+
+  .price-list-page {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .mobile-product-card__top {
+    gap: 9px;
+  }
+
+  .mobile-product-card__image {
+    width: 54px;
+    height: 54px;
+  }
+
+  .mobile-product-image {
+    width: 54px !important;
+    height: 54px !important;
+  }
+
+  .mobile-product-card__info h3 {
+    font-size: 13px;
+  }
+
+  .mobile-product-card__details {
+    grid-template-columns:
+      0.9fr
+      0.9fr
+      1fr;
+  }
+
+  .mobile-detail strong {
+    font-size: 11px;
+  }
+
+  .mobile-detail .ant-tag {
+    padding: 0 5px !important;
+
+    font-size: 8px !important;
+  }
+}
+
+
+/* =========================================================
+   TOUCH DEVICES
+   ========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+
+  .add-product-btn:hover {
+    transform: none;
+  }
+
+  .price-list-edit:hover,
+  .price-list-table .ant-btn-dangerous:hover {
+    transform: none;
+  }
+
+  .mobile-product-card {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-product-card__actions .ant-btn {
+    min-height: 40px;
+  }
+}
+
+
+/* =========================================================
+   TABLE SCROLLBAR
+   ========================================================= */
 
 .price-list-table .ant-table-body::-webkit-scrollbar {
   height: 6px;
-  width: 6px;
 }
 
 .price-list-table .ant-table-body::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
+  background: #f3f3f3;
 }
 
 .price-list-table .ant-table-body::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 3px;
+  background: #c8c8c8;
+
+  border-radius: 10px;
 }
 
-.price-list-table .ant-table-body::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
 
-/* ─────────────────────────────────────────────
-   EMPTY STATE
-   ───────────────────────────────────────────── */
+/* =========================================================
+   ANT DESIGN EMPTY STATE
+   ========================================================= */
 
 .price-list-table .ant-empty {
-  padding: 40px 0;
+  padding: 50px 20px;
 }
 
 .price-list-table .ant-empty-description {
-  font-size: 14px;
-  color: #999;
+  color: #999ea5;
+  font-size: 13px;
 }
 
-/* ─────────────────────────────────────────────
-   ANIMATIONS
-   ───────────────────────────────────────────── */
 
-.price-list-table .ant-table-tbody > tr {
-  transition: background 0.2s ease;
-}
-
-.add-product-btn {
-  transition: all 0.3s ease;
-}
-
-.price-list-edit,
-.price-list-table .ant-btn-dangerous {
-  transition: all 0.3s ease;
-}
-
-/* ─────────────────────────────────────────────
-   DARK MODE SUPPORT (Optional)
-   ───────────────────────────────────────────── */
-
-@media (prefers-color-scheme: dark) {
-  .price-list-table {
-    background: #1a1a2e;
-  }
-
-  .price-list-table .ant-table-thead > tr > th {
-    background: #1f1f3a !important;
-    color: #e8e8e8 !important;
-    border-bottom-color: #2a2a4a;
-  }
-
-  .price-list-table .ant-table-tbody > tr > td {
-    border-bottom-color: #2a2a4a;
-    color: #d0d0d0;
-  }
-
-  .price-list-table .ant-table-tbody > tr:hover > td {
-    background: #2a2a4a !important;
-  }
-
-  .price-list-page__head h1 {
-    color: #e8e8e8;
-  }
-
-  .price-list-table .ant-empty-description {
-    color: #888;
-  }
-}
-
-/* ─────────────────────────────────────────────
-   PRINT STYLES
-   ───────────────────────────────────────────── */
+/* =========================================================
+   PRINT
+   ========================================================= */
 
 @media print {
+
   .price-list-page {
     padding: 0;
-  }
-
-  .price-list-page__head {
-    margin-bottom: 16px;
+    background: #ffffff;
   }
 
   .add-product-btn {
     display: none !important;
+  }
+
+  .mobile-product-list {
+    display: none !important;
+  }
+
+  .desktop-product-list {
+    display: block !important;
   }
 
   .price-list-table .ant-table-thead > tr > th {
@@ -460,46 +1096,7 @@
     color: #000 !important;
   }
 
-  .price-list-table .ant-table-tbody > tr > td {
-    color: #000 !important;
-  }
-
   .price-list-table .ant-btn {
     display: none !important;
-  }
-}
-
-/* ─────────────────────────────────────────────
-   LOADING STATE
-   ───────────────────────────────────────────── */
-
-.price-list-page .ant-spin-container {
-  min-height: 200px;
-}
-
-/* ─────────────────────────────────────────────
-   RESPONSIVE TABLE CONTAINER
-   ───────────────────────────────────────────── */
-
-@media (max-width: 768px) {
-  .price-list-table .ant-table-wrapper {
-    position: relative;
-  }
-
-  .price-list-table .ant-table-wrapper::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 30px;
-    background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.05));
-    pointer-events: none;
-    display: none;
-  }
-
-  .price-list-table .ant-table-wrapper .ant-table-body {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
   }
 }

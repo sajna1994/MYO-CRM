@@ -32,6 +32,11 @@ import {
   PlusOutlined,
   SearchOutlined,
   SettingOutlined,
+  CalendarOutlined,
+  ShopOutlined,
+  ShoppingOutlined,
+  MoreOutlined,
+  FileTextOutlined,
 } from '@ant-design/icons';
 
 import dayjs from 'dayjs';
@@ -180,7 +185,19 @@ const PurchaseManagement = () => {
   const [categorySaving, setCategorySaving] = useState(false);
   const [categoryForm] = Form.useForm();
   const [editingCategoryId, setEditingCategoryId] = useState(null);
+const [isMobile, setIsMobile] = useState(
+  typeof window !== 'undefined' && window.innerWidth <= 768
+);
 
+useEffect(() => {
+  const handleResize = () => {
+    setIsMobile(window.innerWidth <= 768);
+  };
+
+  window.addEventListener('resize', handleResize);
+
+  return () => window.removeEventListener('resize', handleResize);
+}, []);
   // =========================================================
   // FETCH SUPPLIERS
   // =========================================================
@@ -713,7 +730,158 @@ const PurchaseManagement = () => {
     setPage(1);
     fetchPurchases(1, value);
   };
+const renderMobilePurchaseCard = (record) => {
+  const supplierName =
+    typeof record.supplier === 'object' && record.supplier !== null
+      ? record.supplier.name
+      : suppliers.find(
+          (supplier) =>
+            String(supplier._id) === String(record.supplier)
+        )?.name || record.supplier || 'N/A';
 
+  const status = record.status || 'received';
+
+  return (
+    <div className="mobile-purchase-card" key={record._id}>
+
+      {/* Top */}
+      <div className="mobile-purchase-card-top">
+        <div>
+          <div className="mobile-invoice-label">
+            INVOICE
+          </div>
+
+          <div className="mobile-invoice-number">
+            {record.invoiceNumber || 'No Invoice'}
+          </div>
+        </div>
+
+        <span
+          className={`mobile-status mobile-status-${status}`}
+        >
+          {status}
+        </span>
+      </div>
+
+      {/* Date + Supplier */}
+      <div className="mobile-purchase-meta">
+
+        <div className="mobile-meta-item">
+          <CalendarOutlined />
+
+          <div>
+            <span>Date</span>
+            <strong>
+              {dayjs(record.date).format('DD MMM YYYY')}
+            </strong>
+          </div>
+        </div>
+
+        <div className="mobile-meta-item">
+          <ShopOutlined />
+
+          <div>
+            <span>Supplier</span>
+            <strong>{supplierName}</strong>
+          </div>
+        </div>
+
+      </div>
+
+      {/* Products */}
+      <div className="mobile-products">
+
+        <div className="mobile-section-title">
+          <ShoppingOutlined />
+          <span>
+            {record.items?.length || 0} Product
+            {record.items?.length === 1 ? '' : 's'}
+          </span>
+        </div>
+
+        {record.items?.slice(0, 3).map((item, index) => (
+          <div
+            className="mobile-product-row"
+            key={`${record._id}-${index}`}
+          >
+            <div className="mobile-product-name">
+              {item.product}
+            </div>
+
+            <div className="mobile-product-quantity">
+              × {item.quantity}
+            </div>
+
+            <div className="mobile-product-price">
+              {formatCurrency(
+                Number(item.totalPrice) ||
+                  Number(item.quantity || 0) *
+                    Number(item.unitPrice || 0)
+              )}
+            </div>
+          </div>
+        ))}
+
+        {record.items?.length > 3 && (
+          <div className="mobile-more-products">
+            + {record.items.length - 3} more products
+          </div>
+        )}
+
+      </div>
+
+      {/* Bottom */}
+      <div className="mobile-purchase-bottom">
+
+        <div>
+          <span>Total Amount</span>
+          <strong>
+            {formatCurrency(record.totalAmount)}
+          </strong>
+        </div>
+
+        <div className="mobile-purchase-actions">
+
+          <Button
+            className="mobile-action-button view"
+            icon={<EyeOutlined />}
+            onClick={() => handleView(record)}
+          />
+
+          <Button
+            className="mobile-action-button edit"
+            icon={<EditOutlined />}
+            onClick={() =>
+              openEditPurchaseModal(record)
+            }
+          />
+
+          <Popconfirm
+            title="Delete purchase?"
+            description="This action cannot be undone."
+            okText="Delete"
+            cancelText="Cancel"
+            okButtonProps={{
+              danger: true,
+            }}
+            onConfirm={() =>
+              handleDelete(record._id)
+            }
+          >
+            <Button
+              danger
+              className="mobile-action-button"
+              icon={<DeleteOutlined />}
+            />
+          </Popconfirm>
+
+        </div>
+
+      </div>
+
+    </div>
+  );
+};
   // =========================================================
   // FORM WATCH
   // =========================================================
@@ -943,89 +1111,195 @@ const PurchaseManagement = () => {
           HEADER
       ===================================================== */}
 
-      <div className="purchase-page-header">
-        <div>
-          <Title level={2} className="purchase-title">
-            Purchase Management
-          </Title>
-          <div className="purchase-subtitle">
-            Manage your gym product purchases
-          </div>
-        </div>
+    <div className="purchase-page-header">
 
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          className="new-purchase-button"
-          onClick={openNewPurchaseModal}
-        >
-          New Purchase
-        </Button>
-      </div>
+  <div className="purchase-heading-content">
+
+    <Title
+      level={2}
+      className="purchase-title"
+    >
+      Purchase Management
+    </Title>
+
+    <div className="purchase-subtitle">
+      Manage your gym product purchases
+    </div>
+
+  </div>
+
+  <Button
+    type="primary"
+    icon={<PlusOutlined />}
+    className="new-purchase-button"
+    onClick={openNewPurchaseModal}
+  >
+    <span className="desktop-button-text">
+      New Purchase
+    </span>
+
+    <span className="mobile-button-text">
+      Purchase
+    </span>
+  </Button>
+
+</div>
 
       {/* =====================================================
           SUMMARY
       ===================================================== */}
 
-      <Row gutter={[16, 16]} className="purchase-summary">
-        <Col xs={24} sm={12} md={8}>
-          <Card className="purchase-summary-card">
-            <div className="summary-label">Total Purchases</div>
-            <div className="summary-value">{total}</div>
-          </Card>
-        </Col>
+     <Row
+  gutter={[10, 10]}
+  className="purchase-summary"
+>
+  <Col xs={12} sm={12} md={8}>
+    <Card className="purchase-summary-card">
+      <div className="summary-label">
+        Purchases
+      </div>
 
-        <Col xs={24} sm={12} md={8}>
-          <Card className="purchase-summary-card">
-            <div className="summary-label">Total Purchase Value</div>
-            <div className="summary-value orange">
-              {formatCurrency(totalAmount)}
-            </div>
-          </Card>
-        </Col>
-      </Row>
+      <div className="summary-value">
+        {total}
+      </div>
+
+      <div className="summary-small">
+        Total orders
+      </div>
+    </Card>
+  </Col>
+
+  <Col xs={12} sm={12} md={8}>
+    <Card className="purchase-summary-card">
+      <div className="summary-label">
+        Purchase Value
+      </div>
+
+      <div className="summary-value orange">
+        {formatCurrency(totalAmount)}
+      </div>
+
+      <div className="summary-small">
+        Total spending
+      </div>
+    </Card>
+  </Col>
+</Row>
 
       {/* =====================================================
           PURCHASE TABLE
       ===================================================== */}
 
-      <Card className="purchase-table-card" bordered={false}>
-        <div className="purchase-table-toolbar">
-          <Input
-            allowClear
-            prefix={<SearchOutlined />}
-            placeholder="Search product, invoice or supplier..."
-            value={search}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="purchase-search"
-          />
-        </div>
+    <Card
+  className="purchase-table-card"
+  bordered={false}
+>
+  <div className="purchase-table-toolbar">
 
-        <Table
-          dataSource={purchases}
-          columns={columns}
-          rowKey="_id"
-          loading={loading}
-          scroll={{ x: 700 }}
-          pagination={{
-            current: page,
-            pageSize: PAGE_SIZE,
-            total,
-            showSizeChanger: false,
-            responsive: true,
-            showTotal: (totalRows, range) => {
-              if (window.innerWidth < 480) {
-                return `${range[0]}-${range[1]} of ${totalRows}`;
-              }
-              return `Showing ${range[0]} to ${range[1]} of ${totalRows} entries`;
-            },
-            onChange: (newPage) => {
+    <Input
+      allowClear
+      prefix={<SearchOutlined />}
+      placeholder="Search purchases..."
+      value={search}
+      onChange={(e) =>
+        handleSearch(e.target.value)
+      }
+      className="purchase-search"
+    />
+
+  </div>
+
+  {/* DESKTOP */}
+  {!isMobile && (
+    <Table
+      dataSource={purchases}
+      columns={columns}
+      rowKey="_id"
+      loading={loading}
+      scroll={{ x: 1000 }}
+      pagination={{
+        current: page,
+        pageSize: PAGE_SIZE,
+        total,
+        showSizeChanger: false,
+        responsive: true,
+
+        showTotal: (totalRows, range) =>
+          `Showing ${range[0]} to ${range[1]} of ${totalRows} entries`,
+
+        onChange: (newPage) => {
+          setPage(newPage);
+          fetchPurchases(newPage, search);
+        },
+      }}
+    />
+  )}
+
+  {/* MOBILE */}
+  {isMobile && (
+    <div className="mobile-purchase-list">
+
+      {loading ? (
+        <div className="mobile-loading">
+          Loading purchases...
+        </div>
+      ) : purchases.length === 0 ? (
+        <div className="mobile-empty-state">
+
+          <FileTextOutlined />
+
+          <strong>
+            No purchases found
+          </strong>
+
+          <span>
+            Try another search or create a new purchase.
+          </span>
+
+        </div>
+      ) : (
+        purchases.map(renderMobilePurchaseCard)
+      )}
+
+      {/* Mobile Pagination */}
+      {total > PAGE_SIZE && (
+        <div className="mobile-pagination">
+
+          <Button
+            disabled={page === 1}
+            onClick={() => {
+              const newPage = page - 1;
               setPage(newPage);
               fetchPurchases(newPage, search);
-            },
-          }}
-        />
-      </Card>
+            }}
+          >
+            Previous
+          </Button>
+
+          <span>
+            Page {page} of{' '}
+            {Math.ceil(total / PAGE_SIZE)}
+          </span>
+
+          <Button
+            disabled={
+              page >= Math.ceil(total / PAGE_SIZE)
+            }
+            onClick={() => {
+              const newPage = page + 1;
+              setPage(newPage);
+              fetchPurchases(newPage, search);
+            }}
+          >
+            Next
+          </Button>
+
+        </div>
+      )}
+
+    </div>
+  )}
+</Card>
 
       {/* =====================================================
           CREATE / EDIT PURCHASE MODAL
